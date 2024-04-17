@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import '../css/main.css'
-import CloseIcon from '@mui/icons-material/Close';
 import { Multiselect } from "multiselect-react-dropdown";
 
 
@@ -403,7 +402,7 @@ const CreateProduct = () => {
                                         {productData.imagePreviews.map((preview, index) => (
                                             <div key={index} style={{ display: 'inline-block', marginRight: '10px' }}>
                                                 <img src={preview} alt={`Preview ${index}`} style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
-                                                <span style={{ cursor: "pointer" }} onClick={() => handleImageDelete(index)}><CloseIcon /></span>
+                                                <span style={{ cursor: "pointer" }} onClick={() => handleImageDelete(index)}>x</span>
                                             </div>
                                         ))}
                                     </div>
