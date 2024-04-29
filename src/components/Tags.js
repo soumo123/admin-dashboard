@@ -12,7 +12,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import EditTag from "./EditTag";
-
+import Message from '../custom/Message';
 
 const Tags = () => {
   const dispatch = useDispatch()
@@ -26,9 +26,33 @@ const Tags = () => {
   const [edit, setEdit] = useState(false)
   const [editName, seteditName] = useState("")
   const [editId, setEditId] = useState("")
+  const[editImage,setEditImage] = useState("")
   const adminId = localStorage.getItem("adminId");
   const shop_id = localStorage.getItem("id");
   const type = localStorage.getItem("type");
+
+  const [message, setMessage] = useState(false)
+  const [messageType, setMessageType] = useState("")
+  const [imagePreview, setImagePreview] = useState("./default.jpg")
+  const [formsdata, setFormsData] = useState({
+    name: "",
+    file: null,
+    type: type
+  })
+
+
+  const handleChange = (e) => {
+    if (e.target.type === 'file') {
+      setFormsData({ ...formsdata, file: e.target.files[0] });
+      const reader = new FileReader();
+      reader.onload = () => {
+        document.getElementById('selectedImage').src = reader.result;
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    } else {
+      setFormsData({ ...formsdata, [e.target.name]: e.target.value });
+    }
+  };
 
   const handleCloseInvite = () => {
     setShowAddTag(false)
@@ -50,26 +74,43 @@ const Tags = () => {
 
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
+      let { name, file, type } = formsdata
+
       const config = {
         headers: {
-          'Content-Type': "application/json",
+          'Content-Type': 'multipart/form-data'
         },
         withCredentials: true
       }
-      const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/createTags/${adminId}`, { name: name, type: type }, config);
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", name)
+      formDataToSend.append("type", type)
+      formDataToSend.append("file", file)
+
+      const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/createTags/${adminId}`, formDataToSend, config);
       if (response.status === 201) {
-        alert("Tag Created")
+        setMessageType("success")
+        setMessage("Tag Created")
         setName("")
         setShowAddTag(false)
         setTimeout(() => {
           dispatch(noteRefs(new Date().getSeconds()))
         }, 1000);
+
+        setTimeout(() => {
+          setMessage(false)
+        }, 2000);
       }
     } catch (error) {
-      alert("Tag Not Created")
-
+      setMessageType("error")
+      setMessage("Tag Not Created")
+      setTimeout(() => {
+        setMessage(false)
+      }, 2000);
     }
   }
 
@@ -97,23 +138,34 @@ const Tags = () => {
       }
       const response = await axios.delete(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/delete_tags/${adminId}?tagId=${tagId}&type=${type}`);
       if (response.status === 200) {
-        alert("Tag deleted")
+
+        setMessageType("success")
+        setMessage("Tag deleted")
         setDeleteModal(false)
         setTimeout(() => {
           dispatch(noteRefs(new Date().getSeconds()))
         }, 1000);
+
+        setTimeout(() => {
+          setMessage(false)
+        }, 2000);
       }
 
     } catch (error) {
-      alert("Tag not deleted")
+      setMessageType("error")
+      setMessage("Tag Not deleted")
+      setTimeout(() => {
+        setMessage(false)
+      }, 2000);
     }
   }
 
 
-  const handleEditOpen = (name, id) => {
-    setEdit(true)
+  const handleEditOpen = (name, id,image) => {
     seteditName(name)
     setEditId(id)
+    setEditImage(image)
+    setEdit(true)
   }
 
 
@@ -125,6 +177,11 @@ const Tags = () => {
 
   return (
     <>
+      {
+        message ? (
+          <Message type={messageType} message={message} />
+        ) : ("")
+      }
       <div className="container mx-auto px-4 sm:px-8">
         <div className="py-8">
           <div className="flex flex-row mb-1 sm:mb-0 justify-between w-full">
@@ -172,7 +229,7 @@ const Tags = () => {
                         <td className="px-5 py-5 border-b border-zinc-200 bg-white text-sm">{index + 1}</td>
                         <td className="px-5 py-5 border-b border-zinc-200 bg-white text-sm">{ele.label}</td>
                         <td className="px-5 py-5 border-b border-zinc-200 bg-white text-sm">
-                          <span classNameName="text-zinc-900 leading-none hover:text-purple-600" onClick={() => handleEditOpen(ele.label, ele.value)}><FaEdit /></span>
+                          <span classNameName="text-zinc-900 leading-none hover:text-purple-600" onClick={() => handleEditOpen(ele.label, ele.value , ele.thumbnailImage)}><FaEdit /></span>
                           <span classNameName="text-zinc-900 leading-none hover:text-purple-600 pl-6" onClick={() => handleOpenTagModal(ele.value)}><FaTrashAlt /></span>
                         </td>
                       </tr>
@@ -198,9 +255,14 @@ const Tags = () => {
         </Modal.Header>
         <Modal.Body classNameName="">
           <div className="form-group">
-            <label>* Tag Name</label>
-            <input type="text" className="form-control" placeholder="Tag Name" name="name" value={name} onChange={(e) => handleName(e.target.value)} />
+            <label>Tag Name</label>
+            <input type="text" className="form-control" placeholder="Tag Name" name="name" value={formsdata.name} onChange={handleChange} />
 
+          </div>
+          <div className="form-group">
+            <label>Logo</label>
+            <img id="selectedImage" src={imagePreview} alt="Selected Image" class="default-image" />
+            <input type="file" id="imageUpload" name="file" onChange={handleChange} />
           </div>
 
         </Modal.Body>
@@ -233,7 +295,7 @@ const Tags = () => {
         </DialogActions>
       </Dialog>
 
-      <EditTag edit={edit} setEdit={setEdit} editName={editName} seteditName={seteditName} setEditId={setEditId} editId={editId}/>
+      <EditTag edit={edit} setEdit={setEdit} editName={editName} seteditName={seteditName} setEditId={setEditId} editId={editId} setEditImage={setEditImage} editImage={editImage}/>
     </>
 
   )

@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import '../css/main.css'
 import { Multiselect } from "multiselect-react-dropdown";
+import Message from '../custom/Message';
 
 
 const CreateProduct = () => {
-   
+
 
 
     const adminId = localStorage.getItem("adminId");
     const shop_id = localStorage.getItem("id");
     const type = localStorage.getItem("type");
 
+    const [message, setMessage] = useState(false)
+    const [messageType, setMessageType] = useState("")
 
-    
     const [check5, setCheck5] = useState(false)
     const [check6, setCheck6] = useState(false)
     const [check7, setCheck7] = useState(false)
@@ -116,7 +118,7 @@ const CreateProduct = () => {
             setStockError('Please enter stock.');
             return;
         }
-        if (productData.files.length===0) {
+        if (productData.files.length === 0) {
             setFileError('Please enter images.');
             return;
         }
@@ -147,7 +149,8 @@ const CreateProduct = () => {
                 }
             });
             if (response.status === 201) {
-                alert("Product Created")
+                setMessageType("success")
+                setMessage("Product Created")
                 setProductData({
                     name: '',
                     description: '',
@@ -181,10 +184,17 @@ const CreateProduct = () => {
                 setDescriptionError('');
                 setPriceError('');
                 setStockError('');
-
+                setTimeout(() => {
+                    setMessage(false)
+                }, 2000);
             }
         } catch (error) {
-            alert('Product Not Created');
+            setMessageType("error")
+            setMessage("Product Not Created")
+            setTimeout(() => {
+                setMessage(false)
+            }, 3000);
+           
         }
     };
     const handleImageDelete = (index) => {
@@ -277,6 +287,11 @@ const CreateProduct = () => {
 
     return (
         <>
+            {
+                message ? (
+                    <Message type={messageType} message={message} />
+                ) : ("")
+            }
             <div class="container register-form">
                 <div class="form">
                     <div class="note">
@@ -445,7 +460,7 @@ const CreateProduct = () => {
                     </div>
                 </div>
             </div >
-            
+
         </>
     )
 }

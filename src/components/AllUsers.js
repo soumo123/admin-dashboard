@@ -10,8 +10,8 @@ const AllUsers = ({ sidebarOpen }) => {
     const [open, setOpen] = useState(false)
     const [userId, setUserId] = useState("")
     const adminId = localStorage.getItem("adminId");
-  const shop_id = localStorage.getItem("id");
-  const type = localStorage.getItem("type");
+    const shop_id = localStorage.getItem("id");
+    const type = localStorage.getItem("type");
 
 
     const handleOpen = async (id) => {
@@ -51,12 +51,14 @@ const AllUsers = ({ sidebarOpen }) => {
     return (
         <>
 
-            <div className={`all-product ${sidebarOpen ? 'sidebar-open' : ''}`}>
+            <div className={`all-product ${sidebarOpen ? 'sidebar-open' : ''} mt-5`}>
                 <table className="table">
                     <thead>
                         <tr>
                             <th>User ID</th>
                             <th>User Name</th>
+                            <th>Date of joining</th>
+
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -76,7 +78,7 @@ const AllUsers = ({ sidebarOpen }) => {
                 </table>
             </div>
 
-            {console.log("open", open)}
+
             <ViewModal open={open} setOpen={setOpen} details={details} />
         </>
     )

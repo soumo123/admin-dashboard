@@ -5,7 +5,6 @@ import Modal from 'react-bootstrap/Modal';
 
 const ViewModal = ({open,setOpen,details}) => {
 
-    console.log("detailsdetails",details)
 
     return (
         <>
