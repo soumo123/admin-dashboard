@@ -57,6 +57,10 @@ function a11yProps(index) {
 const Settings = () => {
     const dispatch = useDispatch()
     const [browserCategory, setBrowserCategory] = useState(false)
+    const [logoheading, setLogoHeading] = useState("")
+    const[email,setEmail] = useState("")
+    const[phone,setPhone] = useState("")
+    const[location,setlocation]=useState("")
     const [home, setHome] = useState(false)
     const [blogs, setBlogs] = useState(false)
     const [products, setProducts] = useState(false)
@@ -146,6 +150,10 @@ const Settings = () => {
             const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/settings/setting_rules?adminId=${adminId}&type=${type}`)
             if (response.status === 200) {
                 console.log(response.data.data.blog, "settings")
+                setLogoHeading(response.data.data.logoheading)
+                setEmail(response.data.data.email)
+                setPhone(response.data.data.phone)
+                setlocation(response.data.data.location)
                 setBrowserCategory(response.data.data.browse_category)
                 setHome(response.data.data.home)
                 setBlogs(response.data.data.blog)
@@ -182,6 +190,10 @@ const Settings = () => {
             let json = {
                 adminId: adminId,
                 type: Number(type),
+                logoheading:logoheading,
+                email:email,
+                phone:phone,
+                location:location,
                 browse_category: browserCategory,
                 home: home,
                 products: products,
@@ -242,7 +254,21 @@ const Settings = () => {
 
     }
 
+    const handleLogoHeading = (e) => {
+        setLogoHeading(e.target.value)
+    }
 
+    const handleEmail = (e)=>{
+        setEmail(e.target.value)
+    }
+
+    const handlePhone = (e)=>{
+        setPhone(e.target.value)
+    }
+
+    const handleLocation = (e)=>{
+        setlocation(e.target.value)
+    }
 
     const handleBrowserCatrgory = (e) => {
         setBrowserCategory(e.target.checked)
@@ -277,6 +303,7 @@ const Settings = () => {
     }
 
     const handleCraousel = (e) => {
+        console.log("caraaa",e)
         setCarousel(e.target.checked)
     }
 
@@ -332,7 +359,8 @@ const Settings = () => {
 
 
     const handleBrowserPost = (e) => {
-        setBlogs(e.target.checked)
+        console.log("blogg",e)
+        setBrowserPost(e.target.checked)
     }
 
     useEffect(() => {
@@ -374,12 +402,49 @@ const Settings = () => {
                                                 <div class="col">
                                                     <div className='' style={{
                                                     }}>
+                                                        <div class="">
+                                                            <label><span> </span> <span>Logo Heading</span> </label>
+                                                            <input  type="text" value={logoheading} onChange={handleLogoHeading} />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className='' style={{
+                                                    }}>
+                                                        <div class="">
+                                                            <label><span> </span> <span>Email Heading</span> </label>
+                                                            <input  type="text" value={email} onChange={handleEmail} />
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div className='' style={{
+                                                    }}>
+                                                        <div class="">
+                                                            <label><span> </span> <span>Mobile Number</span> </label>
+                                                            <input  type="text" value={phone} onChange={handlePhone} />
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div className='' style={{
+                                                    }}>
+                                                        <div class="">
+                                                            <label><span> </span> <span>Location</span> </label>
+                                                            <input  type="text" value={location} onChange={handleLocation} />
+                                                        </div>
+                                                    </div>
+
+
+
+
+                                                    <div className='' style={{
+                                                    }}>
                                                         <div class="checkbox-wrapper-15"> <input class="inp-cbx" id="cbx-12" type="checkbox" value={browserCategory} onChange={handleBrowserCatrgory} checked={browserCategory} style={{ display: "none" }} />
                                                             <label class="cbx" for="cbx-12"> <span> <svg width="12px" height="9px" viewbox="0 0 12 9"> <polyline points="1 5 4 8 11 1"></polyline> </svg> </span> <span>Browse Category</span> </label>
                                                         </div>
                                                     </div>
                                                     <div class="">
-                                                        <div class="checkbox-wrapper-15"> <input class="inp-cbx" id="cbx-13" type="checkbox" value={home} onChnage={handleHome} checked={home} style={{ display: "none" }} />
+                                                        <div class="checkbox-wrapper-15"> <input class="inp-cbx" id="cbx-13" type="checkbox" value={home} onChange={handleHome} checked={home} style={{ display: "none" }} />
                                                             <label class="cbx" for="cbx-13"> <span> <svg width="12px" height="9px" viewbox="0 0 12 9"> <polyline points="1 5 4 8 11 1"></polyline> </svg> </span> <span>Home </span> </label>
                                                         </div>
                                                     </div>
@@ -438,7 +503,7 @@ const Settings = () => {
                                                     <div className='' style={{
                                                     }}>
                                                         <div class="checkbox-wrapper-15"> <input class="inp-cbx" id="cbx-212" type="checkbox" value={carousel} onChange={handleCraousel} checked={carousel} style={{ display: "none" }} />
-                                                            <label class="cbx" for="cbx-213"> <span> <svg width="12px" height="9px" viewbox="0 0 12 9"> <polyline points="1 5 4 8 11 1"></polyline> </svg> </span> <span>Caraousel</span> </label>
+                                                            <label class="cbx" for="cbx-212"> <span> <svg width="12px" height="9px" viewbox="0 0 12 9"> <polyline points="1 5 4 8 11 1"></polyline> </svg> </span> <span>Caraousel</span> </label>
                                                         </div>
                                                     </div>
                                                     <div className="">
@@ -653,7 +718,7 @@ const Settings = () => {
                                                     <div className='' style={{
                                                     }}>
                                                         <div class="checkbox-wrapper-15"> <input class="inp-cbx" id="cbx-208" type="checkbox" value={client} onChange={handleClient} checked={client} style={{ display: "none" }} />
-                                                            <label class="cbx" for="cbx-207"> <span> <svg width="12px" height="9px" viewbox="0 0 12 9"> <polyline points="1 5 4 8 11 1"></polyline> </svg> </span> <span>Client</span> </label>
+                                                            <label class="cbx" for="cbx-208"> <span> <svg width="12px" height="9px" viewbox="0 0 12 9"> <polyline points="1 5 4 8 11 1"></polyline> </svg> </span> <span>Client</span> </label>
                                                         </div>
                                                     </div>
 
