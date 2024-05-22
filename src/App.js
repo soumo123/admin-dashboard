@@ -11,6 +11,10 @@ import { useParams } from 'react-router-dom'
 import Settings from './components/Settings';
 import { useLocation } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
+import EditProduct from './components/EditProduct';
+import ViewProduct from './components/ViewProduct';
+
+
 
 function App() {
   const location = useLocation();
@@ -36,17 +40,25 @@ function App() {
 
   return (
     <>
-      <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
-        <Sidenav />
-       
-        <main>
+
+   
+      <div id="app" style={({ height: "100vh" })}>
+          <div className="admin-box">
+              <div className="admin-sidebar">
+                   <Sidenav />
+              </div>
+
+              <div className="admin-content">
+              <main>
           
-          <div style={{  marginLeft: "5rem" }}>
+          <div style={{  }}>
            
             <Routes>
             <Route exact={true} path={`/`} element={<Dashboard />} />
               <Route exact={true} path={`/create`} element={<CreateProduct />} />
               <Route exact={true} path="/allproducts" element={<AllProduct />} />
+              <Route exact={true} path="/updateproduct/:id" element={<EditProduct/>} />
+              <Route exact={true} path="/vewProduct/:id" element={<ViewProduct/>} />
               <Route exact={true} path="/allusers" element={<AllUsers />} />
               <Route exact={true} path="/tags" element={<Tags />} />
               <Route exact={true} path="/settings" element={<Settings />} />
@@ -54,6 +66,13 @@ function App() {
             </Routes>
           </div>
         </main>
+              </div>
+          </div>
+
+
+       
+       
+       
       </div>
     </>
   );

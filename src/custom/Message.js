@@ -11,7 +11,8 @@ const Message = ({ type, message }) => {
                 top: '1rem',
                 right: '1rem',
                 zIndex: 9999, // Ensure the toast is on top of other content
-                backgroundColor:"#12e012"
+                backgroundColor:type==="success"? "#12e012" :  "rgb(224 18 18)",
+                borderRadius: "5px"
             }}
         >
             <div
@@ -24,7 +25,7 @@ const Message = ({ type, message }) => {
             >
                 <div className="d-flex">
                     <div className="toast-body">
-                        <p>{message}</p>
+                        <p style={{fontSize:"large",fontWeight:"600"}}>{message}</p>
                     </div>
                     <button
                         type="button"

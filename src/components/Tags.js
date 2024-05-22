@@ -26,7 +26,7 @@ const Tags = () => {
   const [edit, setEdit] = useState(false)
   const [editName, seteditName] = useState("")
   const [editId, setEditId] = useState("")
-  const[editImage,setEditImage] = useState("")
+  const [editImage, setEditImage] = useState("")
   const adminId = localStorage.getItem("adminId");
   const shop_id = localStorage.getItem("id");
   const type = localStorage.getItem("type");
@@ -161,13 +161,41 @@ const Tags = () => {
   }
 
 
-  const handleEditOpen = (name, id,image) => {
+  const handleEditOpen = (name, id, image) => {
     seteditName(name)
     setEditId(id)
     setEditImage(image)
     setEdit(true)
   }
 
+  const handleCategoryChange = async(check,id) => {
+    let active = undefined
+    console.log(check, "check")
+    if (Number(check)===1) {
+      active = 0
+    } else {
+      active = 1
+    }
+
+    try {
+      const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/category_update?userId=${adminId}&type=${type}&tag_id=${id}&status=${active}`)
+      if (response.status === 200) {
+        setMessageType("success")
+        setMessage("Status Update")
+        dispatch(noteRefs(new Date().getSeconds()))
+        setTimeout(() => {
+          setMessage(false)
+        }, 2000);
+      }
+    } catch (error) {
+      setMessageType("error")
+      setMessage("Status Not Update")
+      setTimeout(() => {
+        setMessage(false)
+      }, 2000);
+    }
+
+  }
 
   useEffect(() => {
     getAllTags()
@@ -214,6 +242,9 @@ const Tags = () => {
                     <th className="px-5 py-3 border-b-2 border-zinc-200 bg-purple-800 text-left text-xs font-semibold text-white uppercase tracking-wider">
                       Action
                     </th>
+                    <th className="px-5 py-3 border-b-2 border-zinc-200 bg-purple-800 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                      Top Category
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -229,9 +260,16 @@ const Tags = () => {
                         <td className="px-5 py-5 border-b border-zinc-200 bg-white text-sm">{index + 1}</td>
                         <td className="px-5 py-5 border-b border-zinc-200 bg-white text-sm">{ele.label}</td>
                         <td className="px-5 py-5 border-b border-zinc-200 bg-white text-sm">
-                          <span classNameName="text-zinc-900 leading-none hover:text-purple-600" onClick={() => handleEditOpen(ele.label, ele.value , ele.thumbnailImage)}><FaEdit /></span>
+                          <span classNameName="text-zinc-900 leading-none hover:text-purple-600" onClick={() => handleEditOpen(ele.label, ele.value, ele.thumbnailImage)}><FaEdit /></span>
                           <span classNameName="text-zinc-900 leading-none hover:text-purple-600 pl-6" onClick={() => handleOpenTagModal(ele.value)}><FaTrashAlt /></span>
                         </td>
+                        <td className="px-5 py-5 border-b border-zinc-200 bg-white text-sm">
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" value={ele.topCategory} checked={ele.topCategory} onChange={(e) => handleCategoryChange(e.target.value,ele.value)} />
+                            <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                          </div>
+                        </td>
+
                       </tr>
                     ))
                   )}
@@ -295,7 +333,7 @@ const Tags = () => {
         </DialogActions>
       </Dialog>
 
-      <EditTag edit={edit} setEdit={setEdit} editName={editName} seteditName={seteditName} setEditId={setEditId} editId={editId} setEditImage={setEditImage} editImage={editImage}/>
+      <EditTag edit={edit} setEdit={setEdit} editName={editName} seteditName={seteditName} setEditId={setEditId} editId={editId} setEditImage={setEditImage} editImage={editImage} />
     </>
 
   )

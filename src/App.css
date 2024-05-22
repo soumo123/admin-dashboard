@@ -1,3 +1,9 @@
+
+body{
+  font-family: "Inter", sans-serif !important;
+}
+
+
 #header {
   position: absolute;
   width: 220px;
@@ -65,8 +71,7 @@
 
 
   .all-product {
-    width: calc(100% - 220px); /* Adjust based on the width of your sidebar */
-    margin-left: 220px; /* Same as sidebar width */
+
     transition: width 0.3s ease;
   }
   
@@ -129,6 +134,75 @@
 
 
 
+.admin-box{
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
 
+.admin-sidebar{
 
-  
+}  
+
+.admin-content{
+  flex: 1;
+  margin-left: 2rem;
+    margin-right: 2rem;
+    padding: 2rem 0;
+}
+
+.data-tables th{
+  font-size: 14px;
+  background-color: #68033f;
+  color: #fff;
+  font-weight: 300;
+}
+
+.data-tables td{
+  font-size: 14px;
+  padding: 8px;
+  word-wrap: break-word;
+}
+
+.data-icons{
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+}
+.data-icons span svg{
+  font-size: 21px; 
+}
+.data-icons span:nth-child(1) svg{ 
+  color: #d7783b;
+}
+.data-icons span:nth-child(2) svg{
+  color: #91948f;
+}
+.data-icons span:nth-child(3) svg{
+  color: #db0b0b;
+}
+
+.data-tables .form-check-input:checked {
+  background-color: #0eaa12;
+  border-color: #0eaa12;
+}
+
+.data-tables tbody {
+  display: block;
+    height: 350px;
+    overflow: auto;
+}
+thead, tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+.ps-menu-root ul li a{
+  font-size: 14px;
+}
+
+.ps-menu-root ul li a svg{
+  font-size: 22px;
+    color: #68033f;
+}
+

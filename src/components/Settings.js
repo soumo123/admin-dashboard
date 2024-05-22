@@ -17,6 +17,7 @@ import MiddleCard from '../images/middle_card.png'
 import Client from '../images/client.png'
 import NewProduct from '../images/new_products.png'
 import Browser from '../images/browser.png'
+import Aboutus from '../images/aboutus.png'
 import Caraousel from '../images/caraousel.png'
 import axios from 'axios'
 import Message from '../custom/Message';
@@ -58,9 +59,10 @@ const Settings = () => {
     const dispatch = useDispatch()
     const [browserCategory, setBrowserCategory] = useState(false)
     const [logoheading, setLogoHeading] = useState("")
-    const[email,setEmail] = useState("")
-    const[phone,setPhone] = useState("")
-    const[location,setlocation]=useState("")
+    const[aboutusLocation,setAboutuseLocation]=useState("")
+    const [email, setEmail] = useState("")
+    const [phone, setPhone] = useState("")
+    const [location, setlocation] = useState("")
     const [home, setHome] = useState(false)
     const [blogs, setBlogs] = useState(false)
     const [products, setProducts] = useState(false)
@@ -176,6 +178,7 @@ const Settings = () => {
                 setNewProducts(response.data.data.new_products)
                 setNewProductCard(response.data.data.new_product_card)
                 setBrowserPost(response.data.data.browse_recent_post)
+                setAboutuseLocation(response.data.data.aboutuslocation)
             }
 
         } catch (error) {
@@ -190,10 +193,11 @@ const Settings = () => {
             let json = {
                 adminId: adminId,
                 type: Number(type),
-                logoheading:logoheading,
-                email:email,
-                phone:phone,
-                location:location,
+                logoheading: logoheading,
+                aboutuslocation:aboutusLocation,
+                email: email,
+                phone: phone,
+                location: location,
                 browse_category: browserCategory,
                 home: home,
                 products: products,
@@ -258,15 +262,19 @@ const Settings = () => {
         setLogoHeading(e.target.value)
     }
 
-    const handleEmail = (e)=>{
+    const handleAboutusLocationChange = (e)=>{
+        setAboutuseLocation(e.target.value)
+    }
+
+    const handleEmail = (e) => {
         setEmail(e.target.value)
     }
 
-    const handlePhone = (e)=>{
+    const handlePhone = (e) => {
         setPhone(e.target.value)
     }
 
-    const handleLocation = (e)=>{
+    const handleLocation = (e) => {
         setlocation(e.target.value)
     }
 
@@ -303,7 +311,7 @@ const Settings = () => {
     }
 
     const handleCraousel = (e) => {
-        console.log("caraaa",e)
+        console.log("caraaa", e)
         setCarousel(e.target.checked)
     }
 
@@ -359,7 +367,7 @@ const Settings = () => {
 
 
     const handleBrowserPost = (e) => {
-        console.log("blogg",e)
+        console.log("blogg", e)
         setBrowserPost(e.target.checked)
     }
 
@@ -404,7 +412,7 @@ const Settings = () => {
                                                     }}>
                                                         <div class="">
                                                             <label><span> </span> <span>Logo Heading</span> </label>
-                                                            <input  type="text" value={logoheading} onChange={handleLogoHeading} />
+                                                            <input type="text" value={logoheading} onChange={handleLogoHeading} />
                                                         </div>
                                                     </div>
 
@@ -412,7 +420,7 @@ const Settings = () => {
                                                     }}>
                                                         <div class="">
                                                             <label><span> </span> <span>Email Heading</span> </label>
-                                                            <input  type="text" value={email} onChange={handleEmail} />
+                                                            <input type="text" value={email} onChange={handleEmail} />
                                                         </div>
                                                     </div>
 
@@ -421,7 +429,7 @@ const Settings = () => {
                                                     }}>
                                                         <div class="">
                                                             <label><span> </span> <span>Mobile Number</span> </label>
-                                                            <input  type="text" value={phone} onChange={handlePhone} />
+                                                            <input type="text" value={phone} onChange={handlePhone} />
                                                         </div>
                                                     </div>
 
@@ -430,7 +438,7 @@ const Settings = () => {
                                                     }}>
                                                         <div class="">
                                                             <label><span> </span> <span>Location</span> </label>
-                                                            <input  type="text" value={location} onChange={handleLocation} />
+                                                            <input type="text" value={location} onChange={handleLocation} />
                                                         </div>
                                                     </div>
 
@@ -785,6 +793,33 @@ const Settings = () => {
                                                         <label>Blog  Card Image 3</label>
                                                         <input type="file" name="middle_banner8" onChange={handleImageChange} />
                                                     </div>
+                                                </div>
+                                                <hr style={{
+                                                    marginTop: "100px"
+                                                }}></hr>
+                                            </div>
+                                        </li>
+
+
+
+
+
+
+
+
+
+
+                                        <li>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <img style={{ height: "300px" }} src={Aboutus} />
+                                                </div>
+                                                <div class="col">
+                                                    <div class="">
+                                                        <label><span></span> <span>About us location</span></label>
+                                                        <input type="text" value={aboutusLocation} onChange={handleAboutusLocationChange} />
+                                                    </div>
+
                                                 </div>
                                                 <hr style={{
                                                     marginTop: "100px"
