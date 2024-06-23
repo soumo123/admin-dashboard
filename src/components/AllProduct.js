@@ -33,7 +33,6 @@ const AllProduct = ({ sidebarOpen }) => {
   const [loader, setloader] = useState(false);
 
 
-
   const handleClose = () => {
     setOpen(false);
     setProductId("")

@@ -13,6 +13,7 @@ import { useLocation } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import EditProduct from './components/EditProduct';
 import ViewProduct from './components/ViewProduct';
+import Orders from './components/Orders';
 
 
 
@@ -62,6 +63,7 @@ function App() {
               <Route exact={true} path="/allusers" element={<AllUsers />} />
               <Route exact={true} path="/tags" element={<Tags />} />
               <Route exact={true} path="/settings" element={<Settings />} />
+              <Route exact={true} path="/manage-order" element={<Orders/>}/>
 
             </Routes>
           </div>

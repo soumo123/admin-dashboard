@@ -9,6 +9,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import GroupIcon from '@mui/icons-material/Group';
 import SellIcon from '@mui/icons-material/Sell';
 import SettingsIcon from '@mui/icons-material/Settings';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 //sidebar css from react-pro-sidebar module
 import { Link, useParams } from 'react-router-dom'
 
@@ -38,6 +39,7 @@ const Sidenav = () => {
                         <Link to="/allproducts" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<CategoryIcon />}>Products</MenuItem></Link>
                         <Link to="/allusers" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<GroupIcon />}>Users</MenuItem></Link>
                         <Link to="/tags" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SellIcon />}>Tags</MenuItem></Link>
+                        <Link to="/manage-order" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<StorefrontIcon />}>Manage Order</MenuItem></Link>
                         <Link to="/settings" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SettingsIcon />}>Settings</MenuItem></Link>
                     </Menu>
                 </Sidebar>
