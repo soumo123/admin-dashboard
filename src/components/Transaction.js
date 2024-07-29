@@ -16,7 +16,7 @@ const Transaction = () => {
   const [agentData, setAgentData] = useState([]);
   const [show, setShow] = useState(false)
   const[recShow,setRecShow] = useState(false)
-  const shop_id = localStorage.getItem("id");
+  const shop_id = localStorage.getItem("shop_id");
   const [agId, setAgId] = useState("")
   const [totalBalance, setTotalBalance] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0)

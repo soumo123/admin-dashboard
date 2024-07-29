@@ -11,7 +11,7 @@ import Message from '../custom/Message';
 
 const UpdateStock = ({ sidebarOpen }) => {
   const [agentData, setAgentData] = useState([]);
-  const shop_id = localStorage.getItem("id");
+  const shop_id = localStorage.getItem("shop_id");
   const type = localStorage.getItem("type");
   const adminId = localStorage.getItem("adminId");
 

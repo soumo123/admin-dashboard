@@ -17,7 +17,7 @@ const Vendor = () => {
     const [key1, setkey1] = useState("")
 
     const adminId = localStorage.getItem("adminId");
-    const shop_id = localStorage.getItem("id");
+    const shop_id = localStorage.getItem("shop_id");
     const type = localStorage.getItem("type");
     const [lastTypingTime, setLastTypingTime] = useState(null);
     const [lastTypingTime1, setLastTypingTime1] = useState(null);

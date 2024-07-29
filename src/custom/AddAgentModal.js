@@ -15,7 +15,7 @@ import Message from './Message';
 const AddAgentModal = ({ modalShow2, setModalShow2,setRefresh2 ,vendorData , setMode}) => {
 
   const dispatch = useDispatch()
-  const shop_id = localStorage.getItem("id");
+  const shop_id = localStorage.getItem("shop_id");
   const [imagePreview, setImagePreview] = useState("./avatar.jpg")
   const[vendorId,setVendorId] = useState("")
   const [message, setMessage] = useState(false)

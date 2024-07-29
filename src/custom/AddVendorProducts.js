@@ -13,7 +13,7 @@ const AddVendorProducts = () => {
   const [messageType, setMessageType] = useState("")
   const type = localStorage.getItem("type")
   const adminId = localStorage.getItem("adminId");
-  const shop_id = localStorage.getItem("id");
+  const shop_id = localStorage.getItem("shop_id");
   const { agentId, vendorId } = useParams();
   const handleAddWeight = (formIndex) => {
     const newForms = [...forms];

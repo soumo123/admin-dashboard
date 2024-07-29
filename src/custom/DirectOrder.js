@@ -16,7 +16,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
     const [quantity, setQuantity] = useState(1);
     const [orderItems, setOrderItems] = useState([]);
     const adminId = localStorage.getItem("adminId");
-    const shop_id = localStorage.getItem("id");
+    const shop_id = localStorage.getItem("shop_id");
     const type = localStorage.getItem("type");
     const [extra, setExtra] = useState("")
     const [extraPrice, setExtraPrice] = useState("")

@@ -13,7 +13,7 @@ import Message from '../custom/Message';
 const AddVendorModal = ({ modalShow1, setModalShow1,setRefresh1,setMode }) => {
 
   const dispatch = useDispatch()
-  const shop_id = localStorage.getItem("id");
+  const shop_id = localStorage.getItem("shop_id");
   const [imagePreview, setImagePreview] = useState("./avatar.jpg")
   const [message, setMessage] = useState(false)
   const [messageType, setMessageType] = useState("")
