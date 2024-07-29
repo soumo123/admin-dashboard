@@ -1,0 +1,46 @@
+.container8 {
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  .product-card22 {
+    background-color: #b23b3b;
+    padding: 20px;
+    border-radius: 10px;
+    color: #fff;
+  }
+  
+  .product-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .product-image {
+    width: 60px;
+    height: 60px;
+    margin-right: 20px;
+  }
+  
+  .product-title {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  
+  .product-details table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .product-details th, .product-details td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #fff;
+  }
+  
+  .total-cost {
+    margin-top: 20px;
+    font-size: 1.2em;
+    text-align: right;
+  }
+  

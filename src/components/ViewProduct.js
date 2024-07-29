@@ -187,16 +187,16 @@ const ViewProduct = () => {
                                     <h4>{productData.description}</h4>
                                 </div>
                             </div>
-                            <div class="col-sm-3 col-md-4">
+                            {/* <div class="col-sm-3 col-md-4">
                                 <div class="form-group">
                                     <label>Stock</label>
                                     <h4>{productData.stock}</h4>
 
                                 </div>
-                            </div>
+                            </div> */}
                             <div class="col-sm-3 col-md-4">
                                 <div class="form-group">
-                                    <label>Delicery Days</label>
+                                    <label>Delivery Days</label>
                                     <h4>{productData.deliverydays} Days</h4>
 
                                 </div>
@@ -237,11 +237,34 @@ const ViewProduct = () => {
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label>Weight</label>
-                                           {
-                                            productData && productData.weight.map((ele)=>(
-                                                <h4>{ele.value} {productData.unit} </h4>
-                                            ))
-                                           }
+                                            {productData.weight.map((ele, index) => (
+                                        <div className="row mb-3" key={index}>
+                                            <div className="col-sm-4">
+                                                <div className="form-group">
+                                                    <label>Weight</label>
+                                                    <input type="text" className="form-control" value={ele.weight} readOnly />
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-4">
+                                                <div className="form-group">
+                                                    <label>Stock</label>
+                                                    <input type="text" className="form-control" value={ele.stock} readOnly />
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-4">
+                                                <div className="form-group">
+                                                    <label>Price</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        value={ele.price}
+                                                        readOnly
+                                                        // onChange={e => handlePriceChange(index, e.target.value)}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                         </div>
                                     </div>
                                 </div>
@@ -276,14 +299,14 @@ const ViewProduct = () => {
                                 </div>
                             </div>
 
-                            <div class="col-sm-3 col-md-4">
+                            {/* <div class="col-sm-3 col-md-4">
                                 <div class="form-group">
                                     <label>Purchase Price</label>
                                     <h4>{productData.purchase_price}</h4>
 
 
                                 </div>
-                            </div>
+                            </div> */}
                             <div class="col-sm-3 col-md-4">
                                 <div class="form-group">
                                     <label>Selling Price Method</label>
@@ -292,7 +315,7 @@ const ViewProduct = () => {
                                 </div>
                             </div>
 
-                            {
+                            {/* {
                                 productData?.selling_price_method === "offline" ? (
                                     <>
                                         <div class="col-sm-3 col-md-4">
@@ -319,7 +342,7 @@ const ViewProduct = () => {
 
                                     </>
                                 ) : ("")
-                            }
+                            } */}
 
 
 

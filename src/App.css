@@ -332,6 +332,60 @@ button.btn.btn-delivery:hover  {
 
 
 
+.image-container {
+	position: relative;
+	width: 100px;
+	/* Adjust the size of the container */
+	height: 100px;
+	/* Adjust the size of the container */
+	border-radius: 50%;
+	/* Makes the container round */
+	overflow: hidden;
+	left: 47px;
+	/* Hides the overflow of the image */
+}
+
+.default-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.choose-image {
+	position: absolute;
+    top: 77%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 1px 10px;
+    border-radius: 27px;
+    display: none;
+    cursor: pointer;
+}
+
+.image-container:hover .choose-image {
+	display: block;
+}
+/* 
+input[type="file"] {
+	display: none;
+} */
+
+
+.submit{
+    background: #68033f !important;
+	color:white !important
+}
+
+.submi1{
+	background: #d7783b !important;
+	color:white !important
+}
+
+
+
+
+
 
 
 

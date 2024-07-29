@@ -29,10 +29,11 @@ const ViewModal = ({ open, setOpen, details }) => {
                 show={open}
                 onHide={() => setOpen(false)}
                 dialogClassName="modal-90w"
-                aria-labelledby="example-custom-modal-styling-title"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="example-custom-modal-styling-title">
+                <Modal.Title id="contained-modal-title-vcenter">
                         User Information
                     </Modal.Title>
                 </Modal.Header>

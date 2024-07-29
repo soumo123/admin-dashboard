@@ -191,20 +191,20 @@ const AllProduct = ({ sidebarOpen }) => {
                 <input type="text" placeholder="Search Products By Name and Description" className='form-control' value={searchQuery} name="search" onChange={(e) => handleSearch(e.target.value)} />
               </div>
             </div>
-            <div className="col-sm-4">
+            {/* <div className="col-sm-4">
               <div className="form-group">
                 <label>Price starts from </label>
                 <input type="number" placeholder="Enter Starting Price" className='form-control' value={startPrice} onChange={(e) => handleStartPrice(e.target.value)} />
               </div>
-            </div>
+            </div> */}
 
 
-            <div className="col-sm-4">
+            {/* <div className="col-sm-4">
               <div className="form-group">
                 <label>To</label>
                 <input type="number" placeholder="Enter Last Price" className='form-control' value={lastPrice} onChange={(e) => handleLastPrice(e.target.value)} />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -221,10 +221,10 @@ const AllProduct = ({ sidebarOpen }) => {
                 <th>ID</th>
                 <th>Product Name</th>
                 <th>Description</th>
-                <th>Price</th>
-                <th>Discount</th>
-                <th>Actual Price</th>
-                <th>Stock</th>
+                <th>Delivery Partner</th>
+                <th>Weight & Price</th>
+                {/* <th>Actual Price</th> */}
+                {/* <th>Stock</th> */}
                 <th>Color</th>
                 {/* <th>Size</th> */}
                 <th>active</th>
@@ -234,63 +234,74 @@ const AllProduct = ({ sidebarOpen }) => {
             {
               !loader ? (
                 <div className="container">
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="text-center">
-                                loading....
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ):(
-              <>
-              {
-                products && products.length > 0 ? (
-                  <tbody>
-                  {products && products.map((ele) => (
-                    <tr key={ele.productId}>
-                      <td>{ele.productId}</td>
-                      <td>{ele.name}</td>
-                      <td>{ele.description}</td>
-                      <td>₹ {ele.price}</td>
-                      <td>{ele.discount} %</td>
-                      <td>₹ {ele.actualpricebydiscount}</td>
-                      <td>{ele.stock} pieces</td>
-                      <td>{ele.color}</td>
-                      {/* <td>{ele.size}</td> */}
-                      <td>
-                        <div class="form-check form-switch">
-                          <input data-toggle="tooltip" data-placement="top" title="Availability" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" value={ele.active} checked={ele.active} onChange={(e) => handleCheck(e.target.value, ele.productId)} />
-                        </div>
-                      </td>
-                      <td>
-    
-                        <div className="data-icons">
-                          <span data-toggle="tooltip" data-placement="top" title="View" style={{ cursor: "pointer" }} onClick={() => hanldleView(ele.productId)}><VisibilityIcon /></span>
-                          <span data-toggle="tooltip" data-placement="top" title="Edit" style={{ cursor: "pointer" }} onClick={() => hanleNavigate(ele.productId)}><CreateIcon /></span>
-                          <span data-toggle="tooltip" data-placement="top" title="Delete" style={{ cursor: "pointer" }} onClick={() => hanldleOpen(ele.productId)}><DeleteIcon /></span>
-                        </div>
-                      </td>
-    
-                    </tr>
-                  ))}
-                </tbody>
-                ):(
-                  <div className="container">
                   <div className="row">
-                      <div className="col-12">
-                          <div className="text-center">
-                              No Products Product Found
-                          </div>
+                    <div className="col-12">
+                      <div className="text-center">
+                        loading....
                       </div>
+                    </div>
                   </div>
-              </div>
-                )
-              }
-              </>
-            )
+                </div>
+              ) : (
+                <>
+                  {
+                    products && products.length > 0 ? (
+                      <tbody>
+                        {products && products.map((ele) => (
+                          <tr key={ele.productId}>
+                            <td>{ele.productId}</td>
+                            <td>{ele.name}</td>
+                            <td>{ele.description}</td>
+                            <td>{ele.delivery_partner}</td>
+                            <td>
+                              {
+
+                                ele.weight && ele.weight.map((item) => (
+                                  <>
+                                  <p>Weight : {item.weight} {ele.unit}, Quantity : {item.stock} , Price : ₹ {item.price}</p>
+                                  
+                                  </>
+                                ))
+
+                              }
+                            </td>
+                            {/* <td>₹ {ele.actualpricebydiscount}</td> */}
+                            {/* <td>{ele.stock} pieces</td> */}
+                            <td>{ele.color}</td>
+                            {/* <td>{ele.size}</td> */}
+                            <td>
+                              <div class="form-check form-switch">
+                                <input data-toggle="tooltip" data-placement="top" title="Availability" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" value={ele.active} checked={ele.active} onChange={(e) => handleCheck(e.target.value, ele.productId)} />
+                              </div>
+                            </td>
+                            <td>
+
+                              <div className="data-icons">
+                                <span data-toggle="tooltip" data-placement="top" title="View" style={{ cursor: "pointer" }} onClick={() => hanldleView(ele.productId)}><VisibilityIcon /></span>
+                                <span data-toggle="tooltip" data-placement="top" title="Edit" style={{ cursor: "pointer" }} onClick={() => hanleNavigate(ele.productId)}><CreateIcon /></span>
+                                <span data-toggle="tooltip" data-placement="top" title="Delete" style={{ cursor: "pointer" }} onClick={() => hanldleOpen(ele.productId)}><DeleteIcon /></span>
+                              </div>
+                            </td>
+
+                          </tr>
+                        ))}
+                      </tbody>
+                    ) : (
+                      <div className="container">
+                        <div className="row">
+                          <div className="col-12">
+                            <div className="text-center">
+                              No Products Product Found
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  }
+                </>
+              )
             }
-        
+
           </table>
         </div>
       </div>

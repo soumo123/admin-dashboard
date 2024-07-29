@@ -1,8 +1,10 @@
-import React, { useRef } from 'react'
+import React, { useRef ,useState,useEffect} from 'react'
 import '../css/reciept.css'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useReactToPrint } from 'react-to-print';
+import '../css/reciept.css'
+import axios from 'axios'
 
 const Slip = ({ invo, setInvo, viewData }) => {
     const slipRef = useRef();
@@ -13,6 +15,37 @@ const Slip = ({ invo, setInvo, viewData }) => {
         content: () => slipRef.current,
     });
 
+    const [sgst, setSgst] = useState(0)
+    const [cgst, setCgst] = useState(0)
+    const [value1, setValue1] = useState(0)
+    const [value2, setValue2] = useState(0)
+
+
+    const getTax = async () => {
+
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/get_tax`);
+          if (response.status === 200) {
+            setSgst(response.data.data.sgst)
+            setCgst(response.data.data.cgst)
+            setValue1(response.data.data.sgstvalue)
+            setValue2(response.data.data.cgstvalue)
+          }
+    
+        } catch (error) {
+          console.log(error)
+          setSgst(0)
+          setCgst(0)
+          setValue1(0)
+          setValue2(0)
+        }
+    
+    
+      }
+    
+      useEffect(() => {
+        getTax()
+      }, [])
     console.log("viewDataviewData", viewData)
     return (
         <>
@@ -31,79 +64,87 @@ const Slip = ({ invo, setInvo, viewData }) => {
                         </div>
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <div className="App" ref={slipRef} >
+                <Modal.Body style={{ maxHeight: '80vh', overflowY: 'auto' }}>
 
-                        <div className='row justify-content-center'>
-                            <div class="receipt" >
-                                <header class="receipt-header">
-                                    <img src="	https://shopcake.s3.ap-south-1.amazonaws.com/logo.png" alt="QR Code" class="qr-code" />
-                                    <p>------------- RECEIPT ------------</p>
-                                    <div class="receipt-info">
-                                        <div>
-                                            <p>Shop Name : Creamy affairs</p>
-                                            {/* <p>Cashier: #3</p> */}
-                                        </div>
-                                        <div>
-                                            <p>Shop Address  :  Baidyabati</p>
-                                            <p>Date : { viewData && viewData.length === 0 ? ("") : ((new Date(viewData?.updated_at).toISOString().slice(0, 10).split('-').reverse().join('/')))}</p>
-                                             <p>Time : {viewData && viewData.length === 0 ? ("") : (new Date(viewData?.updated_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }))} </p>      
-                                            {/* <p>Date: {viewData && viewData ? (new Date(viewData?.updated_at).toISOString().slice(0, 10).split('-').reverse().join('/')):("")}</p> */}
-                                        </div>
-                                    </div>
-                                    <p>----------------------------------</p>
-                                </header>
-                                <div class="receipt-body">
-                                    <table class="receipt-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Qty</th>
-                                                <th>Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                    <div ref={slipRef} className="receipt">
+                        <div className="header1">
+                            <h1>Creamy Affairs</h1>
+                            <p>75/3,G.T Road, Baidyabati, Hooghly<br />Baidyabati, West Bengal - 712222<br />Mobile No: 7003357288<br />GSTIN: 19BOCPP3213B1ZE</p>
+                        </div>
+                        <div className="info">
+                            <p>Invoice(Reprint)</p>
+                            <p>Takeaway</p>
+                            <p><strong>Token No: {viewData?.orderId}</strong></p>
+                            {/* <p>Invoice(Reprint) 598</p> */}
+                            <p>{viewData && viewData.length === 0 ? ("") : (new Date(viewData?.updated_at).toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }).replace(',', ''))}</p>
+                        </div>
+                        <div className="items">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Qty</th>
+                                        <th>Rate</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        viewData && viewData.length === 0 ? ("") : (
+                                            <>
+                                                {
+                                                    viewData && viewData?.products.map((ele) => (
+                                                        <tr>
+                                                            <td>{ele.name}</td>
+                                                            <td>{ele.itemCount}</td>
+                                                            <td>₹ {ele.totalPrice}</td>
+                                                            <td>₹ {ele.totalPrice}</td>
 
-                                            {
-                                                viewData && viewData.length === 0 ? ("") : (
-                                                    <>
-                                                        {
-                                                            viewData && viewData?.products.map((ele) => (
-                                                                <tr>
-                                                                    <td>{ele.name}</td>
-                                                                    <td>{ele.itemCount}</td>
-                                                                    <td>₹ {ele.totalPrice}</td>
-                                                                </tr>
-                                                            ))
-                                                        }
+                                                        </tr>
+                                                    ))
+                                                }
+                                            </>
+                                        )
+                                    }
+                                    {/* <tr>
+                                        <td>Jumbo Vanilla Cup (110 Ml)</td>
+                                        <td>1</td>
+                                        <td>25</td>
+                                        <td>25.00</td>
+                                    </tr> */}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="total">
+                            <p>Extra Items: <span>{viewData?.extrathings}</span></p>
 
-                                                    </>
-                                                )
-                                            }
-                                        </tbody>
-                                    </table>
-                                    <p>----------------------------------</p>
-                                </div>
-                                <div class="receipt-total">
-                                    <p>Tax: ₹ {viewData?.tax}</p>
-                                    <p>Shipping Cost: ₹ {viewData?.shippingPrice}</p>
-                                    <p>Total Price</p>
-                                    <h2>₹ {viewData?.orderedPrice}</h2>
-                                    <p>Initial Deposit : ₹ {viewData?.initialDeposit}</p>
-                                    <p>Remaining Price</p>
-                                    <h2>₹ {viewData?.orderedPrice - viewData?.initialDeposit}</h2>
-                                    <p>Paid : {viewData?.paid===true ? (<span style={{color:"green"}}>Sucessfull</span>) : (<span style={{color:"red"}}>Not Paid</span>)}</p>
-                
-                                </div>
-                                <footer class="receipt-footer">
-                                    <p>----------------------------------</p>
-                                    <p>THANK YOU!</p>
-                                    <img src="https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs2/144091941/original/931441fa8639bd21f58c5bd33af4c9f5245d9238/qr-code-in-100-rs-only.png" alt="QR Code" class="qr-code" />
-                                </footer>
-                            </div>
+                            <p>Additional Price: <span>₹ {viewData?.extraprice?.toFixed(2)}</span></p>
+                            <p>Discount: <span>{viewData?.discount} %</span></p>
+
+                            <p>Sub Total: <span>₹ {viewData?.orderedPrice?.toFixed(2)}</span></p>
+                        </div>
+                        <div className="bill-total">
+                            <p>Bill Total: <span>₹ {viewData?.orderedPrice?.toFixed(2)}</span></p>
+                        </div>
+                        <div className="payment">
+                            <p>Payment Summary</p>
+                            <p>Cash: <span>₹ {viewData?.initialDeposit}</span></p>
+                            <p>Today Pay: <span>₹ {viewData?.orderedPrice?.toFixed(2) - viewData?.initialDeposit}</span></p>
+                            <p>Balance: <span>₹ {(viewData?.orderedPrice?.toFixed(2) - viewData?.initialDeposit) - (viewData?.orderedPrice?.toFixed(2) - viewData?.initialDeposit)}.00</span></p>
 
                         </div>
+                        <div className="tax">
+                            <p>Tax Summary</p>
+                            <p>CGST {cgst}%: <span>{viewData?.cgst?.toFixed(2)}</span></p>
+                            <p>SGST {sgst}%: <span>{viewData?.sgst?.toFixed(2)}</span></p>
+                        </div>
+                        <div className="footer">
+                            <p>Thank You!</p>
+                            <p>Powered by www.dotpe.in</p>
+                        </div>
                     </div>
+
+
                 </Modal.Body>
             </Modal>
 

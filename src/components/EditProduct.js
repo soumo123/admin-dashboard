@@ -10,7 +10,6 @@ const EditProduct = () => {
 
     const navigate = useNavigate()
     const { id } = useParams()
-    console.log("idid", id)
     const adminId = localStorage.getItem("adminId");
     const shop_id = localStorage.getItem("id");
     const type = localStorage.getItem("type");
@@ -30,12 +29,12 @@ const EditProduct = () => {
     const [disabled, setDisabled] = useState(false)
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [tagId, setTagId] = useState([])
-    const [actualPriceAfterDiscount, setActualPriceAfterDiscount] = useState("")
+    // const [actualPriceAfterDiscount, setActualPriceAfterDiscount] = useState("")
 
     const [selectedOptions1, setSelectedOptions1] = useState([]);
     const [selectedOptions2, setSelectedOptions2] = useState([]);
 
-
+    const [error, setError] = useState('');
     const handleChange1 = (selectedOptions) => {
         setSelectedOptions1(selectedOptions);
     };
@@ -48,17 +47,17 @@ const EditProduct = () => {
     const [productData, setProductData] = useState({
         name: '',
         description: '',
-        price: 0,
+        // price: 0,
         purchase_price: '',
         delivery_partner: '',
         selling_price_method: '',
-        discount: 0,
+        // discount: 0,
         other_description1: '',
         other_description2: '',
         weight: '',
         unit: '',
         type: type,
-        stock: '',
+        // stock: '',
         color: '',
         size: '',
         product_type: '',
@@ -105,14 +104,14 @@ const EditProduct = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         // Prevent input containing a minus sign for price, stock, and discount
-        if ((name === 'price' || name === 'stock' || name === 'discount') && value.includes('-')) {
-            return; // Don't update state for input containing a minus sign
-        }
+        // if ((name === 'price' || name === 'stock' || name === 'discount') && value.includes('-')) {
+        //     return; // Don't update state for input containing a minus sign
+        // }
 
         // Prevent setting negative values for price, stock, and discount
-        if ((name === 'price' || name === 'stock' || name === 'discount') && parseFloat(value) < 0) {
-            return; // Don't update state for negative values
-        }
+        // if ((name === 'price' || name === 'stock' || name === 'discount') && parseFloat(value) < 0) {
+        //     return; // Don't update state for negative values
+        // }
 
         if (name === "selling_price_method") {
             setProductData(prevState => ({
@@ -135,7 +134,7 @@ const EditProduct = () => {
 
         if (name === 'name') setNameError('');
         if (name === 'description') setDescriptionError('');
-        if (name === 'price') setPriceError('');
+        // if (name === 'price') setPriceError('');
         if (name === 'stock') setStockError('');
         if (name === "purchase_price") setPurchaseError('')
         if (name === "delivery_partner") setDeliveryPartnerErr('')
@@ -179,10 +178,10 @@ const EditProduct = () => {
             setSellingPriceMethodErr('Please enter price method');
             return;
         }
-        if (productData.selling_price_method === "offline" && !productData.price) {
-            setPriceError('Please enter a price.');
-            return;
-        }
+        // if (productData.selling_price_method === "offline" && !productData.price) {
+        //     setPriceError('Please enter a price.');
+        //     return;
+        // }
         if (productData.selling_price_method === "online" && !productData.zomato_service_price && !productData.swiggy_service && !productData.swiggy_service_price && !productData.zepto_service_price && !productData.blinkit_service_price) {
             setDeliveryServiceErr('Please choose atleast one');
             return;
@@ -191,9 +190,12 @@ const EditProduct = () => {
             setDeliveryServiceErr('Please choose atleast one');
             return;
         }
-        if (!productData.stock) {
-            setStockError('Please enter stock.');
-            return;
+        // if (!productData.stock) {
+        //     setStockError('Please enter stock.');
+        //     return;
+        // }
+        if (!validatePrices()) {
+           return
         }
         // if (productData.files.length === 0 ) {
         //     setFileError('Please enter images.');
@@ -221,7 +223,7 @@ const EditProduct = () => {
             formData.set('isOffered', check9);
             formData.set('isFeatured', check6);
             formData.set('isBranded', check8);
-            formData.append('weight11', JSON.stringify(selectedOptions1))
+            formData.append('weight11', JSON.stringify(productData.weight))
             formData.append('size1', JSON.stringify(selectedOptions2))
             const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/update/${adminId}?productId=${id}`, formData, {
                 headers: {
@@ -255,17 +257,17 @@ const EditProduct = () => {
                 setProductData({
                     name: '',
                     description: '',
-                    price: 0,
+                    // price: 0,
                     purchase_price: '',
                     delivery_partner: '',
                     selling_price_method: '',
-                    discount: 0,
+                    // discount: 0,
                     other_description1: '',
                     other_description2: '',
                     weight: '',
                     unit: '',
                     type: type,
-                    stock: '',
+                    // stock: '',
                     color: '',
                     size: '',
                     product_type: '',
@@ -457,17 +459,17 @@ const EditProduct = () => {
                 setProductData({
                     name: response.data.data[0].name,
                     description: response.data.data[0].description,
-                    price: response.data.data[0].price,
+                    // price: response.data.data[0].price,
                     purchase_price: response.data.data[0].purchase_price,
                     delivery_partner: response.data.data[0].delivery_partner,
                     selling_price_method: response.data.data[0].selling_price_method,
-                    discount: response.data.data[0].discount,
+                    // discount: response.data.data[0].discount,
                     other_description1: response.data.data[0].other_description1,
                     other_description2: response.data.data[0].other_description2,
-                    // weight: response.data.data[0].weight,
+                    weight: response.data.data[0].weight,
                     unit: response.data.data[0].unit,
                     type: response.data.data[0].type,
-                    stock: response.data.data[0].stock,
+                    // stock: response.data.data[0].stock,
                     color: response.data.data[0].color,
                     // size: response.data.data[0].size, //lets check at last//
                     product_type: response.data.data[0].product_type,
@@ -522,10 +524,39 @@ const EditProduct = () => {
         getAlltags()
     }, [])
 
-    useEffect(() => {
-        let discountData = productData.price * productData.discount / 100
-        setActualPriceAfterDiscount(productData.price - discountData)
-    }, [productData.discount])
+
+
+
+
+
+    const handlePriceChange = (index, newPrice) => {
+        const newWeights = [...productData.weight];
+        newWeights[index] = { ...newWeights[index], price: Number(newPrice) };
+        setProductData(prevState => ({
+            ...prevState,
+            weight: newWeights
+        }));
+    };
+
+    const validatePrices = () => {
+        for (let weight of productData.weight) {
+            if (!weight.price) {
+                setError(`Please specify the price for weight ${weight.weight}`);
+                return false;
+            }
+        }
+        setError('');
+        return true;
+    };
+
+
+
+
+
+    // useEffect(() => {
+    //     let discountData = productData.price * productData.discount / 100
+    //     setActualPriceAfterDiscount(productData.price - discountData)
+    // }, [productData.discount])
 
     useEffect(() => {
         // Match and select options based on initialTags
@@ -533,7 +564,7 @@ const EditProduct = () => {
         setSelectedOptions(matchedOptions);
     }, [tagId]);
 
-    console.log("tagIdtagId", tagId)
+    console.log("productDataproductDataproductData", productData)
     return (
         <>
             {
@@ -560,7 +591,7 @@ const EditProduct = () => {
                             <div class="col-sm-3 col-md-4">
                                 <div class="form-group">
                                     <label>Delivery Partner <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="Enter Delivery Partner" name="delivery_partner" value={productData.delivery_partner} onChange={handleChange} />
+                                    <input type="text" class="form-control" placeholder="Enter Delivery Partner" name="delivery_partner" value={productData.delivery_partner} onChange={handleChange} readOnly/>
                                     <span className="error-message">{deliveryPartnerErr}</span>
 
                                 </div>
@@ -572,14 +603,14 @@ const EditProduct = () => {
                                     <span className="error-message">{descriptionError}</span>
                                 </div>
                             </div>
-                            <div class="col-sm-3 col-md-4">
+                            {/* <div class="col-sm-3 col-md-4">
 
                                 <div class="form-group">
                                     <label>Stock <span>*</span></label>
                                     <input type="number" class="form-control" placeholder="Stock" name="stock" value={productData.stock} onChange={handleChange} />
                                     <span className="error-message">{stockError}</span>
                                 </div>
-                            </div>
+                            </div> */}
                             <div class="col-sm-3 col-md-4">
                                 <div class="form-group">
                                     <label>Delivery Days</label>
@@ -634,36 +665,38 @@ const EditProduct = () => {
 
                             <div class="col-sm-12">
                                 <label>Weight</label><input class="form-check-input" type="checkbox" value={check2} checked={check2} id="flexCheckDefault" onChange={handleWeight} />
-                                {
-                                    check2 ? (
-                                        <>
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <div class="form-group">
-                                                        <label>Weight</label>
-                                                        {/* <input type="number" class="form-control" placeholder="Weight" name="weight" value={productData.weight} onChange={handleChange} /> */}
-                                                        <CreatableSelect
-                                                            isMulti
-                                                            onChange={handleChange1}
-                                                            options={selectedOptions1}
-                                                            placeholder="Add Weight"
-                                                            name="multiselect"
-                                                            value={selectedOptions1}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div class="form-group">
-                                                        <label>Unit</label>
-                                                        <input type="text" class="form-control" placeholder="unit" name="unit" value={productData.unit} onChange={handleChange} />
-                                                    </div>
+                                {check2 && (
+                                <>
+                                    {productData.weight.map((ele, index) => (
+                                        <div className="row mb-3" key={index}>
+                                            <div className="col-sm-4">
+                                                <div className="form-group">
+                                                    <label>Weight</label>
+                                                    <input type="text" className="form-control" value={ele.weight} readOnly />
                                                 </div>
                                             </div>
-
-
-                                        </>
-                                    ) : ("")
-                                }
+                                            <div className="col-sm-4">
+                                                <div className="form-group">
+                                                    <label>Stock</label>
+                                                    <input type="number" className="form-control" value={ele.stock} readOnly />
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-4">
+                                                <div className="form-group">
+                                                    <label>Price</label>
+                                                    <input
+                                                        type="number"
+                                                        className="form-control"
+                                                        value={ele.price}
+                                                        onChange={e => handlePriceChange(index, Number(e.target.value))}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </>
+                            )}
+                             {error && <div className="alert alert-danger mt-3">{error}</div>}
                             </div>
                             <div class="col-sm-12">
 
@@ -737,27 +770,27 @@ const EditProduct = () => {
                             {
                                 productData?.selling_price_method === "offline" ? (
                                     <>
-                                        <div class="col-sm-3 col-md-4">
+                                        {/* <div class="col-sm-3 col-md-4">
                                             <div class="form-group">
                                                 <label>Price <span>*</span></label>
                                                 <input type="number" class="form-control" placeholder="Enter Price" name="price" value={productData.price} onChange={handleChange} />
                                                 <span className="error-message">{priceError}</span>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3 col-md-4">
+                                        </div> */}
+                                        {/* <div class="col-sm-3 col-md-4">
 
                                             <div class="form-group">
                                                 <label>Selling price after discount <span>*</span></label>
                                                 <input type="number" class="form-control" placeholder="Total Price" value={actualPriceAfterDiscount} disabled />
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3 col-md-4">
+                                        </div> */}
+                                        {/* <div class="col-sm-3 col-md-4">
 
                                             <div class="form-group">
                                                 <label>Discount <span>*</span></label>
                                                 <input type="number" class="form-control" placeholder="Enter Discount" name="discount" value={productData.discount} onChange={handleChange} />
                                             </div>
-                                        </div>
+                                        </div> */}
 
                                     </>
                                 ) : ("")
@@ -819,7 +852,6 @@ const EditProduct = () => {
                                 </div>
                             </div>
                             <div class="col-sm-3 col-md-4">
-
                                 <div class="form-group">
                                     <label>Images</label>
                                     <input type="file" name="files" onChange={handleFileChange} multiple />

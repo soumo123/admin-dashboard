@@ -16,6 +16,7 @@ import ViewOrderModal from './ViewOrderModal.js';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 
 import Slip from '../custom/Slip.js';
+import DirectOrder from '../custom/DirectOrder.js';
 
 const Orders = ({ sidebarOpen }) => {
 
@@ -27,7 +28,7 @@ const Orders = ({ sidebarOpen }) => {
     const [status, setStatus] = useState(0)
     const [loader, setloader] = useState(false);
     const adminId = localStorage.getItem("adminId");
-    const shop_id = localStorage.getItem("id");
+    const shop_id = localStorage.getItem("shop_id");
     const type = localStorage.getItem("type");
     const [show, setShow] = useState(false);
     const [text, setText] = useState("")
@@ -39,7 +40,7 @@ const Orders = ({ sidebarOpen }) => {
     const [ref, setRef] = useState(false)
     const [modalShow, setModalShow] = useState(false);
     const [invo,setInvo] = useState(false)
-
+    const[directModal,setDirectModal] = useState(false)
 
     const handleClose = () => {
         setShow(false);
@@ -162,6 +163,11 @@ const Orders = ({ sidebarOpen }) => {
         }
     }
 
+
+    const handleOpenModal = ()=>{
+        setDirectModal(true)
+    }
+
     useEffect(() => {
         getOrderDetails()
     }, [ref])
@@ -183,6 +189,10 @@ const Orders = ({ sidebarOpen }) => {
                                 <label>Search Orders</label>
                                 <input type="text" placeholder="Search orders by orderId" className='form-control' value={searchQuery} name="search" onChange={(e) => handleSearch(e.target.value)} />
                             </div>
+                           
+                        </div>
+                        <div className='col-sm-8 text-end '>
+                            <button type="button" className='btnSubmit' onClick={handleOpenModal}>+Take Order</button>
                         </div>
                         {/* <div className="col-sm-4">
                             <div className="form-group">
@@ -246,8 +256,8 @@ const Orders = ({ sidebarOpen }) => {
                                                         <td>{ele.paymentmethod}</td>
                                                         <td>{ele.products.length}</td>
                                                         <td>₹ {ele.initialDeposit}</td>
-                                                        <td>₹ {ele.orderedPrice - ele.initialDeposit}</td>
-                                                        <td>₹ {ele.orderedPrice}</td>
+                                                        <td>₹ {(ele.orderedPrice - ele.initialDeposit).toFixed(2)}</td>
+                                                        <td>₹ {ele.orderedPrice?.toFixed(2)}</td>
                                                         <td>{ele.paid === true ? "Paid" : "Not Paid"}</td>
                                                         <td>{ele.status === 0 ? (<>
                                                             <button type="button" class="btn btn-accept" onClick={() => handleOpen("Are you sure want to accept the order ?", ele.orderId, 1)}>Accept</button>
@@ -354,6 +364,11 @@ const Orders = ({ sidebarOpen }) => {
             ) :("")
          }
            
+           {
+            directModal ? (
+                <DirectOrder directModal={directModal} setDirectModal={setDirectModal} setRef={setRef}/>
+            ):("")
+           }
         </>
 
 

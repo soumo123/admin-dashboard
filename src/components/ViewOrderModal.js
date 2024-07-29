@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios'
@@ -12,7 +12,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 // import { useAlert } from 'react-alert'
 
 
-const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad ,setRef}) => {
+const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad, setRef }) => {
 
     const dispatch = useDispatch()
     // const alert = useAlert()
@@ -24,7 +24,7 @@ const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad ,se
     const [status, setStatus] = useState(0)
     const [message, setMessage] = useState(false)
     const [messageType, setMessageType] = useState("")
-    const[mod,setMod] = useState(false)
+    const [mod, setMod] = useState(false)
     const steps = [
         'Accept',
         'Processing',
@@ -102,7 +102,7 @@ const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad ,se
                         View Order
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{ maxHeight: '80vh', overflowY: 'auto' }}>
                     <h4>{viewData?.orderId}</h4>
                     <div class="card card-1">
 
@@ -123,7 +123,7 @@ const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad ,se
                                                             <div class="row  my-auto flex-column flex-md-row">
                                                                 <div class="col my-auto"> <h6 class="mb-0">{ele.name}</h6>  </div>
                                                                 <div class="col-auto my-auto"> <small>Golden Rim </small></div>
-                                                                {ele.weight === "" ? "" : (<div class="col my-auto"> <small>Weight : {ele.weight}</small></div>)}
+                                                                {/* {ele.weight === "" ? "" : (<div class="col my-auto"> <small>Weight : {ele.weight.map((ele)=>ele.value)}</small></div>)} */}
                                                                 {ele.color === "" ? "" : (<div class="col my-auto"> <small>Color : {ele.color}</small></div>)}
 
                                                                 <div class="col my-auto"> <small>Price : ₹ {ele.price}</small></div>
@@ -164,20 +164,32 @@ const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad ,se
 
                                     ) : viewData.status === 2 ? (<button type="button" class="btn btn-process" onClick={() => handleOpen("Processing Complete ?", viewData.orderId, 3)}><p style={{ fontSize: "10px", marginTop: "12px" }}>Processing...</p></button>) : viewData.status === 3 ?
 
-                                        (<button type="button" class="btn btn-delivery" onClick={() => handleOpen("Ready for delivery ?", viewData.orderId, 4)}><p style={{ fontSize: "10px", marginTop: "12px" }}>Ready for delicvery</p></button>) : viewData?.status===-1 ? (<p style={{ fontSize: "15px", marginTop: "12px",color:"red" }}>Order Rejected</p>):(<p style={{ color: "#1F932B" }}>Complete</p>)
+                                        (<button type="button" class="btn btn-delivery" onClick={() => handleOpen("Ready for delivery ?", viewData.orderId, 4)}><p style={{ fontSize: "10px", marginTop: "12px" }}>Ready for delicvery</p></button>) : viewData?.status === -1 ? (<p style={{ fontSize: "15px", marginTop: "12px", color: "red" }}>Order Rejected</p>) : (<p style={{ color: "#1F932B" }}>Complete</p>)
                                     }
                                 </div>
                             </div>
                             <div class="row mt-4">
                                 <div class="col">
                                     <div class="row justify-content-between">
-                                        {/* <div class="col-auto"><p class="mb-1 text-dark"><b>Order Details</b></p></div> */}
-                                        <div class="flex-sm-col text-right col"> <p class="mb-1"><b>Tax</b></p> </div>
-                                        <div class="flex-sm-col col-auto"> <p class="mb-1">&#8377;{viewData?.tax}</p> </div>
+                                        <div class="flex-sm-col text-right col"><p class="mb-1"> <b>Additional Items</b></p> </div>
+                                        <div class="flex-sm-col col-auto"><p class="mb-1">{viewData?.extrathings}</p></div>
                                     </div>
                                     <div class="row justify-content-between">
-                                        <div class="flex-sm-col text-right col"><p class="mb-1"> <b>Shipping Cost</b></p> </div>
-                                        <div class="flex-sm-col col-auto"><p class="mb-1">&#8377;{viewData?.shippingPrice}</p></div>
+                                        <div class="flex-sm-col text-right col"><p class="mb-1"> <b>Extra Price</b></p> </div>
+                                        <div class="flex-sm-col col-auto"><p class="mb-1">&#8377;{viewData?.extraprice}</p></div>
+                                    </div>
+                                    <div class="row justify-content-between">
+                                        <div class="flex-sm-col text-right col"><p class="mb-1"> <b>Discount</b></p> </div>
+                                        <div class="flex-sm-col col-auto"><p class="mb-1">{viewData?.discount} %</p></div>
+                                    </div>
+                                    <div class="row justify-content-between">
+                                        {/* <div class="col-auto"><p class="mb-1 text-dark"><b>Order Details</b></p></div> */}
+                                        <div class="flex-sm-col text-right col"> <p class="mb-1"><b>SGST</b></p> </div>
+                                        <div class="flex-sm-col col-auto"> <p class="mb-1">&#8377;{viewData?.cgst?.toFixed(2)}</p> </div>
+                                    </div>
+                                    <div class="row justify-content-between">
+                                        <div class="flex-sm-col text-right col"><p class="mb-1"> <b>CGST</b></p> </div>
+                                        <div class="flex-sm-col col-auto"><p class="mb-1">&#8377;{viewData?.cgst?.toFixed(2)}</p></div>
                                     </div>
                                     <div class="row justify-content-between">
                                         <div class="flex-sm-col text-right col"><p class="mb-1"><b>Initial Deposit</b></p></div>
@@ -185,11 +197,11 @@ const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad ,se
                                     </div>
                                     <div class="row justify-content-between">
                                         <div class="flex-sm-col text-right col"><p class="mb-1"><b>Total</b></p></div>
-                                        <div class="flex-sm-col col-auto"><p class="mb-1">₹ {viewData?.orderedPrice}</p></div>
+                                        <div class="flex-sm-col col-auto"><p class="mb-1">₹ {viewData?.orderedPrice?.toFixed(2)}</p></div>
                                     </div>
                                     <div class="row justify-content-between">
                                         <div class="flex-sm-col text-right col"><p class="mb-1"><b>Remaining</b></p></div>
-                                        <div class="flex-sm-col col-auto"><p class="mb-1">₹{viewData?.orderedPrice - viewData?.initialDeposit}</p></div>
+                                        <div class="flex-sm-col col-auto"><p class="mb-1">₹{(viewData?.orderedPrice - viewData?.initialDeposit)?.toFixed(2)}</p></div>
                                     </div>
                                 </div>
                             </div>
