@@ -219,6 +219,7 @@ const AllProduct = ({ sidebarOpen }) => {
             <thead>
               <tr>
                 <th>ID</th>
+                <th>Product Image</th>
                 <th>Product Name</th>
                 <th>Description</th>
                 <th>Delivery Partner</th>
@@ -250,6 +251,12 @@ const AllProduct = ({ sidebarOpen }) => {
                         {products && products.map((ele) => (
                           <tr key={ele.productId}>
                             <td>{ele.productId}</td>
+                            <td>
+                              <div className="">
+
+                              <img src={ele.barcodeUrl} style={{width: '100%', height: '100%'}}/>
+                              </div>
+                              </td>
                             <td>{ele.name}</td>
                             <td>{ele.description}</td>
                             <td>{ele.delivery_partner}</td>

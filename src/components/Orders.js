@@ -14,9 +14,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from 'react-bootstrap/Button';
 import ViewOrderModal from './ViewOrderModal.js';
 import ReceiptIcon from '@mui/icons-material/Receipt';
-
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 import Slip from '../custom/Slip.js';
 import DirectOrder from '../custom/DirectOrder.js';
+import dayjs from 'dayjs';
+import 'dayjs/locale/en-gb';
 
 const Orders = ({ sidebarOpen }) => {
 
@@ -41,7 +44,9 @@ const Orders = ({ sidebarOpen }) => {
     const [modalShow, setModalShow] = useState(false);
     const [invo,setInvo] = useState(false)
     const[directModal,setDirectModal] = useState(false)
-
+    const [limit, setLimit] = useState(5);
+    const [offset, setOffset] = useState(0)
+    const [totalPages, setTotalPages] = useState(0);
     const handleClose = () => {
         setShow(false);
         setText("")
@@ -67,10 +72,11 @@ const Orders = ({ sidebarOpen }) => {
 
     const getOrderDetails = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${""}`)
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${""}&limit=${limit}&offset=${offset}`)
             if (response.status === 200) {
                 setloader(true)
                 setOrders(response.data.data)
+                setTotalPages(Math.ceil(response.data.totalData / limit));
             } else {
                 setOrders([])
             }
@@ -92,6 +98,7 @@ const Orders = ({ sidebarOpen }) => {
                 if (response.status === 200) {
                     setloader(true)
                     setOrders(response.data.data)
+                    setTotalPages(Math.ceil(response.data.totalData / limit));
                 }else{
                     setOrders([])
                 }
@@ -109,7 +116,9 @@ const Orders = ({ sidebarOpen }) => {
         }
       }, [searchQuery])
 
-
+      const handlePageChange = (event, value) => {
+        setOffset((value - 1) * limit);
+    };
 
     const updateOrder = async () => {
         try {
@@ -120,6 +129,7 @@ const Orders = ({ sidebarOpen }) => {
                 },
                 withCredentials: true
             }
+            console.log("statusstatus",status)
             const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/updateOrder?orderId=${odId}&type=${type}&shopId=${shop_id}&status=${status}`, config)
             if (response.status === 200) {
                 setShow(false)
@@ -170,7 +180,7 @@ const Orders = ({ sidebarOpen }) => {
 
     useEffect(() => {
         getOrderDetails()
-    }, [ref])
+    }, [offset, limit,ref])
 
 
     return (
@@ -223,10 +233,11 @@ const Orders = ({ sidebarOpen }) => {
                             <tr>
                                 <th>Order ID</th>
                                 <th>Created on</th>
-                                <th>Method</th>
+                                <th>Payment Method</th>
+                                <th>Order Method</th>
+                                <th>Delivery Date</th>
                                 <th>Items</th>
-                                <th>Initial Deposit</th>
-                                <th>Remaining</th>
+                                {/* <th>Remaining</th> */}
                                 <th>Total</th>
                                 <th>Paid</th>
                                 <th>Status</th>
@@ -254,9 +265,11 @@ const Orders = ({ sidebarOpen }) => {
                                                         <td>{ele.orderId}</td>
                                                         <td>{(new Date(ele.created_at).toISOString().slice(0, 10).split('-').reverse().join('/'))}</td>
                                                         <td>{ele.paymentmethod}</td>
+                                                        <td>{ele.order_method}</td>
+                                                        <td>{ele.deliver_date===null || ele.deliver_date==="" ? "" : dayjs(ele.deliver_date).format('DD/MM/YYYY, hh:mm A')}</td>
                                                         <td>{ele.products.length}</td>
-                                                        <td>₹ {ele.initialDeposit}</td>
-                                                        <td>₹ {(ele.orderedPrice - ele.initialDeposit).toFixed(2)}</td>
+                                                        {/* <td>₹ {ele.initialDeposit}</td> */}
+                                                        {/* <td>₹ {(ele.orderedPrice - ele.initialDeposit).toFixed(2)}</td> */}
                                                         <td>₹ {ele.orderedPrice?.toFixed(2)}</td>
                                                         <td>{ele.paid === true ? "Paid" : "Not Paid"}</td>
                                                         <td>{ele.status === 0 ? (<>
@@ -271,8 +284,6 @@ const Orders = ({ sidebarOpen }) => {
 
                                                             (<button type="button" class="btn btn-delivery" onClick={() => handleOpen("Ready for delivery ?", ele.orderId, 4)}><p style={{ fontSize: "10px", marginTop: "12px" }}>Ready for delicvery</p></button>) : ele.status===-1 ? (<p style={{ fontSize: "15px", marginTop: "12px",color:"red" }}>Rejected</p>):(<p style={{ color: "#1F932B" }}>Complete</p>)
                                                         }</td>
-
-
                                                         <td class="text-center">
                                                             <span className="view-invoice fs-xs" data-bs-toggle="tooltip"
                                                                 data-bs-placement="top"
@@ -331,8 +342,11 @@ const Orders = ({ sidebarOpen }) => {
                         }
 
                     </table>
+                    
                 </div>
+                
             </div>
+            <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
             {
                 viewData && viewData ? (
                     <ViewOrderModal show={modalShow} setModalShow={setModalShow} viewData={viewData} setViewData={setViewData} setLoad={setLoad} setRef={setRef} />
@@ -369,6 +383,7 @@ const Orders = ({ sidebarOpen }) => {
                 <DirectOrder directModal={directModal} setDirectModal={setDirectModal} setRef={setRef}/>
             ):("")
            }
+          
         </>
 
 

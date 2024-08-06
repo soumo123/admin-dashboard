@@ -15,7 +15,7 @@ const Transaction = () => {
   const [transactions, setTransationData] = useState({})
   const [agentData, setAgentData] = useState([]);
   const [show, setShow] = useState(false)
-  const[recShow,setRecShow] = useState(false)
+  const [recShow, setRecShow] = useState(false)
   const shop_id = localStorage.getItem("shop_id");
   const [agId, setAgId] = useState("")
   const [totalBalance, setTotalBalance] = useState(0);
@@ -27,6 +27,9 @@ const Transaction = () => {
   const [loader, setLoader] = useState(false)
   const [ref, setRef] = useState(false)
   const [viewTranModal, setVewTranMiodal] = useState(false)
+  const[totalUnpaid,setTotalUnpaid] = useState(0)
+  const[totalpaid,setTotalpaid] = useState(0)
+
 
   const handleRowClick = (e) => {
     if (e.target.closest('.icon')) {
@@ -41,7 +44,7 @@ const Transaction = () => {
     setTotalBalance(Number(balance))
     setTransactionId(id)
   }
-  const handleRecieptSetData = (total, balance, id)=>{
+  const handleRecieptSetData = (total, balance, id) => {
     setRecShow(true)
     setTotalAmount(Number(total))
     setTotalBalance(Number(balance))
@@ -64,9 +67,9 @@ const Transaction = () => {
       <td>{transaction?.paid ? 'Yes' : 'No'}</td>
       <td>{new Date(transaction?.order_date).toLocaleDateString()}</td>
       <td>
-        <span className="icon"><RemoveRedEyeIcon onClick={()=>handleOpenTranModal(transaction?.transaction_id)} /></span>
+        <span className="icon"><RemoveRedEyeIcon onClick={() => handleOpenTranModal(transaction?.transaction_id)} /></span>
         <span className="icon" onClick={() => handleSetData(transaction?.totalAmount, transaction?.balance, transaction?.transaction_id)}><PaidIcon /></span>
-        <span className="icon"><ReceiptIcon onClick={() => handleRecieptSetData(transaction?.totalAmount, transaction?.balance, transaction?.transaction_id)}/></span>
+        <span className="icon"><ReceiptIcon onClick={() => handleRecieptSetData(transaction?.totalAmount, transaction?.balance, transaction?.transaction_id)} /></span>
       </td>
     </tr>
   );
@@ -79,9 +82,14 @@ const Transaction = () => {
       const result = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_transtion?agentId=${agId}&shop_id=${shop_id}`)
       if (result.status === 200) {
         setTransationData(result.data.data)
+        setTotalUnpaid(result.data.data.totalUenpaidTransaction)
+        setTotalpaid(result.data.data.totalPaidTransaction)
+
       }
     } catch (error) {
       setTransationData({})
+      setTotalUnpaid(0)
+setTotalpaid(0)
     }
 
   }
@@ -178,19 +186,31 @@ const Transaction = () => {
       <h1>Transaction Details</h1>
 
       <div>
-        <div className='col-md-3'>
-          <label style={{ fontSize: "18px", fontWeight: "600" }}>Distributor Name : </label>
-          <select class="form-control" value={agId} onChange={(e) => handleSelectAgentId(e.target.value)} >
-            <option value="">Select agent id</option>
+        <div class="row">
+          <div className='col-md-3'>
+            <label style={{ fontSize: "18px", fontWeight: "600" }}>Distributor Name : </label>
+            <select class="form-control" value={agId} onChange={(e) => handleSelectAgentId(e.target.value)} >
+              <option value="">Select agent id</option>
 
-            {
-              agentData && agentData.map((ele) => (
-                <option key={ele.agentId} value={ele.agentId}>{`${ele.agent_name}(${ele.agentId})`}</option>
+              {
+                agentData && agentData.map((ele) => (
+                  <option key={ele.agentId} value={ele.agentId}>{`${ele.agent_name}(${ele.agentId})`}</option>
 
-              ))
-            }
-          </select>
+                ))
+              }
+            </select>
+          </div>
+          <div className='col-md-3'>
+              <label>Total Unpaid Transaction :</label>
+              <h5>{totalUnpaid}</h5>
+          </div>
+          <div className='col-md-3'>
+              <p>Total paid Transaction :</p>
+              <h5>{totalpaid}</h5>
+
+          </div>
         </div>
+
 
         {
           Object.keys(transactions).length ? (
@@ -279,9 +299,9 @@ const Transaction = () => {
       }
 
       {
-          recShow ? (
-            <TransactionSlip recShow={recShow} setRecShow={setRecShow} agId={agId} shop_id={shop_id} transactionId={transactionId} />
-          ):("")
+        recShow ? (
+          <TransactionSlip recShow={recShow} setRecShow={setRecShow} agId={agId} shop_id={shop_id} transactionId={transactionId} />
+        ) : ("")
       }
     </>
   );

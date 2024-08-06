@@ -683,7 +683,18 @@ const EditProduct = () => {
                                             </div>
                                             <div className="col-sm-4">
                                                 <div className="form-group">
-                                                    <label>Price</label>
+                                                    <label>Purchase Price</label>
+                                                    <input
+                                                        type="number"
+                                                        className="form-control"
+                                                        value={ele.purchaseprice}
+                                                        readOnly
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-4">
+                                                <div className="form-group">
+                                                    <label>Selling Price</label>
                                                     <input
                                                         type="number"
                                                         className="form-control"

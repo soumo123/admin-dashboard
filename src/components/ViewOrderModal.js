@@ -8,6 +8,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import dayjs from 'dayjs';
+import 'dayjs/locale/en-gb';
+
 
 // import { useAlert } from 'react-alert'
 
@@ -171,6 +174,19 @@ const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad, se
                             <div class="row mt-4">
                                 <div class="col">
                                     <div class="row justify-content-between">
+                                        <div class="flex-sm-col text-right col"><p class="mb-1"> <b>Order Type</b></p> </div>
+                                        <div class="flex-sm-col col-auto"><p class="mb-1">{viewData?.order_method}</p></div>
+                                    </div>
+                                    {
+                                        viewData?.deliver_date === null || viewData?.deliver_date==="" ? (""):(
+                                            <div class="row justify-content-between">
+                                            <div class="flex-sm-col text-right col"><p class="mb-1"> <b>Delivery Date</b></p> </div>
+                                            <div class="flex-sm-col col-auto"><p class="mb-1">{dayjs(viewData?.deliver_date).format('DD/MM/YYYY, hh:mm A')}</p></div>
+                                        </div>
+                                        )
+                                    }
+                                   
+                                    <div class="row justify-content-between">
                                         <div class="flex-sm-col text-right col"><p class="mb-1"> <b>Additional Items</b></p> </div>
                                         <div class="flex-sm-col col-auto"><p class="mb-1">{viewData?.extrathings}</p></div>
                                     </div>
@@ -199,10 +215,10 @@ const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad, se
                                         <div class="flex-sm-col text-right col"><p class="mb-1"><b>Total</b></p></div>
                                         <div class="flex-sm-col col-auto"><p class="mb-1">₹ {viewData?.orderedPrice?.toFixed(2)}</p></div>
                                     </div>
-                                    <div class="row justify-content-between">
+                                    {/* <div class="row justify-content-between">
                                         <div class="flex-sm-col text-right col"><p class="mb-1"><b>Remaining</b></p></div>
                                         <div class="flex-sm-col col-auto"><p class="mb-1">₹{(viewData?.orderedPrice - viewData?.initialDeposit)?.toFixed(2)}</p></div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             {/* <div class="row invoice ">

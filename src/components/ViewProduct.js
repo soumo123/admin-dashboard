@@ -253,7 +253,19 @@ const ViewProduct = () => {
                                             </div>
                                             <div className="col-sm-4">
                                                 <div className="form-group">
-                                                    <label>Price</label>
+                                                    <label>Purchas Price</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        value={ele.purchaseprice}
+                                                        readOnly
+                                                        // onChange={e => handlePriceChange(index, e.target.value)}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-4">
+                                                <div className="form-group">
+                                                    <label>Selling Price</label>
                                                     <input
                                                         type="text"
                                                         className="form-control"

@@ -8,7 +8,7 @@ import Message from '../custom/Message';
 
 const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
   const [products, setProducts] = useState([]);
-  const [forms, setForms] = useState([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 }, weightFormVisible: false }]);
+  const [forms, setForms] = useState([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0 }, weightFormVisible: false }]);
 
   const [message, setMessage] = useState(false);
   const [messageType, setMessageType] = useState("");
@@ -16,12 +16,13 @@ const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
   const adminId = localStorage.getItem("adminId");
   const shop_id = localStorage.getItem("shop_id");
   const { agentId, vendorId } = useParams();
+  const[err,setErr] = useState(false)
 
   const handleAddWeight = (formIndex) => {
     const newForms = [...forms];
     const form = newForms[formIndex];
     form.weights.push({ ...form.weightInput });
-    form.weightInput = { weight: '', price: 0, stock: 0 };
+    form.weightInput = { weight: '', price: 0, stock: 0 ,purchaseprice:0};
     form.weightFormVisible = false;
     setForms(newForms);
   };
@@ -34,66 +35,49 @@ const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
   };
 
   const handleFormChange = (formIndex, field, value) => {
+
     const newForms = [...forms];
     newForms[formIndex][field] = value;
     setForms(newForms);
+    setErr(false)
   };
 
   const handleWeightInputChange = (formIndex, field, value) => {
     const newForms = [...forms];
-    newForms[formIndex].weightInput[field] = value;
+    newForms[formIndex].weightInput[field] = Number(value);
     setForms(newForms);
   };
 
   const handleAddProduct = (formIndex) => {
     const form = forms[formIndex];
+    if(!form.productName || !form.unit || form.weights.length===0){
+      setErr(true)
+      return
+    }
     const product = {
       productName: form.productName,
       unit: form.unit,
       weights: form.weights
     };
+    console.log("productproduct",product)
+
     setProducts([...products, product]);
     const newForms = forms.filter((_, index) => index !== formIndex);
     setForms(newForms);
   };
 
   const handleAddMoreForm = () => {
-    setForms([...forms, { id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 }, weightFormVisible: false }]);
+    setForms([...forms, { id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0}, weightFormVisible: false }]);
   };
 
   const handleDeleteProduct = (productIndex) => {
     const newProducts = products.filter((_, index) => index !== productIndex);
     setProducts(newProducts);
     if (newProducts.length === 0) {
-      setForms([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 }, weightFormVisible: false }]);
+      setForms([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0}, weightFormVisible: false }]);
     }
   };
 
-  // const addAgentProduct = async () => {
-  //     try {
-  //         const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/addinventory?adminId=${adminId}&agentId=${agentId}&vendorId=${vendorId}&type=${type}&shop_id=${shop_id}`, products, {
-  //             headers: {
-  //                 'Content-Type': 'application/json'
-  //             }
-  //         });
-  //         if (response.status === 201) {
-  //             setMessageType("success");
-  //             setMessage("Product Added");
-  //             setProducts([]);
-  //             setForms([{ id: Date.now(), name: '', unit: '', weights: [], weightInput: { weight: '', price: '', stock: '' }, weightFormVisible: false }]);
-  //             setTimeout(() => {
-  //                 setMessage(false);
-  //             }, 2000);
-  //         }
-  //     } catch (error) {
-  //         console.log(error);
-  //         setMessageType("error");
-  //         setMessage("Oops.. Something went wrong");
-  //         setTimeout(() => {
-  //             setMessage(false);
-  //         }, 2000);
-  //     }
-  // };
 
   const handleClose = () => {
     setOpenModal(false);
@@ -103,7 +87,7 @@ const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
   const handleCancel = ()=>{
     setOpenModal(false);
     setProducts([])
-    setForms([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 }, weightFormVisible: false }]);
+    setForms([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0}, weightFormVisible: false }]);
     setAddedProducts([])
 
   }
@@ -134,14 +118,14 @@ const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
                   handleAddProduct(formIndex);
                 }}>
                   <TextField
-                    label="Product Name"
+                    label="* Product Name"
                     fullWidth
                     margin="normal"
                     value={form.productName}
                     onChange={(e) => handleFormChange(formIndex, 'productName', e.target.value)}
                   />
                   <TextField
-                    label="Unit"
+                    label="* Unit"
                     fullWidth
                     margin="normal"
                     value={form.unit}
@@ -151,6 +135,11 @@ const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
                     <Button variant="outlined" onClick={() => handleFormChange(formIndex, 'weightFormVisible', true)}>
                       Add Weight
                     </Button>
+                    {
+                    err ? (
+                      <p style={{color: 'red'}}>* Please select the specific fields</p>
+                    ):("")
+                   }
                   </Box>
                   <List>
                     {form.weights.map((weight, weightIndex) => (
@@ -187,8 +176,8 @@ const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
                       fullWidth
                       margin="normal"
                       type="number"
-                      value={form.weightInput.price}
-                      onChange={(e) => handleWeightInputChange(formIndex, 'price', e.target.value)}
+                      value={form.weightInput.purchaseprice}
+                      onChange={(e) => handleWeightInputChange(formIndex, 'purchaseprice', e.target.value)}
                     />
                     <TextField
                       label="Stock"
@@ -229,7 +218,7 @@ const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
                     <List>
                       {product.weights.map((weight, weightIndex) => (
                         <ListItem key={weightIndex}>
-                          <ListItemText primary={`Weight: ${weight.weight}, Price: ${weight.price}, Stock: ${weight.stock}`} />
+                          <ListItemText primary={`Weight: ${weight.weight}, Price: ${weight.purchaseprice}, Stock: ${weight.stock}`} />
                         </ListItem>
                       ))}
                     </List>

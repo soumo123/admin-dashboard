@@ -7,7 +7,7 @@ import Message from '../custom/Message';
 
 const AddVendorProducts = () => {
   const [products, setProducts] = useState([]);
-  const [forms, setForms] = useState([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: '', stock: '' }, weightFormVisible: false }]);
+  const [forms, setForms] = useState([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0}, weightFormVisible: false }]);
 
   const [message, setMessage] = useState(false)
   const [messageType, setMessageType] = useState("")
@@ -19,7 +19,7 @@ const AddVendorProducts = () => {
     const newForms = [...forms];
     const form = newForms[formIndex];
     form.weights.push(form.weightInput);
-    form.weightInput = { weight: '', price: '', stock: '' };
+    form.weightInput = { weight: '', price: 0, stock:0,purchaseprice:0 };
     form.weightFormVisible = false;
     setForms(newForms);
   };
@@ -39,7 +39,7 @@ const AddVendorProducts = () => {
 
   const handleWeightInputChange = (formIndex, field, value) => {
     const newForms = [...forms];
-    newForms[formIndex].weightInput[field] = value;
+    newForms[formIndex].weightInput[field] = Number(value);
     setForms(newForms);
   };
 
@@ -56,14 +56,14 @@ const AddVendorProducts = () => {
   };
 
   const handleAddMoreForm = () => {
-    setForms([...forms, { id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: '', stock: '' }, weightFormVisible: false }]);
+    setForms([...forms, { id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0,purchaseprice:0 }, weightFormVisible: false }]);
   };
 
   const handleDeleteProduct = (productIndex) => {
     const newProducts = products.filter((_, index) => index !== productIndex);
     setProducts(newProducts);
     if (newProducts.length === 0) {
-      setForms([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: '', stock: '' }, weightFormVisible: false }]);
+      setForms([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock:0,purchaseprice:0 }, weightFormVisible: false }]);
     }
   };
 
@@ -72,6 +72,7 @@ const AddVendorProducts = () => {
   const addAgentProduct = async () => {
 
     try {
+      console.log("add-agentProduct",products)
       const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/addinventory?adminId=${adminId}&agentId=${agentId}&vendorId=${vendorId}&type=${type}&shop_id=${shop_id}`, products, {
         headers: {
           'Content-Type': 'application/json'
@@ -81,7 +82,7 @@ const AddVendorProducts = () => {
         setMessageType("success")
         setMessage("Product Added")
         setProducts([])
-        setForms([{ id: Date.now(), name: '', unit: '', weights: [], weightInput: { weight: '', price: '', stock: '' }, weightFormVisible: false }])
+        setForms([{ id: Date.now(), name: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0,purchaseprice:0 }, weightFormVisible: false }])
         setTimeout(() => {
           setMessage(false)
         }, 2000);
@@ -177,8 +178,8 @@ const AddVendorProducts = () => {
                   fullWidth
                   margin="normal"
                   type="number"
-                  value={form.weightInput.price}
-                  onChange={(e) => handleWeightInputChange(formIndex, 'price', e.target.value)}
+                  value={form.weightInput.purchaseprice}
+                  onChange={(e) => handleWeightInputChange(formIndex, 'purchaseprice', e.target.value)}
                 />
                 <TextField
                   label="Stock"

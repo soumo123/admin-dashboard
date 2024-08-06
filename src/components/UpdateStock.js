@@ -8,8 +8,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import AddProductModal from '../custom/AddProductModal';
 import Message from '../custom/Message';
+import {useDispatch} from 'react-redux'
 
 const UpdateStock = ({ sidebarOpen }) => {
+  const dispatch = useDispatch()
   const [agentData, setAgentData] = useState([]);
   const shop_id = localStorage.getItem("shop_id");
   const type = localStorage.getItem("type");
@@ -33,6 +35,7 @@ const UpdateStock = ({ sidebarOpen }) => {
   const [message, setMessage] = useState(false);
   const [messageType, setMessageType] = useState("");
   const [weightErrors, setWeightErrors] = useState(false);
+  const[ref,setRef] = useState(false)
   const handleSearch = (query) => {
     setLastTypingTime(new Date().getTime());
     setSearchQuery(query);
@@ -75,13 +78,14 @@ const UpdateStock = ({ sidebarOpen }) => {
   };
 
   useEffect(() => {
-    if (lastTypingTime) {
-      const timer = setTimeout(() => {
-        getAllProductsByAdmin();
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [searchQuery, startPrice, lastPrice]);
+    // if (lastTypingTime) {
+    //   const timer = setTimeout(() => {
+    //     getAllProductsByAdmin();
+    //   }, 1000);
+    //   return () => clearTimeout(timer);
+    // }
+    getAllProductsByAdmin();
+  }, [ref]);
 
   const handleOpen = (product) => {
     setSelectedProduct(product);
@@ -91,6 +95,9 @@ const UpdateStock = ({ sidebarOpen }) => {
   const handleClose = () => {
     setShow(false);
     setSelectedProduct(null);
+    setRef((new Date().getSeconds()))
+    setWeightErrors(false)
+
   };
 
   const handleWeightChange = (index, field, value) => {
@@ -115,7 +122,7 @@ const UpdateStock = ({ sidebarOpen }) => {
 
   function validateWeightArray(productToSave) {
     for (const item of productToSave.weights) {
-      if (!item.weight || !item.price || !item.stock) {
+      if (!item.weight || !item.purchaseprice || !item.stock) {
         return true
       }
     }
@@ -167,6 +174,7 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
         savedProducts: savedProducts,
         addedProducts: addedProducts,
       }
+      console.log("jsonjsonjsonjsonjson",json)
       const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/update_stock?adminId=${adminId}&agentId=${agId}&vendorId=${""}&type=${type}&shop_id=${shop_id}`, json, {
         headers: {
           'Content-Type': 'application/json'
@@ -178,6 +186,7 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
         setSavedProducts([])
         setAddedProducts([])
         setBoomer(false)
+        setRef((new Date().getSeconds()))
         setTimeout(() => {
           setMessage(false);
         }, 2000);
@@ -215,18 +224,16 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
   useEffect(() => {
 
     let saveProductPrice = savedProducts.reduce((total, product) => {
-      return total + product.weights.reduce((subTotal, weight) => subTotal + (parseFloat(weight.price) * parseInt(weight.stock)), 0);
+      return total + product.weights.reduce((subTotal, weight) => subTotal + (parseFloat(weight.purchaseprice) * parseInt(weight.stock)), 0);
     }, 0)
     let addedProductPrice = addedProducts.reduce((total, product) => {
-      return total + product.weights.reduce((subTotal, weight) => subTotal + (parseFloat(weight.price) * parseInt(weight.stock)), 0);
+      return total + product.weights.reduce((subTotal, weight) => subTotal + (parseFloat(weight.purchaseprice) * parseInt(weight.stock)), 0);
     }, 0)
 
 
     setTotalPrice(saveProductPrice + addedProductPrice)
   }, [savedProducts, addedProducts])
 
-
-  console.log("addedProducts , savedProducts", addedProducts, savedProducts)
 
   return (
     <>
@@ -242,7 +249,7 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
           </div>
 
           <div className="content">
-            <label htmlFor="agent-id">Agent Id</label>
+            <label htmlFor="agent-id">* Agent Id</label>
             <Form.Select id="agent-id" value={agId} onChange={(e) => handleSelectAgentId(e.target.value)}>
               <option value="">Select agent id</option>
               {agentData &&
@@ -270,7 +277,7 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
                       />
                     </Form.Group>
                   </Col>
-                  <Col sm={4}>
+                  {/* <Col sm={4}>
                     <Form.Group>
                       <Form.Label>Price starts from</Form.Label>
                       <Form.Control
@@ -291,7 +298,7 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
                         onChange={(e) => handleLastPrice(e.target.value)}
                       />
                     </Form.Group>
-                  </Col>
+                  </Col> */}
                 </Row>
               </Form>
 
@@ -391,11 +398,11 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
                         />
                       </Col>
                       <Col sm="3">
-                        <Form.Label>Price:</Form.Label>
+                        <Form.Label>Purchas Price:</Form.Label>
                         <Form.Control
                           type="number"
-                          value={item.price}
-                          onChange={(e) => handleWeightChange(index, 'price', Number(e.target.value))}
+                          value={item.purchaseprice}
+                          onChange={(e) => handleWeightChange(index, 'purchaseprice', Number(e.target.value))}
                         />
                       </Col>
                       <Col sm="3">
@@ -404,6 +411,15 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
                           type="number"
                           value={item.stock}
                           onChange={(e) => handleWeightChange(index, 'stock', Number(e.target.value))}
+                        />
+                      </Col>
+                      <Col sm="3">
+                        <Form.Label>Selling Price:</Form.Label>
+                        <Form.Control
+                          type="number"
+                          value={item.price}
+                          // onChange={(e) => handleWeightChange(index, 'price', Number(e.target.value))}
+                          readOnly
                         />
                       </Col>
                       <Col sm="3">
@@ -443,7 +459,7 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
                   <div className="product-card" key={product.productId}>
                     <p>{product.name} ({product.productId})</p>
                     {product.weights.map((weight, index) => (
-                      <p key={index}>Weight: {weight.weight}, Price: ₹{weight.price}, Stock: {weight.stock}</p>
+                      <p key={index}>Weight: {weight.weight}, Price: ₹{weight.purchaseprice}, Stock: {weight.stock}</p>
                     ))}
                     <Button
                       variant="outline-danger"
@@ -470,7 +486,7 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
                     <p>Unit :{product.unit}</p>
 
                     {product.weights.map((weight, index) => (
-                      <p key={index}>Weight: {weight.weight}, Price: ₹{weight.price}, Stock: {weight.stock}</p>
+                      <p key={index}>Weight: {weight.weight}, Price: ₹{weight.purchaseprice}, Stock: {weight.stock}</p>
                     ))}
                     <Button
                       variant="outline-danger"

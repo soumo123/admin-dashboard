@@ -120,27 +120,32 @@ const Slip = ({ invo, setInvo, viewData }) => {
 
                             <p>Additional Price: <span>₹ {viewData?.extraprice?.toFixed(2)}</span></p>
                             <p>Discount: <span>{viewData?.discount} %</span></p>
-
+                            <div className="tax">
+                            <p>Tax Summary</p>
+                            <p>CGST {cgst}%: <span>{viewData?.cgst?.toFixed(2)}</span></p>
+                            <p>SGST {sgst}%: <span>{viewData?.sgst?.toFixed(2)}</span></p>
+                        </div>
+                            {
+                                viewData?.initialDeposit === 0 ? (""):    <p>Cash: <span>- ₹ {viewData?.initialDeposit}</span></p>
+                            }
+                        
                             <p>Sub Total: <span>₹ {viewData?.orderedPrice?.toFixed(2)}</span></p>
+                          
                         </div>
                         <div className="bill-total">
                             <p>Bill Total: <span>₹ {viewData?.orderedPrice?.toFixed(2)}</span></p>
                         </div>
-                        <div className="payment">
+                        {/* <div className="payment">
                             <p>Payment Summary</p>
                             <p>Cash: <span>₹ {viewData?.initialDeposit}</span></p>
                             <p>Today Pay: <span>₹ {viewData?.orderedPrice?.toFixed(2) - viewData?.initialDeposit}</span></p>
                             <p>Balance: <span>₹ {(viewData?.orderedPrice?.toFixed(2) - viewData?.initialDeposit) - (viewData?.orderedPrice?.toFixed(2) - viewData?.initialDeposit)}.00</span></p>
 
-                        </div>
-                        <div className="tax">
-                            <p>Tax Summary</p>
-                            <p>CGST {cgst}%: <span>{viewData?.cgst?.toFixed(2)}</span></p>
-                            <p>SGST {sgst}%: <span>{viewData?.sgst?.toFixed(2)}</span></p>
-                        </div>
+                        </div> */}
+                    
                         <div className="footer">
                             <p>Thank You!</p>
-                            <p>Powered by www.dotpe.in</p>
+                            {/* <p>Powered by www.dotpe.in</p> */}
                         </div>
                     </div>
 
