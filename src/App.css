@@ -383,7 +383,11 @@ input[type="file"] {
 }
 
 
-
+@media (max-width: 600px) {
+  .responsive-div {
+    display: none;
+  }
+}
 
 
 

@@ -5,10 +5,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Message from '../custom/Message';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
   const [products, setProducts] = useState([]);
-  const [forms, setForms] = useState([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0 }, weightFormVisible: false }]);
+  const [forms, setForms] = useState([{ id: Date.now(), productName: '', unit: '', manufacture_date: null, expiry_date: null,weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0 }, weightFormVisible: false }]);
 
   const [message, setMessage] = useState(false);
   const [messageType, setMessageType] = useState("");
@@ -57,7 +62,9 @@ const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
     const product = {
       productName: form.productName,
       unit: form.unit,
-      weights: form.weights
+      weights: form.weights,
+      manufacture_date: form.manufacture_date,
+      expiry_date: form.expiry_date
     };
     console.log("productproduct",product)
 
@@ -67,14 +74,14 @@ const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
   };
 
   const handleAddMoreForm = () => {
-    setForms([...forms, { id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0}, weightFormVisible: false }]);
+    setForms([...forms, { id: Date.now(), productName: '', unit: '', manufacture_date: null, expiry_date: null,weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0}, weightFormVisible: false }]);
   };
 
   const handleDeleteProduct = (productIndex) => {
     const newProducts = products.filter((_, index) => index !== productIndex);
     setProducts(newProducts);
     if (newProducts.length === 0) {
-      setForms([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0}, weightFormVisible: false }]);
+      setForms([{ id: Date.now(), productName: '', unit: '',manufacture_date: null, expiry_date: null, weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0}, weightFormVisible: false }]);
     }
   };
 
@@ -87,12 +94,21 @@ const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
   const handleCancel = ()=>{
     setOpenModal(false);
     setProducts([])
-    setForms([{ id: Date.now(), productName: '', unit: '', weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0}, weightFormVisible: false }]);
+    setForms([{ id: Date.now(), productName: '', unit: '', manufacture_date: null, expiry_date: null,weights: [], weightInput: { weight: '', price: 0, stock: 0 ,purchaseprice:0}, weightFormVisible: false }]);
     setAddedProducts([])
 
   }
 
 
+    // Handle date change
+    const handleDateChange = (formIndex, newDate) => {
+      const formattedDate = dayjs(newDate).format('YYYY-MM-DD'); // Or any format you prefer
+      handleFormChange(formIndex, 'manufacture_date', formattedDate);
+    };
+    const handleDateChange1 = (formIndex, newDate) => {
+      const formattedDate = dayjs(newDate).format('YYYY-MM-DD'); // Or any format you prefer
+      handleFormChange(formIndex, 'expiry_date', formattedDate);
+    };
 
   return (
     <>
@@ -131,6 +147,24 @@ const AddProductModal = ({ openModal, setOpenModal, setAddedProducts }) => {
                     value={form.unit}
                     onChange={(e) => handleFormChange(formIndex, 'unit', e.target.value)}
                   />
+                           <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <DatePicker
+                    label="Manufacture Date"
+                    value={dayjs(form.manufacture_date)} // Convert it back to a Dayjs object if needed
+                    onChange={(newDate) => handleDateChange(formIndex, newDate)}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <DatePicker
+                    label="Expiry Date"
+                    value={dayjs(form.expiry_date)} // Convert it back to a Dayjs object if needed
+                    onChange={(newDate) => handleDateChange1(formIndex, newDate)}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                     <Button variant="outlined" onClick={() => handleFormChange(formIndex, 'weightFormVisible', true)}>
                       Add Weight

@@ -30,6 +30,7 @@ const EditProduct = () => {
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [tagId, setTagId] = useState([])
     // const [actualPriceAfterDiscount, setActualPriceAfterDiscount] = useState("")
+    const [expiryTime, setExpiryTime] = useState("")
 
     const [selectedOptions1, setSelectedOptions1] = useState([]);
     const [selectedOptions2, setSelectedOptions2] = useState([]);
@@ -77,7 +78,9 @@ const EditProduct = () => {
         isBranded: false,
         isOffered: false,
         files: [], // Store selected files here,
-        imagePreviews: []
+        imagePreviews: [],
+        manufacture_date: "",
+        expiry_date: ""
     });
 
     console.log("productDataproductData", productData)
@@ -195,7 +198,7 @@ const EditProduct = () => {
         //     return;
         // }
         if (!validatePrices()) {
-           return
+            return
         }
         // if (productData.files.length === 0 ) {
         //     setFileError('Please enter images.');
@@ -489,7 +492,10 @@ const EditProduct = () => {
                     isBranded: response.data.data[0].isBranded,
                     isOffered: response.data.data[0].isOffered,
                     files: [], // Store selected files here,
-                    imagePreviews: response.data.data[0].otherimages
+                    imagePreviews: response.data.data[0].otherimages,
+                    manufacture_date: response.data.data[0].manufacture_date,
+                    expiry_date: response.data.data[0].expiry_date
+
                 });
                 setTagId(response.data.data[0].tags)
                 setSelectedOptions1(response.data.data[0].weight)
@@ -550,7 +556,66 @@ const EditProduct = () => {
     };
 
 
-
+    const checkExpiry = (expiryDate) => {
+        const currentDate = new Date();
+        const expiry = new Date(expiryDate);
+      
+        // Calculate the difference in time
+        const timeDiff = expiry.getTime() - currentDate.getTime();
+      
+        if (timeDiff < 0) {
+          return "Expired already";
+        } else {
+          let years = expiry.getFullYear() - currentDate.getFullYear();
+          let months = expiry.getMonth() - currentDate.getMonth();
+          let days = expiry.getDate() - currentDate.getDate();
+          let hours = expiry.getHours() - currentDate.getHours();
+          let minutes = expiry.getMinutes() - currentDate.getMinutes();
+          let seconds = expiry.getSeconds() - currentDate.getSeconds();
+      
+          // Adjust for negative seconds
+          if (seconds < 0) {
+            minutes -= 1;
+            seconds += 60;
+          }
+      
+          // Adjust for negative minutes
+          if (minutes < 0) {
+            hours -= 1;
+            minutes += 60;
+          }
+      
+          // Adjust for negative hours
+          if (hours < 0) {
+            days -= 1;
+            hours += 24;
+          }
+      
+          // Adjust for negative days, months, etc.
+          if (days < 0) {
+            months -= 1;
+            days += new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+          }
+          if (months < 0) {
+            years -= 1;
+            months += 12;
+          }
+      
+          let result = "";
+      
+          if (years > 0) {
+            result += `${years} year${years > 1 ? 's' : ''}, `;
+          }
+          if (months > 0 || years > 0) {
+            result += `${months} month${months > 1 ? 's' : ''}, `;
+          }
+          result += `${days} day${days > 1 ? 's' : ''}, `;
+          result += `${hours} hour${hours !== 1 ? 's' : ''}, `;
+          result += `${minutes} minute${minutes !== 1 ? 's' : ''} to expire`;
+      
+          return result;
+        }
+    }
 
 
     // useEffect(() => {
@@ -564,6 +629,11 @@ const EditProduct = () => {
         setSelectedOptions(matchedOptions);
     }, [tagId]);
 
+
+    useEffect(() => {
+        setExpiryTime(checkExpiry(productData.expiry_date))
+    }, [productData])
+
     console.log("productDataproductDataproductData", productData)
     return (
         <>
@@ -576,6 +646,7 @@ const EditProduct = () => {
                 <div class="form">
                     <div class="note">
                         <h4>Update Product</h4>
+                        <span className='expirying'>({(`${expiryTime}`)})</span>
                     </div>
 
                     <div class="form-content">
@@ -591,7 +662,7 @@ const EditProduct = () => {
                             <div class="col-sm-3 col-md-4">
                                 <div class="form-group">
                                     <label>Delivery Partner <span>*</span></label>
-                                    <input type="text" class="form-control" placeholder="Enter Delivery Partner" name="delivery_partner" value={productData.delivery_partner} onChange={handleChange} readOnly/>
+                                    <input type="text" class="form-control" placeholder="Enter Delivery Partner" name="delivery_partner" value={productData.delivery_partner} onChange={handleChange} readOnly />
                                     <span className="error-message">{deliveryPartnerErr}</span>
 
                                 </div>
@@ -615,6 +686,23 @@ const EditProduct = () => {
                                 <div class="form-group">
                                     <label>Delivery Days</label>
                                     <input type="number" class="form-control" placeholder="Days" name="deliverydays" value={productData.deliverydays} onChange={handleChange} />
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3 col-md-4">
+                                <div class="form-group">
+                                    <label>Manufacture Date</label>
+                                    <input type="text" readOnly class="form-control" value={new Date(productData.manufacture_date).toLocaleDateString('en-GB').split('/').reverse().join('/')} />
+
+
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3 col-md-4">
+                                <div class="form-group">
+                                    <label>Expiry Date</label>
+                                    <input type="text" readOnly class="form-control" value={new Date(productData.expiry_date).toLocaleDateString('en-GB').split('/').reverse().join('/')} />
+
                                 </div>
                             </div>
 
@@ -666,48 +754,48 @@ const EditProduct = () => {
                             <div class="col-sm-12">
                                 <label>Weight</label><input class="form-check-input" type="checkbox" value={check2} checked={check2} id="flexCheckDefault" onChange={handleWeight} />
                                 {check2 && (
-                                <>
-                                    {productData.weight.map((ele, index) => (
-                                        <div className="row mb-3" key={index}>
-                                            <div className="col-sm-4">
-                                                <div className="form-group">
-                                                    <label>Weight</label>
-                                                    <input type="text" className="form-control" value={ele.weight} readOnly />
+                                    <>
+                                        {productData.weight.map((ele, index) => (
+                                            <div className="row mb-3" key={index}>
+                                                <div className="col-sm-4">
+                                                    <div className="form-group">
+                                                        <label>Weight</label>
+                                                        <input type="text" className="form-control" value={ele.weight} readOnly />
+                                                    </div>
+                                                </div>
+                                                <div className="col-sm-4">
+                                                    <div className="form-group">
+                                                        <label>Stock</label>
+                                                        <input type="number" className="form-control" value={ele.stock} readOnly />
+                                                    </div>
+                                                </div>
+                                                <div className="col-sm-4">
+                                                    <div className="form-group">
+                                                        <label>Purchase Price</label>
+                                                        <input
+                                                            type="number"
+                                                            className="form-control"
+                                                            value={ele.purchaseprice}
+                                                            readOnly
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="col-sm-4">
+                                                    <div className="form-group">
+                                                        <label>Selling Price</label>
+                                                        <input
+                                                            type="number"
+                                                            className="form-control"
+                                                            value={ele.price}
+                                                            onChange={e => handlePriceChange(index, Number(e.target.value))}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <div className="form-group">
-                                                    <label>Stock</label>
-                                                    <input type="number" className="form-control" value={ele.stock} readOnly />
-                                                </div>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <div className="form-group">
-                                                    <label>Purchase Price</label>
-                                                    <input
-                                                        type="number"
-                                                        className="form-control"
-                                                        value={ele.purchaseprice}
-                                                        readOnly
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <div className="form-group">
-                                                    <label>Selling Price</label>
-                                                    <input
-                                                        type="number"
-                                                        className="form-control"
-                                                        value={ele.price}
-                                                        onChange={e => handlePriceChange(index, Number(e.target.value))}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </>
-                            )}
-                             {error && <div className="alert alert-danger mt-3">{error}</div>}
+                                        ))}
+                                    </>
+                                )}
+                                {error && <div className="alert alert-danger mt-3">{error}</div>}
                             </div>
                             <div class="col-sm-12">
 

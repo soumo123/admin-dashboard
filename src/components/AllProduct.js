@@ -208,20 +208,15 @@ const AllProduct = ({ sidebarOpen }) => {
           </div>
         </div>
 
-
-
-
-
-
-
-        <div className="table-responsive">
-          <table className="table data-tables table-hover">
+        <div className="table-responsive-lg">
+          <table className="table data-tables">
             <thead>
               <tr>
                 <th>ID</th>
                 <th>Product Image</th>
                 <th>Product Name</th>
                 <th>Description</th>
+                <th>Expired</th>
                 <th>Delivery Partner</th>
                 <th>Weight & Price</th>
                 {/* <th>Actual Price</th> */}
@@ -259,6 +254,8 @@ const AllProduct = ({ sidebarOpen }) => {
                               </td>
                             <td>{ele.name}</td>
                             <td>{ele.description}</td>
+                            <td>{ele.expired ? <p style={{color: 'red'}}>Expired</p>:<p style={{color: 'green'}}>Not Expire</p>}</td>
+
                             <td>{ele.delivery_partner}</td>
                             <td>
                               {

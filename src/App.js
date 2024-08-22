@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import CreateProduct from './components/CreateProduct';
@@ -19,6 +19,7 @@ import AddVendorProducts from './custom/AddVendorProducts';
 import UpdateStock from './components/UpdateStock';
 import Transaction from './components/Transaction';
 import Taxes from './components/Taxes';
+import Notifications from './components/Notifications';
 
 
 
@@ -42,52 +43,53 @@ function App() {
   }, [adminId,
     shop_id,
     type])
-    console.log("type, adminId, shop_id ---App.js", type, adminId, shop_id)
+  console.log("type, adminId, shop_id ---App.js", type, adminId, shop_id)
 
   return (
     <>
 
-   
+
       <div id="app" style={({ height: "100vh" })}>
-          <div className="admin-box">
-              <div className="admin-sidebar">
-                   <Sidenav />
-              </div>
-
-              <div className="admin-content">
-              <main>
-          
-          <div style={{  }}>
-           
-            <Routes>
-            <Route exact={true} path={`/`} element={<Dashboard />} />
-              {/* <Route exact={true} path={`/create`} element={<CreateProduct />} /> */}
-              <Route exact={true} path="/allproducts" element={<AllProduct />} />
-              <Route exact={true} path="/updateproduct/:id" element={<EditProduct/>} />
-              <Route exact={true} path="/vewProduct/:id" element={<ViewProduct/>} />
-              <Route exact={true} path="/allusers" element={<AllUsers />} />
-              <Route exact={true} path="/tags" element={<Tags />} />
-              <Route exact={true} path="/settings" element={<Settings />} />
-              <Route exact={true} path="/manage-order" element={<Orders/>}/>
-              <Route exact={true} path="/vendors" element={<Vendor/>}/>
-
-              <Route exact={true} path="/addVendorProduct/:agentId/:vendorId" element={<AddVendorProducts />} />
-              <Route exact={true} path="/stocks" element={<UpdateStock />} />
-              <Route exact={true} path ="/transaction" element={<Transaction/>}/>
-              <Route exact={true} path ="/tax" element={<Taxes/>}/>
-
-
-              
-            </Routes>
-          </div>
-        </main>
-              </div>
+        <div className="admin-box">
+          <div className="admin-sidebar">
+            <Sidenav />
           </div>
 
+          <div className="admin-content">
+            <main>
 
-       
-       
-       
+              <div style={{}}>
+
+                <Routes>
+                  <Route exact={true} path={`/`} element={<Dashboard />} />
+                  {/* <Route exact={true} path={`/create`} element={<CreateProduct />} /> */}
+                  <Route exact={true} path="/allproducts" element={<AllProduct />} />
+                  <Route exact={true} path="/updateproduct/:id" element={<EditProduct />} />
+                  <Route exact={true} path="/vewProduct/:id" element={<ViewProduct />} />
+                  <Route exact={true} path="/allusers" element={<AllUsers />} />
+                  <Route exact={true} path="/tags" element={<Tags />} />
+                  <Route exact={true} path="/settings" element={<Settings />} />
+                  <Route exact={true} path="/manage-order" element={<Orders />} />
+                  <Route exact={true} path="/vendors" element={<Vendor />} />
+
+                  <Route exact={true} path="/addVendorProduct/:agentId/:vendorId" element={<AddVendorProducts />} />
+                  <Route exact={true} path="/stocks" element={<UpdateStock />} />
+                  <Route exact={true} path="/transaction" element={<Transaction />} />
+                  <Route exact={true} path="/tax" element={<Taxes />} />
+
+                  <Route exact={true} path="/notifications" element={<Notifications />} />
+
+
+                </Routes>
+              </div>
+            </main>
+          </div>
+        </div>
+
+
+
+
+
       </div>
     </>
   );

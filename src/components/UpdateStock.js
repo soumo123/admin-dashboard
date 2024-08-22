@@ -8,7 +8,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import AddProductModal from '../custom/AddProductModal';
 import Message from '../custom/Message';
-import {useDispatch} from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+
 
 const UpdateStock = ({ sidebarOpen }) => {
   const dispatch = useDispatch()
@@ -32,10 +38,16 @@ const UpdateStock = ({ sidebarOpen }) => {
   const [openModal, setOpenModal] = useState(false)
   const [err, setErr] = useState(false)
   const [totalPrice, setTotalPrice] = useState(0)
+  const [returnPrie, setReturnPrice] = useState(0)
+
   const [message, setMessage] = useState(false);
   const [messageType, setMessageType] = useState("");
   const [weightErrors, setWeightErrors] = useState(false);
-  const[ref,setRef] = useState(false)
+  const [ref, setRef] = useState(false)
+  const [returnProducts, setReturnProducts] = useState([]);
+  const [manufature_date, setManufactureDate] = useState("")
+  const [expiry_date, setExpiryDate] = useState("")
+
   const handleSearch = (query) => {
     setLastTypingTime(new Date().getTime());
     setSearchQuery(query);
@@ -95,8 +107,10 @@ const UpdateStock = ({ sidebarOpen }) => {
   const handleClose = () => {
     setShow(false);
     setSelectedProduct(null);
-    setRef((new Date().getSeconds()))
+    // setRef((new Date().getSeconds()))
     setWeightErrors(false)
+    setManufactureDate("")
+    setExpiryDate("")
 
   };
 
@@ -120,6 +134,37 @@ const UpdateStock = ({ sidebarOpen }) => {
     setSelectedProduct(updatedProduct);
   };
 
+  const handleReturnWeight = (index) => {
+    const updatedProduct = { ...selectedProduct };
+    const weightToReturn = updatedProduct.weight[index];
+
+    // Remove the weight from selectedProduct
+    updatedProduct.weight.splice(index, 1);
+    setSelectedProduct(updatedProduct);
+
+    // Update returnProducts state
+    setReturnProducts(prevReturnProducts => {
+      const existingProductIndex = prevReturnProducts.findIndex(p => p.productId === selectedProduct.productId);
+
+      if (existingProductIndex > -1) {
+        // Product already exists in returnProducts
+        const updatedReturnProducts = [...prevReturnProducts];
+        updatedReturnProducts[existingProductIndex].weights.push(weightToReturn);
+        return updatedReturnProducts;
+      } else {
+        // Product does not exist, add a new entry
+        return [
+          ...prevReturnProducts,
+          {
+            name: selectedProduct.name,
+            productId: selectedProduct.productId,
+            weights: [weightToReturn]
+          }
+        ];
+      }
+    });
+  };
+
   function validateWeightArray(productToSave) {
     for (const item of productToSave.weights) {
       if (!item.weight || !item.purchaseprice || !item.stock) {
@@ -128,23 +173,25 @@ const UpdateStock = ({ sidebarOpen }) => {
     }
     return false;
   }
-console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
+  console.log("selectedProduct.weightselectedProduct.weight", savedProducts)
   const handleSave = async () => {
-
-   
     const productToSave = {
       productId: selectedProduct.productId,
       name: selectedProduct.name,
       weights: selectedProduct.weight,
+      manufacture_date: manufature_date,
+      expiry_date: expiry_date,
     };
-    console.log("productToSave",productToSave)
+    console.log("productToSave", productToSave)
     let err = validateWeightArray(productToSave)
-    console.log("errerrerrerr",err)
-    if(err){
+    console.log("errerrerrerr", err)
+    if (err) {
       setWeightErrors(true)
       return
     }
     setSavedProducts([...savedProducts, productToSave]);
+    setManufactureDate("")
+    setExpiryDate("")
     setShow(false);
   };
 
@@ -174,7 +221,7 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
         savedProducts: savedProducts,
         addedProducts: addedProducts,
       }
-      console.log("jsonjsonjsonjsonjson",json)
+      console.log("jsonjsonjsonjsonjson", json)
       const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/update_stock?adminId=${adminId}&agentId=${agId}&vendorId=${""}&type=${type}&shop_id=${shop_id}`, json, {
         headers: {
           'Content-Type': 'application/json'
@@ -185,6 +232,8 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
         setMessage("Stock Updated");
         setSavedProducts([])
         setAddedProducts([])
+        setManufactureDate("")
+        setExpiryDate("")
         setBoomer(false)
         setRef((new Date().getSeconds()))
         setTimeout(() => {
@@ -230,11 +279,26 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
       return total + product.weights.reduce((subTotal, weight) => subTotal + (parseFloat(weight.purchaseprice) * parseInt(weight.stock)), 0);
     }, 0)
 
+    let returnProductPrice = returnProducts.reduce((total, product) => {
+      return total + product.weights.reduce((subTotal, weight) => subTotal + (parseFloat(weight.purchaseprice) * parseInt(weight.stock)), 0);
+    }, 0)
 
+    setReturnPrice(returnProductPrice)
     setTotalPrice(saveProductPrice + addedProductPrice)
-  }, [savedProducts, addedProducts])
+  }, [savedProducts, addedProducts, returnProducts])
 
 
+  // Handle date change
+  const handleDateChange = (newDate) => {
+    const formattedDate = dayjs(newDate).format('YYYY-MM-DD'); // Or any format you prefer
+    setManufactureDate(formattedDate)
+
+  };
+  const handleDateChange1 = (newDate) => {
+    const formattedDate = dayjs(newDate).format('YYYY-MM-DD'); // Or any format you prefer
+    setExpiryDate(formattedDate)
+  };
+  console.log("returnProducts", returnProducts)
   return (
     <>
       {
@@ -309,6 +373,7 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
                       <th>ID</th>
                       <th>Product Name</th>
                       <th>Description</th>
+                      <th>Expired</th>
                       <th>Delivery Partner</th>
                       <th>Weight & Price</th>
                       {/* <th>Actual Price</th>
@@ -334,6 +399,8 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
                                 <td>{ele.productId}</td>
                                 <td>{ele.name}</td>
                                 <td>{ele.description}</td>
+                            <td>{ele.expired ? <p style={{color: 'red'}}>Expired</p>:<p style={{color: 'green'}}>Not Expire</p>}</td>
+                                
                                 {/* <td>₹ {ele.price}</td> */}
                                 <td>{ele.delivery_partner}</td>
                                 <td>
@@ -389,6 +456,7 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
                   </Form.Group>
                   {selectedProduct.weight.map((item, index) => (
                     <Form.Group key={index} as={Row} className="mb-3 align-items-center">
+
                       <Col sm="3">
                         <Form.Label>Weight:</Form.Label>
                         <Form.Control
@@ -429,18 +497,38 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
                         >
                           Delete
                         </Button>
+                        <Button variant="danger" onClick={() => handleReturnWeight(index)}>Return</Button>
                       </Col>
-                     
+
                     </Form.Group>
                   ))}
-                   {
+                  {
                     weightErrors ? (
-                      <p style={{color: 'red'}}>* Please select the specific fields</p>
-                    ):("")
-                   }
+                      <p style={{ color: 'red' }}>* Please select the specific fields</p>
+                    ) : ("")
+                  }
+
                   <Button onClick={handleAddWeight} variant="outline-primary" className="mt-3">
                     + Add Weight
                   </Button>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                      <DatePicker
+                        label="Manufacture Date"
+                        value={dayjs(manufature_date)} // Convert it back to a Dayjs object if needed
+                        onChange={(newDate) => handleDateChange(newDate)}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                      <DatePicker
+                        label="Expiry Date"
+                        value={dayjs(expiry_date)} // Convert it back to a Dayjs object if needed
+                        onChange={(newDate) => handleDateChange1(newDate)}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
                 </Container>
               </Modal.Body>
               <Modal.Footer>
@@ -504,7 +592,35 @@ console.log("selectedProduct.weightselectedProduct.weight",savedProducts)
               )}
 
             </div>
+
+
+
+
+
+
+            <p>----------------------------------------------</p>
+            <h2>Return Products</h2>
+            <div className="product-container">
+              {returnProducts.length > 0 ? (
+                returnProducts.map((product) => (
+                  <div className="product-card" key={product.productId}>
+                    <p>{product.name} ({product.productId})</p>
+                    {product.weights.map((weight, index) => (
+                      <p key={index}>Weight: {weight.weight}, Price: ₹{weight.purchaseprice}, Stock: {weight.stock}</p>
+                    ))}
+                  </div>
+                ))
+              ) : (
+                <p>No transactions found</p>
+              )}
+
+            </div>
+
+
+            {returnPrie > 0 ? (<p className="total-price">Return Product Price: - ₹{returnPrie}</p>) : ("")}
             <p className="total-price">Total Price: ₹{totalPrice}</p>
+            <p className="total-price">Net Price : ₹{totalPrice - returnPrie}</p>
+
             <button className="create-button" onClick={handleUpdateStock} disabled={boomer ? true : false}>{boomer ? "Updating..." : "Update Stock"}</button>
           </div>
         </div>
