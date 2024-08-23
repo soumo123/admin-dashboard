@@ -7,6 +7,9 @@ import AddVendorModal from '../custom/AddVendorModal.js'
 import AddAgentModal from '../custom/AddAgentModal.js'
 import LoupeIcon from '@mui/icons-material/Loupe';
 import { Link } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
 
 const Vendor = () => {
     const [vendorData, setVendorData] = useState([])
@@ -15,7 +18,7 @@ const Vendor = () => {
     const [loader1, setloader1] = useState(false);
     const [key, setkey] = useState("")
     const [key1, setkey1] = useState("")
-
+    const[show,setShow] = useState(false)
     const adminId = localStorage.getItem("adminId");
     const shop_id = localStorage.getItem("shop_id");
     const type = localStorage.getItem("type");
@@ -27,7 +30,8 @@ const Vendor = () => {
     const [refresh1, setRefresh1] = useState(false)
     const [refresh2, setRefresh2] = useState(false)
     const [mode, setMode] = useState(0)
-
+    const[option,setOption] = useState(0)
+    const[viewdata,setViewData] = useState({})
     const handleOpen1 = (mode) => {
         if (Number(mode) === 1) {
             setMode(1)
@@ -79,6 +83,36 @@ const Vendor = () => {
     };
 
 
+    const hanldeOpen = (vendorId,agentId,key)=>{
+        if(key===1){
+            setOption(1)
+            viewAgentvendor(vendorId,agentId,1)
+            setShow(true)
+        }else{
+            setOption(2)
+            viewAgentvendor(vendorId,agentId,2)
+            setShow(true)
+        }
+     
+    }
+
+
+    const handleClose  = ()=>{
+        setShow(false)
+        setOption(0)
+    }
+
+    const viewAgentvendor = async(vendorId,agentId,option)=>{
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/view_agent_vendor?agentId=${agentId}&vendorId=${vendorId}&shop_id=${shop_id}&key=${option}`)
+        if (response.status === 200) {
+            setViewData(response.data.data)
+        }
+        } catch (error) {
+            console.log(error)
+        }
+        
+    }
 
     useEffect(() => {
         if (lastTypingTime1) {
@@ -106,7 +140,7 @@ const Vendor = () => {
     }, [key1])
 
 
-    
+
     useEffect(() => {
         if (lastTypingTime) {
             const timer = setTimeout(() => {
@@ -157,7 +191,7 @@ const Vendor = () => {
                                 type="text"
                                 placeholder="Search vendors..."
                                 value={key}
-                                onChange={(e)=>handleSearchChange(e.target.value)}
+                                onChange={(e) => handleSearchChange(e.target.value)}
                                 className="search-input"
                             />
                             <button className="btnSubmit" onClick={() => handleOpen1(1)}>+ Add vendor</button>
@@ -205,9 +239,7 @@ const Vendor = () => {
                                                                     <td>
 
                                                                         <div className="data-icons">
-                                                                            <span data-toggle="tooltip" data-placement="top" title="View" style={{ cursor: "pointer" }} ><VisibilityIcon /></span>
-                                                                            <span data-toggle="tooltip" data-placement="top" title="Edit" style={{ cursor: "pointer" }}><ModeEditIcon /></span>
-                                                                            <span data-toggle="tooltip" data-placement="top" title="Delete" style={{ cursor: "pointer" }}><DeleteIcon /></span>
+                                                                            <span data-toggle="tooltip" data-placement="top" title="View" style={{ cursor: "pointer" }} onClick={()=>hanldeOpen(ele.vendorId,undefined,1)}><VisibilityIcon /></span>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -244,7 +276,7 @@ const Vendor = () => {
                                 type="text"
                                 placeholder="Search agents..."
                                 value={key1}
-                                onChange={(e)=>handleSearchChange1(e.target.value)}
+                                onChange={(e) => handleSearchChange1(e.target.value)}
                                 className="search-input"
                             />
                             <button className="btnSubmit" onClick={() => handleOpen1(2)}>+ Add agents</button>
@@ -295,9 +327,8 @@ const Vendor = () => {
                                                                     <td>
 
                                                                         <div className="data-icons">
-                                                                            <Link to={`/addVendorProduct/${ele.agentId}/${ele.vendorId}`}><span data-toggle="tooltip" data-placement="top" title="View" style={{ cursor: "pointer" }} ><LoupeIcon /></span></Link>
-                                                                            <span data-toggle="tooltip" data-placement="top" title="Edit" style={{ cursor: "pointer" }}><ModeEditIcon /></span>
-                                                                            <span data-toggle="tooltip" data-placement="top" title="Delete" style={{ cursor: "pointer" }}><DeleteIcon /></span>
+                                                                            <Link to={`/addVendorProduct/${ele.agentId}/${ele.vendorId}`}><span data-toggle="tooltip" data-placement="top" title="add products" style={{ cursor: "pointer" }} ><LoupeIcon /></span></Link>
+                                                                            <span data-toggle="tooltip" data-placement="top" title="View" style={{ cursor: "pointer" }} onClick={()=>hanldeOpen(ele.vendorId,ele.agentId,2)}><VisibilityIcon /></span>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -341,7 +372,35 @@ const Vendor = () => {
                 ) : ("")
             }
 
-
+            <Modal
+                show={show}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        View {option===1 ? ("Vendor"):("Agent")}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className='container'>
+                        <div className="row">
+                            <div className='col'>
+                                <h3>Image :<img src={viewdata.image}/></h3>
+                                <h3>Vendor Id :{viewdata.id}</h3>
+                                {viewdata.ag_id ? (<h3>Agent Id :{viewdata.ag_id}</h3>):("")}  
+                                <h3>Name : {viewdata.name}</h3>
+                                <h3>Email : {viewdata.email}</h3>
+                                <h3>Phone :{viewdata.phone}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={handleClose}>Close</Button>
+                </Modal.Footer>
+            </Modal>
         </>
     )
 }
