@@ -331,7 +331,7 @@ const UpdateStock = ({ sidebarOpen }) => {
                 <Row>
                   <Col sm={4}>
                     <Form.Group>
-                      <Form.Label>Search Products</Form.Label>
+                      {/* <Form.Label>Search Products</Form.Label> */}
                       <Form.Control
                         type="text"
                         placeholder="Search Products By Name and Description"
@@ -497,7 +497,7 @@ const UpdateStock = ({ sidebarOpen }) => {
                         >
                           Delete
                         </Button>
-                        <Button variant="danger" onClick={() => handleReturnWeight(index)}>Return</Button>
+                        {/* <Button variant="danger" onClick={() => handleReturnWeight(index)}>Return</Button> */}
                       </Col>
 
                     </Form.Group>
@@ -597,7 +597,7 @@ const UpdateStock = ({ sidebarOpen }) => {
 
 
 
-
+{/* 
             <p>----------------------------------------------</p>
             <h2>Return Products</h2>
             <div className="product-container">
@@ -614,7 +614,7 @@ const UpdateStock = ({ sidebarOpen }) => {
                 <p>No transactions found</p>
               )}
 
-            </div>
+            </div> */}
 
 
             {returnPrie > 0 ? (<p className="total-price">Return Product Price: - ₹{returnPrie}</p>) : ("")}

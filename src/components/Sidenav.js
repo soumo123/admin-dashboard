@@ -15,6 +15,8 @@ import Inventory2Icon from '@mui/icons-material/Inventory2';
 import PaidIcon from '@mui/icons-material/Paid';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
+import ViewListIcon from '@mui/icons-material/ViewList';
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
@@ -91,7 +93,9 @@ const Sidenav = () => {
                     <Link to="/stocks" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<Inventory2Icon />}>Stocks</MenuItem></Link>
                     <Link to="/transaction" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<PaidIcon />}>Transaction</MenuItem></Link>
                     <Link to="/tax" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AccountBalanceIcon />}>Manage Tax</MenuItem></Link>
+                    <Link to="/expired" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ReportGmailerrorredIcon />}>Expired Products</MenuItem></Link>
 
+                    <Link to="/requests" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ViewListIcon />}>Request Orders</MenuItem></Link>
 
 
                 </Menu>

@@ -20,6 +20,8 @@ import UpdateStock from './components/UpdateStock';
 import Transaction from './components/Transaction';
 import Taxes from './components/Taxes';
 import Notifications from './components/Notifications';
+import Expiredproducts from './components/Expiredproducts';
+import Requestedorders from './components/Requestedorders';
 
 
 
@@ -78,6 +80,8 @@ function App() {
                   <Route exact={true} path="/tax" element={<Taxes />} />
 
                   <Route exact={true} path="/notifications" element={<Notifications />} />
+                  <Route exact={true} path="/expired" element={<Expiredproducts />} />
+                  <Route exact={true} path="/requests" element={<Requestedorders />} />
 
 
                 </Routes>
