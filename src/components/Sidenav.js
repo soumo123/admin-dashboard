@@ -9,7 +9,7 @@ import SellIcon from '@mui/icons-material/Sell';
 import SettingsIcon from '@mui/icons-material/Settings';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 //sidebar css from react-pro-sidebar module
-import { Link, useFetcher } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import PaidIcon from '@mui/icons-material/Paid';
@@ -20,12 +20,43 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menus from '@mui/material/Menu';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItems from '@mui/material/MenuItem';
+
+
+const settings = ['Logout'];
+
 const Sidenav = () => {
+    const navigate = useNavigate()
     const { collapseSidebar } = useProSidebar();
     const adminId = localStorage.getItem("adminId")
     const type = localStorage.getItem("type")
     const [count, setCount] = useState("")
+    const image = localStorage.getItem("adminImage")
     const dataRefe = useSelector((state) => state.noteRef.arr);
+
+    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+    const handleOpenNavMenu = (event) => {
+        setAnchorElNav(event.currentTarget);
+    };
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
+
+    const handleCloseNavMenu = () => {
+        setAnchorElNav(null);
+    };
+
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
 
     const countNotification = async () => {
 
@@ -41,10 +72,21 @@ const Sidenav = () => {
         }
     }
 
+    const handleLogout = async()=>{
+        localStorage.removeItem("adminId")
+        localStorage.removeItem("shop_id")
+        localStorage.removeItem("type")
+        localStorage.removeItem("adminImage")
+        localStorage.removeItem("adminToken")
+        sessionStorage.removeItem("adminToken")
+        navigate("/")
+
+    }
+
     useEffect(() => {
         countNotification()
     }, [dataRefe])
-    
+
 
 
     return (
@@ -73,11 +115,11 @@ const Sidenav = () => {
                                 {
                                     count > 0 && (
                                         <div class="noti">
-                                        <span>{count}</span>
-                                    </div>
+                                            <span>{count}</span>
+                                        </div>
                                     )
                                 }
-                               
+
                             </div>
 
                         </MenuItem>
@@ -99,7 +141,38 @@ const Sidenav = () => {
 
 
                 </Menu>
-
+                <Box sx={{ flexGrow: 0 }}>
+                    <Tooltip title="Open settings">
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <Avatar alt="Remy Sharp" src={image} /> 
+                          
+                        </IconButton>
+                       
+                    </Tooltip>
+                    {`${adminId}`}
+                    <Menus
+                        sx={{ mt: '45px' }}
+                        id="menu-appbar"
+                        anchorEl={anchorElUser}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={Boolean(anchorElUser)}
+                        onClose={handleCloseUserMenu}
+                    >
+                        {settings.map((setting) => (
+                            <MenuItems key={setting} onClick={handleCloseUserMenu}>
+                                <Typography textAlign="center" onClick={handleLogout}>{setting}</Typography>
+                            </MenuItems>
+                        ))}
+                    </Menus>
+                </Box>
             </Sidebar>
 
 
