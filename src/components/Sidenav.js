@@ -141,7 +141,7 @@ const Sidenav = () => {
 
 
                 </Menu>
-                <Box sx={{ flexGrow: 0 }}>
+                <Box sx={{ flexGrow: 0 }} className="profile-icon">
                     <Tooltip title="Open settings">
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                             <Avatar alt="Remy Sharp" src={image} /> 

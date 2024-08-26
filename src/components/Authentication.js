@@ -55,7 +55,6 @@ const Authentication = () => {
         localStorage.setItem("adminImage", response.data.user.image)
         setMode(1)
       } else {
-        console.log("errorrrrrrrrrrrrrrr", error)
         setMessageType("error")
         setMessage("Email or Password is wrong")
         setTimeout(() => {
