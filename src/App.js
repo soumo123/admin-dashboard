@@ -155,7 +155,7 @@ function App() {
     const exactShopId = localStorage.getItem("shop_id")
     const exactType = localStorage.getItem("type")
     
-    console.log("adminIdadminIdadminIdadminId",exactadminId)
+
 
   return (
     <>
@@ -165,7 +165,7 @@ function App() {
         <div className="admin-box">
           <div className="admin-sidebar">
             {
-               exactadminId==="" ? (
+               exactadminId==="" || exactadminId===null || exactShopId==="" || exactShopId===null || exactType==="" || exactType===null ? (
                 ""
                ):(
                 <Sidenav />
@@ -178,7 +178,7 @@ function App() {
             <main>
               <div style={{}}>
                 {
-                  exactadminId==="" ? (
+                  exactadminId==="" || exactadminId===null || exactShopId==="" || exactShopId===null || exactType==="" || exactType===null  ? (
                     <Routes>
                       <Route exact={true} path="/" element={<Authentication />} />
                       <Route path="*" element={<Navigate to="/" />} /> {/* Redirect to / */}
