@@ -217,10 +217,10 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
     const handleOrder = async (e) => {
         e.preventDefault()
         try {
-
             if (orderItems.length > 0) {
+                console.log("initialDeposit , orderMethod",initialDeposit , orderMethod)
 
-                if (orderMethod === "ordered" || (Number(initialDeposit) === 0 && Number(initialDeposit) === "")) {
+                if (orderMethod === "ordered" && (Number(initialDeposit) === 0)) {
                     setDepoErr(true)
                     return
                 }

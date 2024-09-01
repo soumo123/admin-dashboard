@@ -107,7 +107,7 @@ const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad, se
                 </Modal.Header>
                 <Modal.Body style={{ maxHeight: '80vh', overflowY: 'auto' }}>
                     <h4>{viewData?.orderId}</h4>
-                    <div class="card card-1">
+                    <div class="card2 card-1">
 
                         <div class="card-body">
                             <div class="row justify-content-between mb-3">
@@ -118,7 +118,7 @@ const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad, se
                                 viewData && viewData?.products?.map((ele) => (
                                     <div class="row mt-4">
                                         <div class="col">
-                                            <div class="card card-2">
+                                            <div class="card2 card-2">
                                                 <div class="card-body">
                                                     <div class="media">
                                                         <div class="sq align-self-center "> <img class="img-fluid  my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0" src={ele.thumbImage} width="135" height="135" /> </div>

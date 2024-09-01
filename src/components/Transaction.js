@@ -27,8 +27,12 @@ const Transaction = () => {
   const [loader, setLoader] = useState(false)
   const [ref, setRef] = useState(false)
   const [viewTranModal, setVewTranMiodal] = useState(false)
-  const[totalUnpaid,setTotalUnpaid] = useState(0)
-  const[totalpaid,setTotalpaid] = useState(0)
+  const [totalUnpaid, setTotalUnpaid] = useState(0)
+  const [totalpaid, setTotalpaid] = useState(0)
+
+  const [total, setTotal] = useState(0)
+  const [totalUnpaidAmount, setTotalUnpaidAmount] = useState(0)
+  const [totalpaidAmount, setTotalpaidAmount] = useState(0)
 
 
   const handleRowClick = (e) => {
@@ -68,7 +72,9 @@ const Transaction = () => {
       <td>{new Date(transaction?.order_date).toLocaleDateString()}</td>
       <td>
         <span className="icon"><RemoveRedEyeIcon onClick={() => handleOpenTranModal(transaction?.transaction_id)} /></span>
-        <span className="icon" onClick={() => handleSetData(transaction?.totalAmount, transaction?.balance, transaction?.transaction_id)}><PaidIcon /></span>
+        {transaction?.paid ? ("") : (
+          <span className="icon" onClick={() => handleSetData(transaction?.totalAmount, transaction?.balance, transaction?.transaction_id)}><PaidIcon /></span>
+        )}
         <span className="icon"><ReceiptIcon onClick={() => handleRecieptSetData(transaction?.totalAmount, transaction?.balance, transaction?.transaction_id)} /></span>
       </td>
     </tr>
@@ -84,12 +90,17 @@ const Transaction = () => {
         setTransationData(result.data.data)
         setTotalUnpaid(result.data.data.totalUenpaidTransaction)
         setTotalpaid(result.data.data.totalPaidTransaction)
-
+        setTotal(result.data.data.totalAmount)
+        setTotalUnpaidAmount(result.data.data.totalUnpaidAmount)
+        setTotalpaidAmount(result.data.data.totalPaidAmount)
       }
     } catch (error) {
       setTransationData({})
       setTotalUnpaid(0)
-setTotalpaid(0)
+      setTotalpaid(0)
+      setTotal(0)
+      setTotalUnpaidAmount(0)
+      setTotalpaidAmount(0)
     }
 
   }
@@ -167,12 +178,9 @@ setTotalpaid(0)
   }
 
   useEffect(() => {
-    if (agId) {
 
       getTrsanctions()
-    } else {
-      setTransationData({})
-    }
+   
   }, [ref, agId])
 
 
@@ -200,13 +208,30 @@ setTotalpaid(0)
               }
             </select>
           </div>
-          <div className='col-md-3'>
-              <label>Total Unpaid Transaction :</label>
-              <h5>{totalUnpaid}</h5>
+          <div className='col-md-2'>
+            <label>Total Unpaid Transaction :</label>
+            <h5>{totalUnpaid}</h5>
           </div>
-          <div className='col-md-3'>
-              <p>Total paid Transaction :</p>
-              <h5>{totalpaid}</h5>
+
+          <div className='col-md-2'>
+            <p>Total paid Transaction :</p>
+            <h5>{totalpaid}</h5>
+
+
+          </div>
+          <div className='col-md-1'>
+            <p>Total Bill Amount :</p>
+            <h5>₹ {total}</h5>
+
+          </div>
+          <div className='col-md-2'>
+            <p>Total Paid Bill Amount:</p>
+            <h5>₹ {totalpaidAmount}</h5>
+
+          </div>
+          <div className='col-md-2'>
+            <p>Total unpaid Bill Amount :</p>
+            <h5>₹ {totalUnpaidAmount}</h5>
 
           </div>
         </div>

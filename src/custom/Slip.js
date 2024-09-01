@@ -126,7 +126,18 @@ const Slip = ({ invo, setInvo, viewData }) => {
                             <p>SGST {sgst}%: <span>{viewData?.sgst?.toFixed(2)}</span></p>
                         </div>
                             {
-                                viewData?.initialDeposit === 0 ? (""):    <p>Cash: <span>- ₹ {viewData?.initialDeposit}</span></p>
+                                viewData?.initialDeposit === 0 ? (""):    
+                                <>
+                                {
+                                    viewData?.paid ? (
+                                        ""
+                                    ):(
+                                        <p>Cash: <span>- ₹ {viewData?.initialDeposit}</span></p>
+                                    )
+                                }
+                                </>
+                               
+
                             }
                         
                             <p>Sub Total: <span>₹ {viewData?.orderedPrice?.toFixed(2)}</span></p>

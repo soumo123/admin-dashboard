@@ -159,7 +159,7 @@ const TransactionSlip = ({ recShow, setRecShow, agId, shop_id, transactionId }) 
                         </div>
                         <div className="footer">
                             <p>Thank You!</p>
-                            <p>Powered by www.dotpe.in</p>
+                            {/* <p>Powered by www.dotpe.in</p> */}
                         </div>
                     </div>
 

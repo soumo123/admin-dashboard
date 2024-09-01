@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { noteRefs } from '../redux/actions/userAction'
-import { useSelector, useDispatch } from 'react-redux'
+import {useDispatch } from 'react-redux'
 import Message from '../custom/Message';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import CancelIcon from '@mui/icons-material/Cancel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -15,7 +13,6 @@ import Button from 'react-bootstrap/Button';
 import ViewOrderModal from './ViewOrderModal.js';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
 import Slip from '../custom/Slip.js';
 import DirectOrder from '../custom/DirectOrder.js';
 import dayjs from 'dayjs';
@@ -47,6 +44,8 @@ const Orders = ({ sidebarOpen }) => {
     const [limit, setLimit] = useState(5);
     const [offset, setOffset] = useState(0)
     const [totalPages, setTotalPages] = useState(0);
+    const[ordertype,setOrderType] = useState("")
+
     const handleClose = () => {
         setShow(false);
         setText("")
@@ -72,7 +71,7 @@ const Orders = ({ sidebarOpen }) => {
 
     const getOrderDetails = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${""}&limit=${limit}&offset=${offset}`)
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${""}&limit=${limit}&offset=${offset}&ordertype=${ordertype}`)
             if (response.status === 200) {
                 setloader(true)
                 setOrders(response.data.data)
@@ -94,7 +93,7 @@ const Orders = ({ sidebarOpen }) => {
           const timer = setTimeout(() => {
             const getOrderDetails = async () => {
               try {
-                const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${searchQuery}`)
+                const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${searchQuery}&ordertype=${ordertype}`)
                 if (response.status === 200) {
                     setloader(true)
                     setOrders(response.data.data)
@@ -178,9 +177,13 @@ const Orders = ({ sidebarOpen }) => {
         setDirectModal(true)
     }
 
+    const handleOrderTypeChange = (e)=>{
+        setOrderType(e)
+    }
+
     useEffect(() => {
         getOrderDetails()
-    }, [offset, limit,ref])
+    }, [ordertype,offset, limit,ref])
 
 
     return (
@@ -201,7 +204,18 @@ const Orders = ({ sidebarOpen }) => {
                             </div>
                            
                         </div>
-                        <div className='col-sm-8 text-end '>
+                        <div className="col-sm-4">
+                            <div className="form-group">
+                                <label>Order Type</label>
+                                <select className='form-control' value={ordertype} onChange={(e)=>handleOrderTypeChange(e.target.value)}>
+                                    <option value="">All Orders</option>
+                                    <option value="direct">Direct Order</option>
+                                    <option value="ordered">Ordered</option>
+                                </select>
+                            </div>
+                           
+                        </div>
+                        <div className='col-sm-4 text-end '>
                             <button type="button" className='btnSubmit' onClick={handleOpenModal}>+Take Order</button>
                         </div>
                         {/* <div className="col-sm-4">
@@ -294,17 +308,14 @@ const Orders = ({ sidebarOpen }) => {
                                                                     onClick={() => getOrderById(ele.orderId,1)}
                                                                 />
                                                             </span>
-                                                            {
-                                                                ele.status === 4 ? (
+                                                           
                                                                     <span className="view-invoice fs-xs" data-bs-toggle="tooltip"
                                                                         data-bs-placement="top"
                                                                         title="Invoice"
                                                                         style={{ color: '#d7783b', cursor: 'pointer' }}>
                                                                         <ReceiptIcon onClick={() => getOrderById(ele.orderId,2)}/>
                                                                     </span>
-                                                                ) : ("")
-                                                            }
-
+                                                              
                                                         </td>
 
                                                         {/* <td>

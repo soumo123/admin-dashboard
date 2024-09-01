@@ -76,9 +76,22 @@ const UpdateStock = ({ sidebarOpen }) => {
     }
   };
 
-  const getAllProductsByAdmin = async () => {
+  // const getAllProductsByAdmin = async () => {
+  //   try {
+  //     const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=${searchQuery}&startprice=${startPrice}&lastprice=${lastPrice}`);
+  //     if (response.status === 200) {
+  //       setLoader(true);
+  //       setProducts(response.data.data);
+  //     }
+  //   } catch (error) {
+  //     setLoader(true);
+  //     console.log(error.stack);
+  //   }
+  // };
+
+  const getReqOrders = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=${searchQuery}&startprice=${startPrice}&lastprice=${lastPrice}`);
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_req_orders_agents?adminId=${adminId}&agentId=${agId}`);
       if (response.status === 200) {
         setLoader(true);
         setProducts(response.data.data);
@@ -87,7 +100,9 @@ const UpdateStock = ({ sidebarOpen }) => {
       setLoader(true);
       console.log(error.stack);
     }
-  };
+  }
+
+
 
   useEffect(() => {
     // if (lastTypingTime) {
@@ -96,8 +111,12 @@ const UpdateStock = ({ sidebarOpen }) => {
     //   }, 1000);
     //   return () => clearTimeout(timer);
     // }
-    getAllProductsByAdmin();
-  }, [ref]);
+    // getAllProductsByAdmin();
+    if(agId){
+
+      getReqOrders()
+    }
+  }, [ref,agId]);
 
   const handleOpen = (product) => {
     setSelectedProduct(product);
@@ -156,8 +175,9 @@ const UpdateStock = ({ sidebarOpen }) => {
         return [
           ...prevReturnProducts,
           {
-            name: selectedProduct.name,
+            name: selectedProduct.productname,
             productId: selectedProduct.productId,
+            reqId:selectedProduct.reqId,
             weights: [weightToReturn]
           }
         ];
@@ -177,7 +197,8 @@ const UpdateStock = ({ sidebarOpen }) => {
   const handleSave = async () => {
     const productToSave = {
       productId: selectedProduct.productId,
-      name: selectedProduct.name,
+      name: selectedProduct.productname,
+      reqId:selectedProduct.reqId,
       weights: selectedProduct.weight,
       manufacture_date: manufature_date,
       expiry_date: expiry_date,
@@ -259,7 +280,8 @@ const UpdateStock = ({ sidebarOpen }) => {
 
   useEffect(() => {
     getAllAgents();
-    getAllProductsByAdmin();
+    // getAllProductsByAdmin();
+    getReqOrders()
   }, []);
 
   useEffect(() => {
@@ -298,7 +320,8 @@ const UpdateStock = ({ sidebarOpen }) => {
     const formattedDate = dayjs(newDate).format('YYYY-MM-DD'); // Or any format you prefer
     setExpiryDate(formattedDate)
   };
-  console.log("returnProducts", returnProducts)
+  console.log("selectedProductselectedProduct", selectedProduct)
+  console.log("addedProducts",addedProducts)
   return (
     <>
       {
@@ -327,11 +350,10 @@ const UpdateStock = ({ sidebarOpen }) => {
           </div>
           <div className="product-list">
             <div className={`all-product ${sidebarOpen ? 'sidebar-open' : ''}`}>
-              <Form>
+              {/* <Form>
                 <Row>
                   <Col sm={4}>
                     <Form.Group>
-                      {/* <Form.Label>Search Products</Form.Label> */}
                       <Form.Control
                         type="text"
                         placeholder="Search Products By Name and Description"
@@ -341,32 +363,11 @@ const UpdateStock = ({ sidebarOpen }) => {
                       />
                     </Form.Group>
                   </Col>
-                  {/* <Col sm={4}>
-                    <Form.Group>
-                      <Form.Label>Price starts from</Form.Label>
-                      <Form.Control
-                        type="number"
-                        placeholder="Enter Starting Price"
-                        value={startPrice}
-                        onChange={(e) => handleStartPrice(e.target.value)}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col sm={4}>
-                    <Form.Group>
-                      <Form.Label>To</Form.Label>
-                      <Form.Control
-                        type="number"
-                        placeholder="Enter Last Price"
-                        value={lastPrice}
-                        onChange={(e) => handleLastPrice(e.target.value)}
-                      />
-                    </Form.Group>
-                  </Col> */}
-                </Row>
-              </Form>
 
-              <div className="table-responsive mt-4">
+                </Row>
+              </Form> */}
+
+              {/* <div className="table-responsive mt-4">
                 <table className="table data-tables table-hover">
                   <thead>
                     <tr>
@@ -376,8 +377,7 @@ const UpdateStock = ({ sidebarOpen }) => {
                       <th>Expired</th>
                       <th>Delivery Partner</th>
                       <th>Weight & Price</th>
-                      {/* <th>Actual Price</th>
-                      <th>Stock</th> */}
+                    
                       <th>Color</th>
                     </tr>
                   </thead>
@@ -401,7 +401,7 @@ const UpdateStock = ({ sidebarOpen }) => {
                                 <td>{ele.description}</td>
                             <td>{ele.expired ? <p style={{color: 'red'}}>Expired</p>:<p style={{color: 'green'}}>Not Expire</p>}</td>
                                 
-                                {/* <td>₹ {ele.price}</td> */}
+                           
                                 <td>{ele.delivery_partner}</td>
                                 <td>
                                   {
@@ -415,10 +415,67 @@ const UpdateStock = ({ sidebarOpen }) => {
 
                                   }
                                 </td>
-                                {/* <td>{ele.discount} %</td> */}
-                                {/* <td>₹ {ele.actualpricebydiscount}</td> */}
-                                {/* <td>{ele.stock} pieces</td> */}
+                                
                                 <td>{ele.color}</td>
+                              </tr>
+                            </React.Fragment>
+                          ))}
+                        </tbody>
+                      ) : (
+                        <div className="container">
+                          <div className="row">
+                            <div className="col-12">
+                              <div className="text-center">No Products Found</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </table>
+              </div> */}
+              <div className="table-responsive mt-4">
+                <table className="table data-tables table-hover">
+                  <thead>
+                    <tr>
+                      <th>Product ID</th>
+                      <th>Product Name</th>
+                      <th>Weight & Price</th>
+
+
+                    </tr>
+                  </thead>
+                  {!loader ? (
+                    <div className="container">
+                      <div className="row">
+                        <div className="col-12">
+                          <div className="text-center">loading....</div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {products && products.length > 0 ? (
+                        <tbody>
+                          {products.map((ele) => (
+                            <React.Fragment key={ele.productId}>
+                              <tr onClick={() => handleOpen(ele)}>
+                                <td>{ele.productId}</td>
+                                <td>{ele.productname}</td>
+                                {/* <td>{ele.expired ? <p style={{color: 'red'}}>Expired</p>:<p style={{color: 'green'}}>Not Expire</p>}</td>
+                                <td>{ele.delivery_partner}</td> */}
+                                <td>
+                                  {
+                                    ele.weight && ele.weight.map((item) => (
+                                      <>
+                                        <p>Weight : {item.weight} {ele.unit}, Quantity : {item.stock} , Price : ₹ {item.price}</p>
+
+                                      </>
+                                    ))
+                                  }
+                                </td>
+
+                                {/* <td>{ele.color}</td> */}
                               </tr>
                             </React.Fragment>
                           ))}
@@ -451,7 +508,7 @@ const UpdateStock = ({ sidebarOpen }) => {
                       Product Name:
                     </Form.Label>
                     <Col sm="10">
-                      <Form.Control plaintext readOnly defaultValue={selectedProduct.name} />
+                      <Form.Control plaintext readOnly defaultValue={selectedProduct.productname} />
                     </Col>
                   </Form.Group>
                   {selectedProduct.weight.map((item, index) => (
@@ -597,7 +654,7 @@ const UpdateStock = ({ sidebarOpen }) => {
 
 
 
-{/* 
+            {/* 
             <p>----------------------------------------------</p>
             <h2>Return Products</h2>
             <div className="product-container">

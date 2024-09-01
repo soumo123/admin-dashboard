@@ -47,7 +47,7 @@ const Notifications = () => {
     }
   };
 
-  const handlerequestOrder = async (not_id, name, agentId, email, phone) => {
+  const handlerequestOrder = async (not_id, name, agentId, email, phone,weight,price,purchaseprice,productId,productname) => {
 
     try {
       console.log("not_id", not_id, "quantity", quantities[not_id]);
@@ -55,13 +55,18 @@ const Notifications = () => {
 
         agentId: agentId,
         shopId: shop_id,
-        quantity: quantities[not_id],
+        productId:productId,
+        productname:productname,
+        weight:weight,
+        price:price,
+        stock: Number(quantities[not_id]),
+        purchaseprice:purchaseprice,
         agentname: name,
         email: email,
         phone: phone,
         message: messages[not_id]
       }
-      console.log("json", json)
+      console.log("json--reqq", json)
       const config = {
         headers: {
           'Content-Type': "application/json",
@@ -205,7 +210,7 @@ const Notifications = () => {
                                             value={messages[ele._id] || ""}
                                             onChange={(e) => handleMessageChange(ele._id, e.target.value)}
                                           />
-                                          <button type="button" className='btn btn-warning' onClick={(e) => handlerequestOrder(ele._id, ele.agent_details?.name, ele.agent_details?.ag_id, ele.agent_details?.email, ele.agent_details?.phone)}>Take order</button>
+                                          <button type="button" className='btn btn-warning' onClick={(e) => handlerequestOrder(ele._id, ele.agent_details?.name, ele.agent_details?.ag_id, ele.agent_details?.email, ele.agent_details?.phone,ele.weight,ele.price,ele.purchaseprice,ele.productId,ele.productname)}>Take order</button>
                                           <button type="button" className='btn btn-secondary'>Cancel</button>
                                         </>
                                       )}

@@ -196,7 +196,7 @@ function App() {
                       <Route exact={true} path="/manage-order" element={<Orders />} />
                       <Route exact={true} path="/vendors" element={<Vendor />} />
 
-                      <Route exact={true} path="/addVendorProduct/:agentId/:vendorId" element={<AddVendorProducts />} />
+                      <Route exact={true} path="/addVendorProduct" element={<AddVendorProducts />} />
                       <Route exact={true} path="/stocks" element={<UpdateStock />} />
                       <Route exact={true} path="/transaction" element={<Transaction />} />
                       <Route exact={true} path="/tax" element={<Taxes />} />

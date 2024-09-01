@@ -78,9 +78,9 @@ const Requestedorders = () => {
                       redata.map((ele) => (
                         <tr  key={ele?._id}>
 
-                          <td>{ele?.agentName}</td>
-                          <td>{ele?.email}</td>
-                          <td>{ele?.phone}</td>
+                          <td>{ele?.agentInfo?.agentname} {`(${ele?.agentInfo?.agentId})`}</td>
+                          <td>{ele?.agentInfo?.email}</td>
+                          <td>{ele?.agentInfo?.phone}</td>
                           <td>{ele?.quantity}</td>
                           <td>{ele?.message}</td>
 

@@ -17,6 +17,7 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import ViewListIcon from '@mui/icons-material/ViewList';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
@@ -124,7 +125,7 @@ const Sidenav = () => {
 
                         </MenuItem>
                     </Link>
-                    {/* <Link to="/create" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AddCircleOutlineIcon />}>Create Product</MenuItem></Link> */}
+                    <Link to="/addVendorProduct" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AddCircleIcon />}>Add Products</MenuItem></Link>
                     <Link to="/allproducts" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<CategoryIcon />}>Products</MenuItem></Link>
                     <Link to="/allusers" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<GroupIcon />}>Users</MenuItem></Link>
                     <Link to="/tags" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SellIcon />}>Tags</MenuItem></Link>

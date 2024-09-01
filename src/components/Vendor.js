@@ -327,7 +327,7 @@ const Vendor = () => {
                                                                     <td>
 
                                                                         <div className="data-icons">
-                                                                            <Link to={`/addVendorProduct/${ele.agentId}/${ele.vendorId}`}><span data-toggle="tooltip" data-placement="top" title="add products" style={{ cursor: "pointer" }} ><LoupeIcon /></span></Link>
+                                                                            {/* <Link to={`/addVendorProduct/${ele.agentId}/${ele.vendorId}`}><span data-toggle="tooltip" data-placement="top" title="add products" style={{ cursor: "pointer" }} ><LoupeIcon /></span></Link> */}
                                                                             <span data-toggle="tooltip" data-placement="top" title="View" style={{ cursor: "pointer" }} onClick={()=>hanldeOpen(ele.vendorId,ele.agentId,2)}><VisibilityIcon /></span>
                                                                         </div>
                                                                     </td>
