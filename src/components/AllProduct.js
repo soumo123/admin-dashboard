@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CreateIcon from '@mui/icons-material/Create';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Pagination from '@mui/material/Pagination';
+
 const AllProduct = ({ sidebarOpen }) => {
 
   const dispatch = useDispatch()
@@ -31,7 +33,10 @@ const AllProduct = ({ sidebarOpen }) => {
   const [startPrice, setStartPrice] = useState("")
   const [lastPrice, setLatPrice] = useState("")
   const [loader, setloader] = useState(false);
-
+  const [totalPages, setTotalPages] = useState(0);
+  const [limit, setLimit] = useState(5);
+  const [offset, setOffset] = useState(0)
+  const[expired,setExpired] = useState("")
 
   const handleClose = () => {
     setOpen(false);
@@ -66,15 +71,17 @@ const AllProduct = ({ sidebarOpen }) => {
 
     try {
 
-      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=${searchQuery}&startprice=${startPrice}&lastprice=${lastPrice}`)
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=${searchQuery}&startprice=${startPrice}&lastprice=${lastPrice}&limit=${limit}&offset=${offset}&expired=${expired}`)
       if (response.status === 200) {
         setloader(true)
         setProducts(response.data.data)
-
+        setTotalPages(Math.ceil(response.data.totalData / limit));
       }
 
     } catch (error) {
       setloader(true)
+      setProducts([])
+      setTotalPages(0)
       console.log(error.stack)
     }
 
@@ -121,10 +128,11 @@ const AllProduct = ({ sidebarOpen }) => {
       const timer = setTimeout(() => {
         const getAllProductsByAdmin = async () => {
           try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=${searchQuery}&startprice=${startPrice}&lastprice=${lastPrice}`)
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=${searchQuery}&startprice=${startPrice}&lastprice=${lastPrice}&limit=${limit}&offset=${offset}&expired=${expired}`)
             if (response.status === 200) {
               console.log("response.data.data", response.data.data)
               setProducts(response.data.data)
+              setTotalPages(Math.ceil(response.data.totalData / limit));
             }
           } catch (error) {
             setProducts([])
@@ -169,9 +177,17 @@ const AllProduct = ({ sidebarOpen }) => {
 
   }
 
+  const handlePageChange = (event, value) => {
+    setOffset((value - 1) * limit);
+};
+
+const handleExpireChange = (e)=>{
+  setExpired(e)
+}
+
   useEffect(() => {
     getAllProductsByAdmin()
-  }, [dataRefe])
+  }, [dataRefe,expired])
 
 
 
@@ -185,26 +201,38 @@ const AllProduct = ({ sidebarOpen }) => {
       <div className={`all-product ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className='form'>
           <div className="row">
-            <div className="col-sm-4">
+            <div className="col-sm-3">
               <div className="form-group">
                 <label>Search Products</label>
                 <input type="text" placeholder="Search Products By Name and Description" className='form-control' value={searchQuery} name="search" onChange={(e) => handleSearch(e.target.value)} />
               </div>
             </div>
-            {/* <div className="col-sm-4">
+            <div className="col-sm-3">
               <div className="form-group">
                 <label>Price starts from </label>
                 <input type="number" placeholder="Enter Starting Price" className='form-control' value={startPrice} onChange={(e) => handleStartPrice(e.target.value)} />
               </div>
-            </div> */}
+            </div>
 
 
-            {/* <div className="col-sm-4">
+            <div className="col-sm-3">
               <div className="form-group">
                 <label>To</label>
                 <input type="number" placeholder="Enter Last Price" className='form-control' value={lastPrice} onChange={(e) => handleLastPrice(e.target.value)} />
               </div>
-            </div> */}
+            </div>
+
+            <div className="col-sm-3">
+              <div className="form-group">
+                <label>Sort</label>
+                <select className='form-control' value={expired} onChange={(e)=>handleExpireChange(e.target.value)}>
+                <option value={""}>All</option>
+                  <option value={true}>Expired</option>
+                  <option value={false}>Not Expired</option>
+
+                </select>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -309,6 +337,7 @@ const AllProduct = ({ sidebarOpen }) => {
           </table>
         </div>
       </div>
+      <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
 
       <Dialog
         open={open}
