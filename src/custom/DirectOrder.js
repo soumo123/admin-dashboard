@@ -60,6 +60,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
     };
 
     const handleDateChange = (newValue) => {
+        setDepoErr(false)
         setDateTime(newValue);
         setTime(newValue.format('YYYY-MM-DD HH:mm:ss'))
         console.log('Selected date and time:', newValue, newValue.format('YYYY-MM-DD HH:mm:ss'));
@@ -97,12 +98,12 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
     }
 
 
-    const handleDeposit = (e)=>{
+    const handleDeposit = (e) => {
         setInitialDeposit(e)
         setDepoErr(false)
     }
 
-    const hanldePhone = (e)=>{
+    const hanldePhone = (e) => {
         setPhone(e)
         setDepoErr(false)
 
@@ -110,7 +111,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
     const getAllProductsByAdmin = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=&startprice=&lastprice=`);
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=&startprice=&lastprice=&limit=${10000000}&offset=${0}&expired=`);
             if (response.status === 200) {
                 setProducts(response.data.data);
             }
@@ -151,6 +152,8 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
         }
 
         setAddErr(false);
+        setDepoErr(false)
+
     };
     const handleWeightChange = (e) => {
         const selectedWeight = e.target.value;
@@ -175,11 +178,14 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
         }
 
         setAddErr(false);
+        setDepoErr(false)
+
     };
 
 
     const handleQuantityChange = (e) => {
         setAddErr(false)
+        setDepoErr(false)
         if (e.target.value === 0 || "") {
             setQuantity(1)
         } else {
@@ -218,7 +224,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
         e.preventDefault()
         try {
             if (orderItems.length > 0) {
-                console.log("initialDeposit , orderMethod",initialDeposit , orderMethod)
+                console.log("initialDeposit , orderMethod", initialDeposit, orderMethod)
 
                 if (orderMethod === "ordered" && (Number(initialDeposit) === 0)) {
                     setDepoErr(true)
@@ -287,12 +293,18 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
 
     }
+
+    const handleChangeCustomer = (e)=>{
+        setCustomerName(e)
+        setAddErr(false)
+        setDepoErr(false)
+    }
+
     useEffect(() => {
         getTax()
     }, [])
 
     console.log("orderItemsorderItems", orderItems)
-
     return (
         <>
             {
@@ -312,6 +324,133 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <div class="row">
+                        <div class="col">
+                            <label for="inputEmail4" class="form-label">Customer name</label>
+                            <input type="text" class="form-control" placeholder="Customer name" aria-label="Customer name" value={customer_name} onChange={(e) => handleChangeCustomer(e.target.value)} />
+                        </div>
+                    </div>
+                    <div className='row mt-5'>
+                    <div class="col">
+                            <label for="inputEmail4" class="form-label">* Select Product</label>
+
+                            <select id="inputState" class="form-select" value={selectedId} onChange={handleProductChange}>
+                                <option value="">Select Product</option>
+                                {products && products.map((ele) => (
+                                    <option key={ele.productId} value={ele.productId}>{`${ele.name} (${ele.productId})`}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div class="col">
+                            <label for="inputEmail4" class="form-label">* Select Variation</label>
+                            <select id="inputState4" class="form-select" value={selectedWeight} onChange={handleWeightChange} disabled={!selectedId}>
+                                <option value="">Select Variation</option>
+                                {weight && weight.map((ele) => (
+                                    <option key={ele.weight} value={ele.weight}>{`${ele.weight} ${unit}`}</option>
+                                ))}
+                            </select>
+                        </div>
+                        {
+                            price ? (
+
+                                <div class="col">
+                                    <label for="inputEmail4" class="form-label">Price</label>
+                                    <input type="text" class="form-control" placeholder="Customer name" aria-label="price" value={price} readOnly />
+                                </div>
+                            ) : ("")
+                        }
+                        <div class="col">
+                            <label for="inputEmail4" class="form-label">Select Quantity</label>
+                            <input type="number" class="form-control" placeholder="Quantity" aria-label="Quantity" min={1} value={quantity} onChange={handleQuantityChange} />
+
+                        </div>
+                        <div className='col'>
+
+                            <Button onClick={handleSaveProduct}>Save</Button>
+
+                        </div>
+                        {
+                            addErr ? (
+                                <p style={{ color: 'red' }}>* Please select mandatory fields</p>
+                            ) : ("")
+                        }
+                    </div>
+
+
+                    <div className='row mt-5'>
+                        <div class="col">
+                            <label for="inputEmail4" class="form-label">Additional Items</label>
+                            <textarea type="text" class="form-control" placeholder="Additional Items" aria-label="Additional Items" value={extra} onChange={(e) => setExtra(e.target.value)} />
+                        </div>
+                        <div class="col">
+                            <label for="inputEmail4" class="form-label">Extra Cost or Price</label>
+                            <input type="number" class="form-control" placeholder="Extra Cost" aria-label="Extra Cost" value={extraPrice} onChange={(e) => setExtraPrice(e.target.value)} />
+                        </div>
+                        <div class="col">
+                            <label for="inputEmail4" class="form-label">Discount</label>
+                            <input type="number" class="form-control" placeholder="Discount" aria-label="Discount" value={discount} onChange={(e) => setDiscount(e.target.value)} />
+                        </div>
+
+                        <div class="col">
+                            <label for="inputEmail4" class="form-label">Notes</label>
+                            <textarea type="text" class="form-control" placeholder="Notes" aria-label="Notes" value={notes} onChange={(e) => setNotes(e.target.value)} />
+                        </div>
+
+                        <div class="col">
+                            <label for="inputEmail4" class="form-label">* Order Type</label>
+                            <select id="inputState3" class="form-select" value={orderMethod} onChange={(e) => handleOrderMethod(e.target.value)}>
+                                <option value="direct">Direct</option>
+                                <option value="ordered">Ordered</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    {
+                        orderMethod === "ordered" ? (
+                            <div className='row mt-5'>
+                                <div class="col">
+                                    <label for="inputEmail4" class="form-label">* Advance Payment</label>
+                                    <input type="number" class="form-control" placeholder="Advance Payment" aria-label="Advance Payment" value={initialDeposit} onChange={(e) => handleDeposit(e.target.value)} />
+                                </div>
+
+                                <div class="col">
+                                    <label for="inputEmail4" class="form-label">Customer Phone Number</label>
+                                    <input type="number" class="form-control" placeholder="Customer Phone Number" aria-label="Customer Phone Number" value={phone} onChange={(e) => hanldePhone(e.target.value)} />
+                                </div>
+                                <div class="col">
+                                    <label for="inputEmail4" class="form-label">Set Date</label>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DemoContainer components={['DateTimePicker']}>
+                                            <DateTimePicker
+                                                label="Pick the Date and Time"
+                                                value={dateTime}
+                                                onChange={handleDateChange}
+                                            />
+                                        </DemoContainer>
+                                    </LocalizationProvider>
+                                </div>
+                                {
+                                    depositeErr ? (
+                                        <p style={{ color: 'red' }}>* Please select mandatory fields</p>
+                                    ) : ("")
+                                }
+                            </div>
+                        ) : ("")
+
+                    }
+
+                    <div className='row'>
+                        <div className='col'>
+                        {orderItems.map((item, index) => (
+                            <div key={index}>
+                                <p>{item.name} ({item.productId}) - {item.weight} {unit} - Quantity: {item.itemCount} Pieces- Total Price: ₹ {item.totalPrice}</p>
+                            </div>
+                        ))}
+                        </div>
+                    </div>
+{/*                     
                     <label>* Customer Name :</label>
                     <input type="text" value={customer_name} onChange={(e) => setCustomerName(e.target.value)} />
                     {orderItems.map((item, index) => (
@@ -346,16 +485,8 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                             <p style={{ color: 'red' }}>* Please select mandatory fields</p>
                         ) : ("")
                     }
-                    {/* {orderItems.length > 0 && (
-                        <Button onClick={() => {
-                            setSelectedId("");
-                            setWeight([]);
-                            setSelectedWeight("");
-                            setPrice("");
-                            setQuantity(1);
-                        }} style={{ marginTop: '10px' }}>+ Add More</Button>
-                    )} */}
-                    <div className="">
+                  */}
+                    {/* <div className="">
                         <label>Extra things :</label>
                         <textarea type="text" value={extra} onChange={(e) => setExtra(e.target.value)} />
                         <label>
@@ -404,9 +535,12 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                                 ""
                             )
                         }
-                    </div>
+                    </div> */}
+
+                 
                 </Modal.Body>
                 <Modal.Footer>
+              
                     <Button onClick={handleOrder}>Create order</Button>
 
                     <Button onClick={handleClose}>Close</Button>
