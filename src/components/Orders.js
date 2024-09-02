@@ -78,12 +78,13 @@ const Orders = ({ sidebarOpen }) => {
                 setTotalPages(Math.ceil(response.data.totalData / limit));
             } else {
                 setOrders([])
+                setTotalPages(0)
             }
-
         } catch (error) {
             setloader(true)
             console.log(error)
             setOrders([])
+            setTotalPages(0)
         }
     }
 
@@ -278,8 +279,8 @@ const Orders = ({ sidebarOpen }) => {
                                                     <tr key={ele.orderId}>
                                                         <td>{ele.orderId}</td>
                                                         <td>{(new Date(ele.created_at).toISOString().slice(0, 10).split('-').reverse().join('/'))}</td>
-                                                        <td>{ele.paymentmethod}</td>
-                                                        <td>{ele.order_method}</td>
+                                                        <td className='text-capitalize'>{ele.paymentmethod}</td>
+                                                        <td className='text-capitalize'>{ele.order_method}</td>
                                                         <td>{ele.deliver_date===null || ele.deliver_date==="" ? "" : dayjs(ele.deliver_date).format('DD/MM/YYYY, hh:mm A')}</td>
                                                         <td>{ele.products.length}</td>
                                                         {/* <td>₹ {ele.initialDeposit}</td> */}
