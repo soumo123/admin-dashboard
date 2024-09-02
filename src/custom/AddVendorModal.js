@@ -70,9 +70,9 @@ const AddVendorModal = ({ modalShow1, setModalShow1,setRefresh1,setMode }) => {
 
       if (response.status === 201) {
         setFormData({})
-        setModalShow1(false);
         setMessageType("success")
         setMessage("Vendor added")
+        setModalShow1(false);
         setMode(0)
         
         setTimeout(() => {
