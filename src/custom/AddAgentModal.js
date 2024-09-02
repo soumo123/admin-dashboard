@@ -75,9 +75,9 @@ const AddAgentModal = ({ modalShow2, setModalShow2,setRefresh2 ,vendorData , set
 
       if (response.status === 201) {
         setFormData({})
-        setModalShow2(false);
         setMessageType("success")
         setMessage("Agent added")
+        setModalShow2(false);
         setMode(0)
         setTimeout(() => {
           setMessage(false)
