@@ -144,7 +144,7 @@ const AllProduct = ({ sidebarOpen }) => {
       }, 1000);
       return () => clearTimeout(timer)
     }
-  }, [searchQuery, startPrice, lastPrice])
+  }, [searchQuery, startPrice, lastPrice,offset, limit])
 
   const handleCheck = async (check, pdId) => {
     let active = undefined
@@ -187,7 +187,7 @@ const handleExpireChange = (e)=>{
 
   useEffect(() => {
     getAllProductsByAdmin()
-  }, [dataRefe,expired])
+  }, [dataRefe,expired,offset, limit])
 
 
 
