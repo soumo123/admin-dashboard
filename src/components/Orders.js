@@ -114,7 +114,7 @@ const Orders = ({ sidebarOpen }) => {
           }, 1000);
           return () => clearTimeout(timer)
         }
-      }, [searchQuery])
+      }, [searchQuery,offset, limit])
 
       const handlePageChange = (event, value) => {
         setOffset((value - 1) * limit);
