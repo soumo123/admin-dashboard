@@ -31,7 +31,7 @@ const AddVendorProducts = () => {
 
   const [agentId, setAgentId] = useState("")
   const [vendorId, setVendorId] = useState("")
-
+  const[title,setTitle]=useState("")
   const[err,setErr] = useState(false)
 
   const handleAddWeight = (formIndex) => {
@@ -56,8 +56,6 @@ const AddVendorProducts = () => {
     setErr(false)
     const newForms = [...forms];
     newForms[formIndex][field] = value;
-    console.log("newForms[formIndex][field]", newForms[formIndex][field], value)
-    console.log("newForms", newForms)
     setForms(newForms);
   };
 
@@ -80,7 +78,6 @@ const AddVendorProducts = () => {
 
     };
     let validationResult = validateData(product);
-    console.log("productproductproduct",product)
     if(validationResult){
       setErr(true)
       return 
@@ -94,7 +91,15 @@ const AddVendorProducts = () => {
     setForms([...forms, { id: Date.now(), productName: '', unit: '', manufacture_date: null, expiry_date: null, weights: [], weightInput: { weight: '', price: 0, stock: 0, purchaseprice: 0 }, weightFormVisible: false }]);
   };
 
+  const handleClearall = ()=>{
+    setSelectedOption(null)
+    setAgentId("")
+    setVendorId("")
+    setTitle("")
+  }
+
   const handleDeleteProduct = (productIndex) => {
+    setErr(false)
     const newProducts = products.filter((_, index) => index !== productIndex);
     setProducts(newProducts);
     if (newProducts.length === 0) {
@@ -107,11 +112,10 @@ const AddVendorProducts = () => {
   const addAgentProduct = async () => {
 
     try {
-      if(products.length===0){
+      if(products.length===0 || !agentId){
         setErr(true)
         return
       }
-      console.log("add-agentProduct", products)
       const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/addinventory?adminId=${adminId}&agentId=${agentId}&vendorId=${vendorId}&type=${type}&shop_id=${shop_id}`, products, {
         headers: {
           'Content-Type': 'application/json'
@@ -149,8 +153,7 @@ const AddVendorProducts = () => {
     const formattedDate = dayjs(newDate).format('YYYY-MM-DD'); // Or any format you prefer
     handleFormChange(formIndex, 'expiry_date', formattedDate);
   };
-  console.log('forms', forms)
-  console.log('productssssss', products)
+
 
 
   const handleSearch = (query) => {
@@ -185,7 +188,7 @@ const AddVendorProducts = () => {
           try {
             const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/search_vendor?adminId=${adminId}&key=${searchQuery}`)
             if (response.status === 200) {
-              console.log("response.data.data", response.data.data)
+             
               setSerachData(response.data.data)
             }
           } catch (error) {
@@ -204,10 +207,10 @@ const AddVendorProducts = () => {
     if (selectedOption) {
       setAgentId(selectedOption.value);
       setVendorId(selectedOption.label)
+      setTitle(selectedOption.title)
     }
   }, [selectedOption])
 
-console.log("selectedOptionselectedOption",selectedOption)
   return (
     <>
       {
@@ -229,8 +232,12 @@ console.log("selectedOptionselectedOption",selectedOption)
               options={searchData}
               getOptionLabel={(option) => option.title || ""}
               onChange={(event, newValue) => {
-                handleSelectOpton(newValue);
-                console.log("Selected Option:", newValue);
+                if (newValue === null) {
+                  handleClearall(); // Call handleClearall when cleared
+                } else {
+                  handleSelectOpton(newValue);
+                  console.log("Selected Option:", newValue);
+                }
               }}
               onKeyDown={(event) => {
                 if (event.key === 'Backspace' && searchQuery === '') {
@@ -251,19 +258,23 @@ console.log("selectedOptionselectedOption",selectedOption)
                   }}
                 />
               )}
-              onClear={() => {
-                setSelectedOption(null); // Clear the selected option
-              }}
+            
             />
 
           </Stack>
 
+          <Stack spacing={2} sx={{ width: 300 }}>
+          <label for="inputEmail4" class="form-label">Agent & Vendor</label>
+            <input type="text" className='form-control' value={title} readOnly/>
+         
+          </Stack>
+
         </Typography>
-        {
-          err ? (
-            <p style={{color:"red"}}>* Please fill all the details </p>
-          ):("")
-        }
+        {/* <div class="row">
+          <div className='col'>
+        
+          </div>
+        </div> */}
        
         {products.length > 0 && (
           <Button variant="contained" color="primary" onClick={handleAddMoreForm} sx={{ mb: 4 }}>
