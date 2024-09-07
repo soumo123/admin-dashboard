@@ -31,8 +31,9 @@ const AddVendorProducts = () => {
 
   const [agentId, setAgentId] = useState("")
   const [vendorId, setVendorId] = useState("")
-  const[title,setTitle]=useState("")
-  const[err,setErr] = useState(false)
+  const [title, setTitle] = useState("")
+  const [err, setErr] = useState(false)
+  const [loader, setLoader] = useState(false)
 
   const handleAddWeight = (formIndex) => {
     setErr(false)
@@ -78,9 +79,9 @@ const AddVendorProducts = () => {
 
     };
     let validationResult = validateData(product);
-    if(validationResult){
+    if (validationResult) {
       setErr(true)
-      return 
+      return
     }
     setProducts([...products, product]);
     const newForms = forms.filter((_, index) => index !== formIndex);
@@ -91,7 +92,7 @@ const AddVendorProducts = () => {
     setForms([...forms, { id: Date.now(), productName: '', unit: '', manufacture_date: null, expiry_date: null, weights: [], weightInput: { weight: '', price: 0, stock: 0, purchaseprice: 0 }, weightFormVisible: false }]);
   };
 
-  const handleClearall = ()=>{
+  const handleClearall = () => {
     setSelectedOption(null)
     setAgentId("")
     setVendorId("")
@@ -112,16 +113,18 @@ const AddVendorProducts = () => {
   const addAgentProduct = async () => {
 
     try {
-      if(products.length===0 || !agentId){
+      if (products.length === 0 || !agentId) {
         setErr(true)
         return
       }
+      setLoader(true)
       const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/addinventory?adminId=${adminId}&agentId=${agentId}&vendorId=${vendorId}&type=${type}&shop_id=${shop_id}`, products, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
       if (response.status === 201) {
+        setLoader(false)
         setMessageType("success")
         setMessage("Product Added")
         setProducts([])
@@ -136,6 +139,7 @@ const AddVendorProducts = () => {
       console.log(error)
       setMessageType("error")
       setMessage("Oops.. Something went wrong")
+      setLoader(false)
       setTimeout(() => {
         setMessage(false)
       }, 2000);
@@ -188,7 +192,7 @@ const AddVendorProducts = () => {
           try {
             const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/search_vendor?adminId=${adminId}&key=${searchQuery}`)
             if (response.status === 200) {
-             
+
               setSerachData(response.data.data)
             }
           } catch (error) {
@@ -210,6 +214,9 @@ const AddVendorProducts = () => {
       setTitle(selectedOption.title)
     }
   }, [selectedOption])
+
+  console.log("productsssforms",products,forms)
+
 
   return (
     <>
@@ -258,15 +265,15 @@ const AddVendorProducts = () => {
                   }}
                 />
               )}
-            
+
             />
 
           </Stack>
 
           <Stack spacing={2} sx={{ width: 300 }}>
-          <label for="inputEmail4" class="form-label">Agent & Vendor</label>
-            <input type="text" className='form-control' value={title} readOnly/>
-         
+            <label for="inputEmail4" class="form-label">Agent & Vendor</label>
+            <input type="text" className='form-control' value={title} readOnly />
+
           </Stack>
 
         </Typography>
@@ -275,7 +282,7 @@ const AddVendorProducts = () => {
         
           </div>
         </div> */}
-       
+
         {products.length > 0 && (
           <Button variant="contained" color="primary" onClick={handleAddMoreForm} sx={{ mb: 4 }}>
             Add More
@@ -335,7 +342,7 @@ const AddVendorProducts = () => {
                       </IconButton>
                     }
                   >
-                    <ListItemText primary={`Weight: ${weight.weight}, Price: ${weight.price}, Stock: ${weight.stock}`} />
+                    <ListItemText primary={`Weight: ${weight.weight}, Price: ${weight.purchaseprice}, Stock: ${weight.stock}`} />
                   </ListItem>
                 ))}
               </List>
@@ -343,7 +350,7 @@ const AddVendorProducts = () => {
                 Save Product
               </Button>
             </form>
-          
+
             <Dialog open={form.weightFormVisible} onClose={() => handleFormChange(formIndex, 'weightFormVisible', false)}>
               <DialogTitle>Add Weight</DialogTitle>
               <DialogContent>
@@ -385,10 +392,10 @@ const AddVendorProducts = () => {
         ))}
         {
           err ? (
-            <p style={{color:"red"}}>* Please fill all the details </p>
-          ):("")
+            <p style={{ color: "red" }}>* Please fill all the details </p>
+          ) : ("")
         }
-       
+
         <Box sx={{ mt: 4 }}>
           {products.length > 0 && (
             <Typography variant="h6">Products List</Typography>
@@ -416,9 +423,19 @@ const AddVendorProducts = () => {
             </Card>
           ))}
         </Box>
-        <Button type="button" variant="contained" color="primary" onClick={addAgentProduct}>
-          Submit
-        </Button>
+        {
+          loader ? (
+            <button class="btn btn-primary" type="button" disabled>
+              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+              Uploading ....
+            </button>
+          ) : (
+
+            <Button type="button" variant="contained" color="primary" onClick={addAgentProduct}>
+              Submit
+            </Button>
+          )
+        }
       </Box>
     </>
   );

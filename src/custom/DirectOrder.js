@@ -43,7 +43,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
     const [initialDeposit, setInitialDeposit] = useState(0)
     const [phone, setPhone] = useState("")
     const [depositeErr, setDepoErr] = useState(false)
-
+    const [loader, setLoader] = useState(false)
     let totalPrice = 0
     const handleClose = () => {
         setDirectModal(false);
@@ -230,6 +230,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                     setDepoErr(true)
                     return
                 }
+                setLoader(true)
                 let orderedPrice = orderItems.reduce((acc, item) => acc + item.totalPrice, 0) + Number(extraPrice);
                 let cgst = Number(value2) * orderedPrice
                 let sgst = Number(value1) * orderedPrice
@@ -263,6 +264,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                 if (result.status === 201) {
                     setMessage("Order Created")
                     setMessageType("success")
+                    setLoader(false)
                     setProducts([])
                     setOrderItems([])
                     setSelectedId("");
@@ -278,12 +280,14 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                 }
             } else {
                 setAddErr(true)
+                setLoader(false)
                 return
             }
 
         } catch (error) {
             setMessageType("error")
             setMessage("Oops..Something went wrong")
+            setLoader(false)
             setTimeout(() => {
                 setMessage(false)
             }, 2000);
@@ -294,7 +298,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
     }
 
-    const handleChangeCustomer = (e)=>{
+    const handleChangeCustomer = (e) => {
         setCustomerName(e)
         setAddErr(false)
         setDepoErr(false)
@@ -330,8 +334,8 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                             <input type="text" class="form-control" placeholder="Customer name" aria-label="Customer name" value={customer_name} onChange={(e) => handleChangeCustomer(e.target.value)} />
                         </div>
                     </div>
-                    <div className='row mt-5'>
-                    <div class="col">
+                    <div className='row mt-5  align-items-end'>
+                        <div class="col">
                             <label for="inputEmail4" class="form-label">* Select Product</label>
 
                             <select id="inputState" class="form-select" value={selectedId} onChange={handleProductChange}>
@@ -443,14 +447,14 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
                     <div className='row'>
                         <div className='col'>
-                        {orderItems.map((item, index) => (
-                            <div key={index}>
-                                <p>{item.name} ({item.productId}) - {item.weight} {unit} - Quantity: {item.itemCount} Pieces- Total Price: ₹ {item.totalPrice}</p>
-                            </div>
-                        ))}
+                            {orderItems.map((item, index) => (
+                                <div key={index}>
+                                    <p>{item.name} ({item.productId}) - {item.weight} {unit} - Quantity: {item.itemCount} Pieces- Total Price: ₹ {item.totalPrice}</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
-{/*                     
+                    {/*                     
                     <label>* Customer Name :</label>
                     <input type="text" value={customer_name} onChange={(e) => setCustomerName(e.target.value)} />
                     {orderItems.map((item, index) => (
@@ -537,15 +541,25 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                         }
                     </div> */}
 
-                 
+
                 </Modal.Body>
                 <Modal.Footer>
-              
-                    <Button onClick={handleOrder}>Create order</Button>
+                    {
+                        loader ? (
+                            <button class="btn btn-primary" type="button" disabled>
+                                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                Generate Order ....
+                            </button>
+                        ) : (
+                            <>
+                                <Button onClick={handleOrder}>Create order</Button>
+                                <Button onClick={handleClose}>Close</Button>
+                            </>
+                        )
+                    }
 
-                    <Button onClick={handleClose}>Close</Button>
-                </Modal.Footer>
-            </Modal>
+                </Modal.Footer >
+            </Modal >
         </>
     );
 }
