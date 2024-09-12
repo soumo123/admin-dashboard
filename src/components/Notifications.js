@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { noteRefs } from '../redux/actions/userAction';
@@ -7,6 +8,7 @@ import Message from '../custom/Message';
 
 const Notifications = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [notification, setNotifications] = useState([]);
   const [checkedStates, setCheckedStates] = useState({}); // Object to store the checked state of each accordion
   const adminId = localStorage.getItem('adminId');
@@ -85,6 +87,7 @@ const Notifications = () => {
         }, 2000);
         dispatch(noteRefs(new Date().getSeconds()));
         dispatch(setRef(new Date().getSeconds()))
+        navigate("/requests")
       } else {
         setMessageType("error")
         setMessage("Ooops..Something went wrong")
