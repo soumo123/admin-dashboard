@@ -88,7 +88,7 @@ const AddAgentModal = ({ modalShow2, setModalShow2,setRefresh2 ,vendorData , set
     } catch (error) {
       console.error('Error signing up:', error);
       setMessageType("error")
-        setMessage("Oops , Something went wrong !")
+        setMessage(error.response.data.message)
         setTimeout(() => {
           setMessage(false)
         }, 2000);
