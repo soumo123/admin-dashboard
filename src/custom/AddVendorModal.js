@@ -84,7 +84,7 @@ const AddVendorModal = ({ modalShow1, setModalShow1,setRefresh1,setMode }) => {
     } catch (error) {
       console.error('Error signing up:', error);
       setMessageType("error")
-        setMessage("Oops , Something went wrong !")
+        setMessage(error.response.data.message)
         setTimeout(() => {
           setMessage(false)
         }, 2000);
