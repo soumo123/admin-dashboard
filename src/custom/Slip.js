@@ -97,7 +97,7 @@ const Slip = ({ invo, setInvo, viewData }) => {
                                                         <tr>
                                                             <td>{ele.name}</td>
                                                             <td>{ele.itemCount}</td>
-                                                            <td>₹ {ele.totalPrice}</td>
+                                                            <td>₹ {ele.price}</td>
                                                             <td>₹ {ele.totalPrice}</td>
 
                                                         </tr>

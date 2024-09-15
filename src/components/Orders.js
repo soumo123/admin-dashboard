@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import Message from '../custom/Message';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -39,12 +39,13 @@ const Orders = ({ sidebarOpen }) => {
     const [messageType, setMessageType] = useState("")
     const [ref, setRef] = useState(false)
     const [modalShow, setModalShow] = useState(false);
-    const [invo,setInvo] = useState(false)
-    const[directModal,setDirectModal] = useState(false)
+    const [invo, setInvo] = useState(false)
+    const [directModal, setDirectModal] = useState(false)
     const [limit, setLimit] = useState(5);
     const [offset, setOffset] = useState(0)
     const [totalPages, setTotalPages] = useState(0);
-    const[ordertype,setOrderType] = useState("")
+    const [ordertype, setOrderType] = useState("")
+    const [totaReqorders, setTotalReqOrders] = useState(0)
 
     const handleClose = () => {
         setShow(false);
@@ -65,7 +66,7 @@ const Orders = ({ sidebarOpen }) => {
         setSearchQuery(query);
     };
 
-    const handleSlipShow = ()=>{
+    const handleSlipShow = () => {
         setInvo(true)
     }
 
@@ -76,9 +77,12 @@ const Orders = ({ sidebarOpen }) => {
                 setloader(true)
                 setOrders(response.data.data)
                 setTotalPages(Math.ceil(response.data.totalData / limit));
+                setTotalReqOrders(response.data.totalReqorders)
             } else {
                 setOrders([])
                 setTotalPages(0)
+                setTotalReqOrders(0)
+
             }
         } catch (error) {
             setloader(true)
@@ -91,32 +95,38 @@ const Orders = ({ sidebarOpen }) => {
 
     useEffect(() => {
         if (lastTypingTime) {
-          const timer = setTimeout(() => {
-            const getOrderDetails = async () => {
-              try {
-                const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${searchQuery}&ordertype=${ordertype}`)
-                if (response.status === 200) {
-                    setloader(true)
-                    setOrders(response.data.data)
-                    setTotalPages(Math.ceil(response.data.totalData / limit));
-                }else{
-                    setOrders([])
-                }
-              } catch (error) {
-                setloader(true)
-                console.log(error)
-                setOrders([])
-              }
-            };
-    
-            getOrderDetails();
-    
-          }, 1000);
-          return () => clearTimeout(timer)
-        }
-      }, [searchQuery,offset, limit])
+            const timer = setTimeout(() => {
+                const getOrderDetails = async () => {
+                    try {
+                        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${searchQuery}&ordertype=${ordertype}`)
+                        if (response.status === 200) {
+                            setloader(true)
+                            setOrders(response.data.data)
+                            setTotalPages(Math.ceil(response.data.totalData / limit));
+                            setTotalReqOrders(response.data.totalReqorders)
 
-      const handlePageChange = (event, value) => {
+                        } else {
+                            setOrders([])
+                            setTotalReqOrders(0)
+
+                        }
+                    } catch (error) {
+                        setloader(true)
+                        console.log(error)
+                        setOrders([])
+                        setTotalReqOrders(0)
+
+                    }
+                };
+
+                getOrderDetails();
+
+            }, 1000);
+            return () => clearTimeout(timer)
+        }
+    }, [searchQuery, offset, limit])
+
+    const handlePageChange = (event, value) => {
         setOffset((value - 1) * limit);
     };
 
@@ -129,7 +139,7 @@ const Orders = ({ sidebarOpen }) => {
                 },
                 withCredentials: true
             }
-            console.log("statusstatus",status)
+            console.log("statusstatus", status)
             const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/updateOrder?orderId=${odId}&type=${type}&shopId=${shop_id}&status=${status}`, config)
             if (response.status === 200) {
                 setShow(false)
@@ -156,11 +166,11 @@ const Orders = ({ sidebarOpen }) => {
     }
 
 
-    const getOrderById = async (id,num) => {
+    const getOrderById = async (id, num) => {
         try {
-            if(num===1){
+            if (num === 1) {
                 setModalShow(true)
-            }else{
+            } else {
                 setInvo(true)
             }
             const result = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorder/${id}`)
@@ -174,17 +184,21 @@ const Orders = ({ sidebarOpen }) => {
     }
 
 
-    const handleOpenModal = ()=>{
+    const handleOpenModal = () => {
         setDirectModal(true)
     }
 
-    const handleOrderTypeChange = (e)=>{
+    const handleOrderTypeChange = (e) => {
         setOrderType(e)
+    }
+
+    const handlReqOrder = () => {
+        navigate("/manualorders")
     }
 
     useEffect(() => {
         getOrderDetails()
-    }, [ordertype,offset, limit,ref])
+    }, [ordertype, offset, limit, ref])
 
 
     return (
@@ -198,36 +212,44 @@ const Orders = ({ sidebarOpen }) => {
             <div className={`all-product ${sidebarOpen ? 'sidebar-open' : ''}`}>
                 <div className='form'>
                     <div className="row">
-                        <div className="col-sm-4">
+                        <div className="col-sm-3">
                             <div className="form-group">
                                 <label>Search Orders</label>
                                 <input type="text" placeholder="Search orders by orderId" className='form-control' value={searchQuery} name="search" onChange={(e) => handleSearch(e.target.value)} />
                             </div>
-                           
+
                         </div>
-                        <div className="col-sm-4">
+                        <div className="col-sm-3">
                             <div className="form-group">
                                 <label>Order Type</label>
-                                <select className='form-control' value={ordertype} onChange={(e)=>handleOrderTypeChange(e.target.value)}>
+                                <select className='form-control' value={ordertype} onChange={(e) => handleOrderTypeChange(e.target.value)}>
                                     <option value="">All Orders</option>
                                     <option value="direct">Direct Order</option>
                                     <option value="ordered">Ordered</option>
                                 </select>
                             </div>
-                           
+
                         </div>
-                        <div className='col-sm-4 text-end '>
+                        <div className='col-sm-3 text-end '>
                             <button type="button" className='btnSubmit' onClick={handleOpenModal}>+Take Order</button>
                         </div>
-                        {/* <div className="col-sm-4">
-                            <div className="form-group">
-                                <label>Price starts from </label>
-                                <input type="number" placeholder="Enter Starting Price" className='form-control' value={startPrice} onChange={(e) => handleStartPrice(e.target.value)} />
-                            </div>
+                        <div className="col-sm-3">
+
+                            <button type="button" className='btnSubmit position-relative' onClick={handlReqOrder}>Requested Orders
+                                {
+                                    totaReqorders > 0 && (
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {totaReqorders}
+                                </span>
+
+                                    )
+                                }
+                            </button>
+
                         </div>
 
 
-                        <div className="col-sm-4">
+                        {/* <div className="col-sm-4">
                             <div className="form-group">
                                 <label>To</label>
                                 <input type="number" placeholder="Enter Last Price" className='form-control' value={lastPrice} onChange={(e) => handleLastPrice(e.target.value)} />
@@ -281,7 +303,7 @@ const Orders = ({ sidebarOpen }) => {
                                                         <td>{(new Date(ele.created_at).toISOString().slice(0, 10).split('-').reverse().join('/'))}</td>
                                                         <td className='text-capitalize'>{ele.paymentmethod}</td>
                                                         <td className='text-capitalize'>{ele.order_method}</td>
-                                                        <td>{ele.deliver_date===null || ele.deliver_date==="" ? "" : dayjs(ele.deliver_date).format('DD/MM/YYYY, hh:mm A')}</td>
+                                                        <td>{ele.deliver_date === null || ele.deliver_date === "" ? "" : dayjs(ele.deliver_date).format('DD/MM/YYYY, hh:mm A')}</td>
                                                         <td>{ele.products.length}</td>
                                                         {/* <td>₹ {ele.initialDeposit}</td> */}
                                                         {/* <td>₹ {(ele.orderedPrice - ele.initialDeposit).toFixed(2)}</td> */}
@@ -297,7 +319,7 @@ const Orders = ({ sidebarOpen }) => {
 
                                                         ) : ele.status === 2 ? (<button type="button" class="btn btn-process" onClick={() => handleOpen("Processing Complete ?", ele.orderId, 3)}><p style={{ fontSize: "10px", marginTop: "12px" }}>Processing...</p></button>) : ele.status === 3 ?
 
-                                                            (<button type="button" class="btn btn-delivery" onClick={() => handleOpen("Ready for delivery ?", ele.orderId, 4)}><p style={{ fontSize: "10px", marginTop: "12px" }}>Ready for delicvery</p></button>) : ele.status===-1 ? (<p style={{ fontSize: "15px", marginTop: "12px",color:"red" }}>Rejected</p>):(<p style={{ color: "#1F932B" }}>Complete</p>)
+                                                            (<button type="button" class="btn btn-delivery" onClick={() => handleOpen("Ready for delivery ?", ele.orderId, 4)}><p style={{ fontSize: "10px", marginTop: "12px" }}>Ready for delicvery</p></button>) : ele.status === -1 ? (<p style={{ fontSize: "15px", marginTop: "12px", color: "red" }}>Rejected</p>) : (<p style={{ color: "#1F932B" }}>Complete</p>)
                                                         }</td>
                                                         <td class="text-center">
                                                             <span className="view-invoice fs-xs" data-bs-toggle="tooltip"
@@ -306,17 +328,17 @@ const Orders = ({ sidebarOpen }) => {
                                                                 <VisibilityIcon
 
                                                                     style={{ color: '#d7783b', cursor: 'pointer' }}
-                                                                    onClick={() => getOrderById(ele.orderId,1)}
+                                                                    onClick={() => getOrderById(ele.orderId, 1)}
                                                                 />
                                                             </span>
-                                                           
-                                                                    <span className="view-invoice fs-xs" data-bs-toggle="tooltip"
-                                                                        data-bs-placement="top"
-                                                                        title="Invoice"
-                                                                        style={{ color: '#d7783b', cursor: 'pointer' }}>
-                                                                        <ReceiptIcon onClick={() => getOrderById(ele.orderId,2)}/>
-                                                                    </span>
-                                                              
+
+                                                            <span className="view-invoice fs-xs" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top"
+                                                                title="Invoice"
+                                                                style={{ color: '#d7783b', cursor: 'pointer' }}>
+                                                                <ReceiptIcon onClick={() => getOrderById(ele.orderId, 2)} />
+                                                            </span>
+
                                                         </td>
 
                                                         {/* <td>
@@ -354,9 +376,9 @@ const Orders = ({ sidebarOpen }) => {
                         }
 
                     </table>
-                    
+
                 </div>
-                
+
             </div>
             <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
             {
@@ -384,18 +406,18 @@ const Orders = ({ sidebarOpen }) => {
                     </Button>
                 </DialogActions>
             </Dialog>
-         {
-            viewData && viewData && invo ? (
-                <Slip invo={invo} setInvo={setInvo} viewData={viewData} setViewData={setViewData}/>
-            ) :("")
-         }
-           
-           {
-            directModal ? (
-                <DirectOrder directModal={directModal} setDirectModal={setDirectModal} setRef={setRef}/>
-            ):("")
-           }
-          
+            {
+                viewData && viewData && invo ? (
+                    <Slip invo={invo} setInvo={setInvo} viewData={viewData} setViewData={setViewData} />
+                ) : ("")
+            }
+
+            {
+                directModal ? (
+                    <DirectOrder directModal={directModal} setDirectModal={setDirectModal} setRef={setRef} />
+                ) : ("")
+            }
+
         </>
 
 

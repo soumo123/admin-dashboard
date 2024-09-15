@@ -125,6 +125,7 @@ import Notifications from './components/Notifications';
 import Expiredproducts from './components/Expiredproducts';
 import Requestedorders from './components/Requestedorders';
 import Authentication from './components/Authentication';
+import ReqManualOrder from './components/ReqManualOrder';
 
 
 
@@ -204,6 +205,9 @@ function App() {
                       <Route exact={true} path="/notifications" element={<Notifications />} />
                       <Route exact={true} path="/expired" element={<Expiredproducts />} />
                       <Route exact={true} path="/requests" element={<Requestedorders />} />
+
+                      <Route exact={true} path="/manualorders" element={<ReqManualOrder />} />
+
                     </Routes>
                   )
                 }

@@ -240,18 +240,18 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                     receivedData: orderItems,
                     cgst: cgst,
                     sgst: sgst,
-                    phone: phone,
-                    initialDeposit: Number(initialDeposit),
+                    phone: phone, //
+                    initialDeposit: Number(initialDeposit),//
                     orderedPrice: orderedPrice,
-                    username: customer_name,
-                    extrathings: extra,
-                    extraprice: Number(extraPrice),
-                    notes: notes,
-                    discount: Number(discount),
-                    paid: orderMethod === "direct" ? true : false,
-                    order_method: orderMethod,
-                    deliver_date: time,
-                    status: orderMethod === "direct" ? 4 : 1,
+                    username: customer_name,//
+                    extrathings: extra,//
+                    extraprice: Number(extraPrice),//
+                    notes: notes,//
+                    discount: Number(discount),//
+                    paid: orderMethod === "direct" ? true : false,//
+                    order_method: orderMethod,//
+                    deliver_date: time,//
+                    status: orderMethod === "direct" ? 4 : 1,//
                 }
                 console.log("jsonjson", json)
                 const config = {
