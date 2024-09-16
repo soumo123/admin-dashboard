@@ -71,7 +71,11 @@ const ReqManualOrder = () => {
 
 
     }
-
+    const handleSearch = (query) => {
+        setLastTypingTime(new Date().getTime())
+        setSearchQuery(query);
+      };
+    
 
 
     useEffect(() => {
@@ -211,9 +215,6 @@ const ReqManualOrder = () => {
         getOrders()
     }, [ref])
 
-
-    console.log("extraextra", extra)
-
     return (
         <>
             {
@@ -222,171 +223,192 @@ const ReqManualOrder = () => {
                 ) : ("")
             }
             <h1>Requested Orders</h1>
-            <div class="accordion">
-                {
-                    !loader ? (
-
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-12">
-                                    <div className="text-center">
-                                        loading....
-                                    </div>
-                                </div>
+            <div className='container'>
+                <div className='form'>
+                    <div className="row">
+                        <div className="col-sm-3">
+                            <div className="form-group">
+                                <label>Search orders</label>
+                                <input type="text" placeholder="Search by tokenId" className='form-control' name="search" value={searchQuery} onChange={(e) => handleSearch(e.target.value)} />
                             </div>
                         </div>
-                    ) : (
-                        <>
+                    
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col'>
+                        <div class="" style={{ maxHeight: "400px", overflowY: "auto" }}>
                             {
-                                orders && orders.length > 0 ? (
-                                    <>
-                                        {
-                                            orders && orders.map((ele, index) => (
-                                                <div class="accordion-item" key={index}>
-                                                    <input type="checkbox" id={`item-${index}`} />
-                                                    <label for={`item-${index}`} class="accordion-header">
-                                                        <span>{ele.tokenId}</span>
-                                                        <span class="arrow">
-                                                            <i class="fa-solid fa-caret-right"></i>
-                                                        </span>
-                                                    </label>
-                                                    <div class="accordion-content">
-                                                        <div className="row">
-                                                            <div className="col">
-                                                                <label for="inputEmail4" class="form-label">Token Number</label>
-                                                                <input type="text" class="form-control" placeholder="Token No." aria-label="Token No." value={ele.tokenId} readOnly />
-                                                            </div>
-                                                            <div className="col">
-                                                                <label for="inputEmail4" class="form-label">Customer name</label>
-                                                                <input type="text" class="form-control" placeholder="Customer name" aria-label="Customer name" value={ele.username} readOnly />
-                                                            </div>
-                                                            <div className="col">
-                                                                <label for="inputEmail4" class="form-label">Mobile</label>
-                                                                <input type="text" class="form-control" placeholder="Mobile" aria-label="Mobile" readOnly value={ele.phone} />
-                                                            </div>
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col">
-                                                                <label for="inputEmail4" class="form-label">Extra Things</label>
-                                                                <input type="text" class="form-control" placeholder="Extra Things" aria-label="Extra Things" value={orderChanges[ele.tokenId]?.extra || ele.extrathings}
+                                !loader ? (
 
-                                                                    onChange={(e) => handleInputChange(ele.tokenId, 'extra', e.target.value)}
-                                                                />
-                                                            </div>
-                                                            <div className="col">
-                                                                <label for="inputEmail4" class="form-label">Extra Cost (₹)</label>
-                                                                <input
-                                                                    type="text" // Restricts to numbers only
-                                                                    className="form-control"
-                                                                    placeholder="Extra Cost"
-                                                                    aria-label="Extra Cost"
-                                                                    // min="0" // Prevents negative values
-                                                                    value={orderChanges[ele.tokenId]?.extraPrice || ele.extraprice}
-                                                                    onChange={(e) => {
-                                                                        const value = e.target.value;
-                                                                        // Check if value is a valid number and not negative
-                                                                        if (!isNaN(value) && Number(value) >= 0) {
-                                                                            handleInputChange(ele.tokenId, 'extraPrice', value);
-                                                                        } else {
-                                                                            // If it's not a valid number or negative, reset to 0 or previous value
-                                                                            handleInputChange(ele.tokenId, 'extraPrice', 0);
-                                                                        }
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                            <div className="col">
-                                                                <label for="inputEmail4" class="form-label">Discount (%)</label>
-                                                                <input type="text"
-                                                                    class="form-control"
-                                                                    placeholder="discount"
-                                                                    aria-label="discount"
-                                                                    value={orderChanges[ele.tokenId]?.discount || ele.discount}
-                                                                    onChange={(e) => {
-                                                                        const value = e.target.value;
-                                                                        if (!isNaN(value) && Number(value) >= 0) {
-                                                                            handleInputChange(ele.tokenId, 'discount', value)
-
-                                                                        } else {
-
-                                                                            handleInputChange(ele.tokenId, 'discount', 0)
-                                                                        }
-                                                                    }
-                                                                    } />
-                                                            </div>
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col">
-                                                                <label for="inputEmail4" class="form-label">Items</label>
-                                                                {ele.products.map((item, itemIndex) => (
-                                                                    <div key={index}>
-                                                                        <p>{item.name} ({item.productId}) - {item.weight} {item.unit} - Quantity: {item.itemCount} Pieces- Price: ₹ {item.totalPrice}
-                                                                            <button className="btn btn-danger" onClick={() => handleRemoveItem(ele.tokenId, item.productId)}>
-                                                                                <CloseIcon />
-                                                                            </button>
-                                                                        </p>
-                                                                    </div>
-                                                                ))}
-
-                                                            </div>
-
-                                                        </div>
-
-                                                        <div className="row">
-                                                            <div className="col">
-                                                                <label for="inputEmail4" class="form-label">
-                                                                    CGST (2.5 %) &
-                                                                    SGST (2.5 %)
-
-
-                                                                </label>
-                                                            </div>
-
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col">
-                                                                <label for="inputEmail4" class="form-label">Total Price : </label>
-                                                                <input type="text" className="form-control" placeholder="Total Price" aria-label="Total Price" value={calculateTotalPrice({ ...ele, extraPrice: Number(orderChanges[ele.tokenId]?.extraPrice) || Number(ele.extraprice), extra: orderChanges[ele.tokenId]?.extra || ele.extrathings, discount: Number(orderChanges[ele.tokenId]?.discount) || Number(ele.discount) }).orderedPrice} readOnly />
-                                                            </div>
-
-                                                        </div>
-
-                                                        {
-                                                            ele.products.length === 0 ? (
-                                                                <span style={{ color: "red" }}>* You have to select minimum one product</span>
-                                                            ) : (
-
-                                                                <button type="button" className="btn btn-primary" onClick={() => handleSubmit(ele.tokenId, ele)}>Place Order</button>
-                                                            )
-                                                        }
-
-                                                    </div>
-                                                </div>
-                                            ))
-                                        }
-                                        <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
-                                    </>
-
-                                ) :
-                                    (
-                                        <div className="container">
-                                            <div className="row">
-                                                <div className="col-12">
-                                                    <div className="text-center">
-                                                        No Orders Found
-                                                    </div>
+                                    <div className="container">
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <div className="text-center">
+                                                    loading....
                                                 </div>
                                             </div>
                                         </div>
-                                    )
+                                    </div>
+                                ) : (
+                                    <>
+                                        {
+                                            orders && orders.length > 0 ? (
+                                                <>
+                                                    <div className="accordion-scroll-container" >
+                                                        {
+                                                            orders && orders.map((ele, index) => (
+                                                                <div class="accordion-item" key={index}>
+                                                                    <input type="checkbox" id={`item-${index}`} />
+                                                                    <label for={`item-${index}`} class="accordion-header">
+                                                                        <span>{ele.tokenId} ({ele.username})</span>
+                                                                        <span class="arrow">
+                                                                            <i class="fa-solid fa-caret-right"></i>
+                                                                        </span>
+                                                                    </label>
+                                                                    <div class="accordion-content">
+                                                                        <div className="row">
+                                                                            <div className="col">
+                                                                                <label for="inputEmail4" class="form-label">Token Number</label>
+                                                                                <input type="text" class="form-control" placeholder="Token No." aria-label="Token No." value={ele.tokenId} readOnly />
+                                                                            </div>
+                                                                            <div className="col">
+                                                                                <label for="inputEmail4" class="form-label">Customer name</label>
+                                                                                <input type="text" class="form-control" placeholder="Customer name" aria-label="Customer name" value={ele.username} readOnly />
+                                                                            </div>
+                                                                            <div className="col">
+                                                                                <label for="inputEmail4" class="form-label">Mobile</label>
+                                                                                <input type="text" class="form-control" placeholder="Mobile" aria-label="Mobile" readOnly value={ele.phone} />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="row">
+                                                                            <div className="col">
+                                                                                <label for="inputEmail4" class="form-label">Extra Things</label>
+                                                                                <input type="text" class="form-control" placeholder="Extra Things" aria-label="Extra Things" value={orderChanges[ele.tokenId]?.extra || ele.extrathings}
+
+                                                                                    onChange={(e) => handleInputChange(ele.tokenId, 'extra', e.target.value)}
+                                                                                />
+                                                                            </div>
+                                                                            <div className="col">
+                                                                                <label for="inputEmail4" class="form-label">Extra Cost (₹)</label>
+                                                                                <input
+                                                                                    type="text" // Restricts to numbers only
+                                                                                    className="form-control"
+                                                                                    placeholder="Extra Cost"
+                                                                                    aria-label="Extra Cost"
+                                                                                    // min="0" // Prevents negative values
+                                                                                    value={orderChanges[ele.tokenId]?.extraPrice || ele.extraprice}
+                                                                                    onChange={(e) => {
+                                                                                        const value = e.target.value;
+                                                                                        // Check if value is a valid number and not negative
+                                                                                        if (!isNaN(value) && Number(value) >= 0) {
+                                                                                            handleInputChange(ele.tokenId, 'extraPrice', value);
+                                                                                        } else {
+                                                                                            // If it's not a valid number or negative, reset to 0 or previous value
+                                                                                            handleInputChange(ele.tokenId, 'extraPrice', 0);
+                                                                                        }
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+                                                                            <div className="col">
+                                                                                <label for="inputEmail4" class="form-label">Discount (%)</label>
+                                                                                <input type="text"
+                                                                                    class="form-control"
+                                                                                    placeholder="discount"
+                                                                                    aria-label="discount"
+                                                                                    value={orderChanges[ele.tokenId]?.discount || ele.discount}
+                                                                                    onChange={(e) => {
+                                                                                        const value = e.target.value;
+                                                                                        if (!isNaN(value) && Number(value) >= 0) {
+                                                                                            handleInputChange(ele.tokenId, 'discount', value)
+
+                                                                                        } else {
+
+                                                                                            handleInputChange(ele.tokenId, 'discount', 0)
+                                                                                        }
+                                                                                    }
+                                                                                    } />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="row">
+                                                                            <div className="col">
+                                                                                <label for="inputEmail4" class="form-label">Items</label>
+                                                                                {ele.products.map((item, itemIndex) => (
+                                                                                    <div key={index}>
+                                                                                        <p>{item.name} ({item.productId}) - {item.weight} {item.unit} - Quantity: {item.itemCount} Pieces- Price: ₹ {item.totalPrice}
+                                                                                            <button className="btn btn-danger" onClick={() => handleRemoveItem(ele.tokenId, item.productId)}>
+                                                                                                <CloseIcon />
+                                                                                            </button>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                ))}
+
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                        <div className="row">
+                                                                            <div className="col">
+                                                                                <label for="inputEmail4" class="form-label">
+                                                                                    CGST (2.5 %) &
+                                                                                    SGST (2.5 %)
+
+
+                                                                                </label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div className="row">
+                                                                            <div className="col">
+                                                                                <label for="inputEmail4" class="form-label">Total Price : </label>
+                                                                                <input type="text" className="form-control" placeholder="Total Price" aria-label="Total Price" value={calculateTotalPrice({ ...ele, extraPrice: Number(orderChanges[ele.tokenId]?.extraPrice) || Number(ele.extraprice), extra: orderChanges[ele.tokenId]?.extra || ele.extrathings, discount: Number(orderChanges[ele.tokenId]?.discount) || Number(ele.discount) }).orderedPrice} readOnly />
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                        {
+                                                                            ele.products.length === 0 ? (
+                                                                                <span style={{ color: "red" }}>* You have to select minimum one product</span>
+                                                                            ) : (
+
+                                                                                <button type="button" className="btn btn-primary" onClick={() => handleSubmit(ele.tokenId, ele)}>Place Order</button>
+                                                                            )
+                                                                        }
+
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                        }
+
+                                                        <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
+                                                    </div>
+                                                </>
+
+                                            ) :
+                                                (
+                                                    <div className="container">
+                                                        <div className="row">
+                                                            <div className="col-12">
+                                                                <div className="text-center">
+                                                                    No Orders Found
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )
+                                        }
+
+                                    </>
+                                )
                             }
 
-                        </>
-                    )
-                }
 
 
-
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </>
 
     )
