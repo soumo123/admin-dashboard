@@ -8,7 +8,7 @@
     top: 50%;
   }
   .accordion-item input[type="checkbox"] {
-    display: none;
+    /* display: none; */
     appearance: none;
   }
   .accordion-item {

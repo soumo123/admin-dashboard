@@ -45,8 +45,11 @@ const Requestedorders = () => {
 
   return (
     <>
-
-      <table class="table table-warning">
+  <h1>Requested Orders to Agents</h1>
+      <div className='container'>
+        <div className='row'>
+          <div className='col'>
+          <table class="table table-warning">
         <thead>
           <tr>
 
@@ -64,7 +67,7 @@ const Requestedorders = () => {
               <div className="row">
                 <div className="col-12">
                   <div className="text-center">
-                    No Data Found
+                  loading....
                   </div>
                 </div>
               </div>
@@ -110,6 +113,10 @@ const Requestedorders = () => {
 
       </table>
       <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
+          </div>
+        </div>
+      </div>
+    
     </>
   )
 }
