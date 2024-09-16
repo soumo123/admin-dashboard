@@ -2,12 +2,12 @@
 /* accoridan  */
 .accordion {
     width: min(90vw, 500px);
-    position: absolute;
+    /* position: absolute; */
     transform: translate(-50%, -50%);
     left: 50%;
     top: 50%;
   }
-  input[type="checkbox"] {
+  .accordion-item input[type="checkbox"] {
     display: none;
     appearance: none;
   }
