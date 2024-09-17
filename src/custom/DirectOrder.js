@@ -9,6 +9,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
@@ -19,6 +20,8 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
     const [selectedId, setSelectedId] = useState("");
     const [selectedWeight, setSelectedWeight] = useState("");
     const [price, setPrice] = useState("");
+    const[maxQuantity,setMaxQuantity] = useState(0)
+    const[quanErr,setQuanerr] = useState(false)
     const [quantity, setQuantity] = useState(1);
     const [orderItems, setOrderItems] = useState([]);
     const adminId = localStorage.getItem("adminId");
@@ -111,7 +114,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
     const getAllProductsByAdmin = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=&startprice=&lastprice=&limit=${10000000}&offset=${0}&expired=`);
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=&startprice=&lastprice=&limit=${10000000}&offset=${0}&expired=false`);
             if (response.status === 200) {
                 setProducts(response.data.data);
             }
@@ -127,7 +130,6 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
     const handleProductChange = (e) => {
         const selectedProductId = e.target.value;
-        console.log("selectedProductId", selectedProductId);
         setSelectedId(selectedProductId);
 
         if (selectedProductId) {
@@ -160,12 +162,14 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
         setSelectedWeight(selectedWeight);
 
         if (selectedId) {
+            console.log("selectedId",selectedId)
             const selectedProduct = products.find(p => p.productId === selectedId);
 
             if (selectedProduct) {
                 const weightInfo = selectedProduct.weight.find(w => Number(w.weight) === Number(selectedWeight));
 
                 if (weightInfo) {
+                    setMaxQuantity(weightInfo.stock)
                     setPrice(weightInfo.price);
                 } else {
                     setPrice("");
@@ -182,38 +186,51 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
     };
 
+    console.log("weight",weight)
 
     const handleQuantityChange = (e) => {
         setAddErr(false)
+        setQuanerr(false)
         setDepoErr(false)
         if (e.target.value === 0 || "") {
             setQuantity(1)
         } else {
-            setQuantity(e.target.value);
+            if(e.target.value>maxQuantity){
+                setQuantity(e.target.value)
+                setQuanerr(true)
+            }else{
+                setQuantity(e.target.value);
+            }
         }
     };
 
     const handleSaveProduct = () => {
-        if (selectedId && selectedWeight && quantity && price) {
-            const selectedProduct = products.find(p => p.productId === selectedId);
-            const orderItem = {
-                productId: selectedId,
-                name: selectedProduct.name,
-                description: selectedProduct.description,
-                color: "",
-                thumbImage: selectedProduct.thumbnailimage,
-                weight: Number(selectedWeight),
-                price: Number(price),
-                itemCount: Number(quantity),
-                totalPrice: price * quantity,
-            };
-            setOrderItems([...orderItems, orderItem]);
-            // Reset selections for the next product
-            setSelectedId("");
-            setWeight([]);
-            setSelectedWeight("");
-            setPrice("");
-            setQuantity(1);
+        console.log("quanErr",quanErr)
+        if (selectedId && selectedWeight && quantity>=1 && price) {
+            if(!quanErr){
+                const selectedProduct = products.find(p => p.productId === selectedId);
+                const orderItem = {
+                    productId: selectedId,
+                    name: selectedProduct.name,
+                    description: selectedProduct.description,
+                    color: "",
+                    thumbImage: selectedProduct.thumbnailimage,
+                    weight: Number(selectedWeight),
+                    price: Number(price),
+                    itemCount: Number(quantity),
+                    totalPrice: price * quantity,
+                };
+                setOrderItems([...orderItems, orderItem]);
+                // Reset selections for the next product
+                setSelectedId("");
+                setWeight([]);
+                setSelectedWeight("");
+                setPrice("");
+                setQuantity(1);
+            }else{
+               setQuanerr(true) 
+            }
+            
         } else {
             setAddErr(true)
             return
@@ -260,24 +277,24 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                     },
                     withCredentials: true
                 }
-                const result = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/create?adminId=${adminId}&type=${type}&shop_id=${shop_id}`, json, config)
-                if (result.status === 201) {
-                    setMessage("Order Created")
-                    setMessageType("success")
-                    setLoader(false)
-                    setProducts([])
-                    setOrderItems([])
-                    setSelectedId("");
-                    setWeight([]);
-                    setSelectedWeight("");
-                    setPrice("");
-                    setQuantity(1);
-                    setDirectModal(false)
-                    setTimeout(() => {
-                        setMessage(false)
-                    }, 2000);
-                    dispatch(setRef(new Date().getSeconds()))
-                }
+                // const result = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/create?adminId=${adminId}&type=${type}&shop_id=${shop_id}`, json, config)
+                // if (result.status === 201) {
+                //     setMessage("Order Created")
+                //     setMessageType("success")
+                //     setLoader(false)
+                //     setProducts([])
+                //     setOrderItems([])
+                //     setSelectedId("");
+                //     setWeight([]);
+                //     setSelectedWeight("");
+                //     setPrice("");
+                //     setQuantity(1);
+                //     setDirectModal(false)
+                //     setTimeout(() => {
+                //         setMessage(false)
+                //     }, 2000);
+                //     dispatch(setRef(new Date().getSeconds()))
+                // }
             } else {
                 setAddErr(true)
                 setLoader(false)
@@ -303,6 +320,17 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
         setAddErr(false)
         setDepoErr(false)
     }
+
+    const handleRemoveItem = (productId, weight) => {
+        setOrderItems(orderItems.filter(item => item.productId !== productId || item.weight !== weight));
+    };
+
+    const calculateTotalPrice = () => {
+        let orderedPrice = orderItems.reduce((acc, item) => acc + item.totalPrice, 0);
+        let cgstAmount = Number(value2) * orderedPrice;
+        let sgstAmount = Number(value1) * orderedPrice;
+        return ((orderedPrice + cgstAmount + sgstAmount + Number(extraPrice)) - ((orderedPrice + cgstAmount + sgstAmount) * Number(discount) / 100));
+    };
 
     useEffect(() => {
         getTax()
@@ -366,8 +394,12 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                         }
                         <div class="col">
                             <label for="inputEmail4" class="form-label">Select Quantity</label>
-                            <input type="number" class="form-control" placeholder="Quantity" aria-label="Quantity" min={1} value={quantity} onChange={handleQuantityChange} />
-
+                            <input type="number" class="form-control" placeholder="Quantity" aria-label="Quantity" min={1} max={maxQuantity} value={quantity} onChange={handleQuantityChange} />
+                            {
+                            quanErr ? (
+                                <p style={{ color: 'red' }}>* maximum {maxQuantity} numbers can add</p>
+                            ) : ("")
+                        }
                         </div>
                         <div className='col'>
 
@@ -449,99 +481,16 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                         <div className='col'>
                             {orderItems.map((item, index) => (
                                 <div key={index}>
-                                    <p>{item.name} ({item.productId}) - {item.weight} {unit} - Quantity: {item.itemCount} Pieces- Total Price: ₹ {item.totalPrice}</p>
+                                    <p>{item.name} ({item.productId}) - {item.weight} {unit} - Quantity: {item.itemCount} Pieces- Total Price: ₹ {item.totalPrice}
+                                        <button className="btn btn-danger" onClick={() => handleRemoveItem(item.productId,item.weight)}>
+                                            <CloseIcon />
+                                        </button>
+                                    </p>
+
                                 </div>
                             ))}
                         </div>
                     </div>
-                    {/*                     
-                    <label>* Customer Name :</label>
-                    <input type="text" value={customer_name} onChange={(e) => setCustomerName(e.target.value)} />
-                    {orderItems.map((item, index) => (
-                        <div key={index} style={{ marginBottom: '15px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
-                            <p>{item.name} ({item.productId}) - {item.weight} {unit} - Quantity: {item.itemCount} Pieces- Total Price: ₹ {item.totalPrice}</p>
-                        </div>
-                    ))}
-                    <label>* Select Product :</label>
-                    <select value={selectedId} onChange={handleProductChange}>
-                        <option value="">Select Product</option>
-                        {products && products.map((ele) => (
-                            <option key={ele.productId} value={ele.productId}>{`${ele.name} (${ele.productId})`}</option>
-                        ))}
-                    </select>
-                    <label>* Select Variation :</label>
-                    <select value={selectedWeight} onChange={handleWeightChange} disabled={!selectedId}>
-                        <option value="">Select Variation</option>
-                        {weight && weight.map((ele) => (
-                            <option key={ele.weight} value={ele.weight}>{`${ele.weight} ${unit}`}</option>
-                        ))}
-                    </select>
-                    {price ? (
-
-                        <p>Price:₹ {price}</p>
-
-                    ) : ""}
-                    <label>* Select Quantity :</label>
-                    <input type="number" min={1} value={quantity} onChange={handleQuantityChange} />
-                    <Button onClick={handleSaveProduct}>Save</Button>
-                    {
-                        addErr ? (
-                            <p style={{ color: 'red' }}>* Please select mandatory fields</p>
-                        ) : ("")
-                    }
-                  */}
-                    {/* <div className="">
-                        <label>Extra things :</label>
-                        <textarea type="text" value={extra} onChange={(e) => setExtra(e.target.value)} />
-                        <label>
-                            Extra Price
-                        </label>
-                        <input type="number" value={extraPrice} onChange={(e) => setExtraPrice(e.target.value)} />
-                        <label>Discount</label>
-                        <input type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} />%
-
-                        <label>Notes</label>
-                        <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} />
-
-                        <label>Notes</label>
-                        <select value={orderMethod} onChange={(e) => handleOrderMethod(e.target.value)}>
-                            <option value="direct">Direct</option>
-                            <option value="ordered">Ordered</option>
-
-                        </select>
-                        {
-                            orderMethod === "ordered" ? (
-
-                                <>
-                                    <label>* Advance Pay</label>
-                                    <input type="number" value={initialDeposit} onChange={(e) => handleDeposit(e.target.value)} />
-
-                                    <label>* Phone Number </label>
-                                    <input type="number" value={phone} onChange={(e) => hanldePhone(e.target.value)} />
-
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <p>Select Date and Time</p>
-                                        <DemoContainer components={['DateTimePicker']}>
-                                            <DateTimePicker
-                                                label="Pick the Date and Time"
-                                                value={dateTime}
-                                                onChange={handleDateChange}
-                                            />
-                                        </DemoContainer>
-                                    </LocalizationProvider>
-                                    {
-                                        depositeErr ? (
-                                            <p style={{ color: 'red' }}>* Please select mandatory fields</p>
-                                        ) : ("")
-                                    }
-                                </>
-                            ) : (
-                                ""
-                            )
-                        }
-                    </div> */}
-
-
                 </Modal.Body>
                 <Modal.Footer>
                     {
