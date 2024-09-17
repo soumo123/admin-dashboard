@@ -107,7 +107,7 @@ const Transaction = () => {
 
   const getAllAgents = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=`);
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=1`);
       if (response.status === 200) {
         setAgentData(response.data.data);
       } else {
