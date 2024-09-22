@@ -12,8 +12,11 @@ import dayjs from 'dayjs';
 import CloseIcon from '@mui/icons-material/Close';
 
 
+
+
 const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
+    
     const dispatch = useDispatch()
     const [products, setProducts] = useState([]);
     const [weight, setWeight] = useState([]);
@@ -47,6 +50,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
     const [phone, setPhone] = useState("")
     const [depositeErr, setDepoErr] = useState(false)
     const [loader, setLoader] = useState(false)
+    const [scannedCode, setScannedCode] = useState('');
     let totalPrice = 0
     const handleClose = () => {
         setDirectModal(false);
@@ -130,6 +134,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
     const handleProductChange = (e) => {
         const selectedProductId = e.target.value;
+        console.log("selectedProductId",selectedProductId)
         setSelectedId(selectedProductId);
 
         if (selectedProductId) {
@@ -332,6 +337,45 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
         return ((orderedPrice + cgstAmount + sgstAmount + Number(extraPrice)) - ((orderedPrice + cgstAmount + sgstAmount) * Number(discount) / 100));
     };
 
+
+    const handleBarcodeInput = (event) => {
+        const scannedValue = event.key; // Capture the input value
+
+        // Check if the key is numeric to capture barcode input
+        if (/^[0-9a-zA-Z]+$/.test(scannedValue)) {
+            setScannedCode((prev) => prev + scannedValue);
+        }
+
+        // If the Enter key is pressed, process the scanned code
+        if (event.key === 'Enter') {
+            const product = products.find((ele) => ele.productId === scannedCode);
+            if (product) {
+                setSelectedId(product.productId);// Automatically select the product
+                setWeight(product.weight);
+                setUnit(product.unit);
+                setSelectedWeight("");
+                setPrice("");
+            } else {
+                setWeight([]);
+                setUnit("");
+                setSelectedWeight("");
+                setPrice("");
+            }
+            setScannedCode(''); // Clear the scanned code for the next scan
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleBarcodeInput);
+
+        return () => {
+            window.removeEventListener('keydown', handleBarcodeInput);
+        };
+    }, [scannedCode, products]);
+
+
+
+
     useEffect(() => {
         getTax()
     }, [])
@@ -366,7 +410,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                         <div class="col">
                             <label for="inputEmail4" class="form-label">* Select Product</label>
 
-                            <select id="inputState" class="form-select" value={selectedId} onChange={handleProductChange}>
+                            <select id="inputState" class="form-select" value={selectedId} onChange={handleProductChange} >
                                 <option value="">Select Product</option>
                                 {products && products.map((ele) => (
                                     <option key={ele.productId} value={ele.productId}>{`${ele.name} (${ele.productId})`}</option>

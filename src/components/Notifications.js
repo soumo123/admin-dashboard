@@ -249,7 +249,7 @@ const Notifications = () => {
                             <div className="row">
                               <div className="col-12">
                                 <div className="text-center">
-                                  No Orders Found
+                                  No notifications Found
                                 </div>
                               </div>
                             </div>

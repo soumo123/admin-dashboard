@@ -71,11 +71,12 @@ const ReqManualOrder = () => {
 
 
     }
+    console.log("orders--online", orders)
     const handleSearch = (query) => {
         setLastTypingTime(new Date().getTime())
         setSearchQuery(query);
-      };
-    
+    };
+
 
 
     useEffect(() => {
@@ -120,6 +121,14 @@ const ReqManualOrder = () => {
         }));
     };
     const handleSubmit = async (tokenId, ele) => {
+        if (ele.accept !== 1) {
+            setMessage("Please Accept the order first")
+            setMessageType("error")
+            setTimeout(() => {
+                setMessage(false)
+            }, 2000);
+            return
+        }
         const changes = orderChanges[tokenId] || {};
 
         let orderedPrice = calculateTotalPrice({
@@ -207,6 +216,34 @@ const ReqManualOrder = () => {
         }
         return allprices
     }
+
+    const handleStatus = async (accept, tokId) => {
+
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': "application/json",
+                },
+                withCredentials: true
+            }
+            const result = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/accept_reject_order?adminId=${adminId}&type=${type}&tokenId=${tokId}&accept=${accept}`, config)
+            if (result.status === 200) {
+                setMessage(result.data.message)
+                setMessageType("success")
+                setTimeout(() => {
+                    setMessage(false)
+                }, 2000);
+                dispatch(setRef(new Date().getSeconds()))
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+
+
+    }
+
+
     useEffect(() => {
         getTax()
     }, [])
@@ -222,7 +259,7 @@ const ReqManualOrder = () => {
                     <Message type={messageType} message={message} />
                 ) : ("")
             }
-            <h1>Requested Orders</h1>
+            <h1>Online Orders</h1>
             <div className='container'>
                 <div className='form'>
                     <div className="row">
@@ -232,7 +269,7 @@ const ReqManualOrder = () => {
                                 <input type="text" placeholder="Search by tokenId" className='form-control' name="search" value={searchQuery} onChange={(e) => handleSearch(e.target.value)} />
                             </div>
                         </div>
-                    
+
                     </div>
                 </div>
                 <div className='row'>
@@ -259,13 +296,51 @@ const ReqManualOrder = () => {
                                                         {
                                                             orders && orders.map((ele, index) => (
                                                                 <div class="accordion-item" key={index}>
+                                                                    {/* <div className="row">
+                                                                        <div className="col">
+
+                                                                        </div>
+                                                                     </div> */}
                                                                     <input type="checkbox" id={`item-${index}`} />
                                                                     <label for={`item-${index}`} class="accordion-header">
-                                                                        <span>{ele.tokenId} ({ele.username})</span>
+                                                                        <span>{ele.tokenId} (Customer Name : {ele.username})</span>
                                                                         <span class="arrow">
                                                                             <i class="fa-solid fa-caret-right"></i>
                                                                         </span>
+                                                                        {
+                                                                            ele.accept === 0 ? (
+                                                                                <>
+                                                                                    <button type="button" class="btn btn-success btn-sm" onClick={() => handleStatus(1, ele.tokenId)}>Accept</button>
+                                                                                    <button type="button" class="btn btn-danger btn-sm" onClick={() => handleStatus(-1, ele.tokenId)}>Reject</button>
+                                                                                </>
+                                                                            ) : (
+                                                                                <div>
+                                                                                    {
+                                                                                        ele.accept === 1 ? (
+                                                                                            <p style={{ color: "green" }}>Accept</p>
+                                                                                        ) : (
+                                                                                            <p style={{ color: "red" }}>Reject</p>
+
+                                                                                        )
+
+                                                                                    }
+
+                                                                                </div>
+                                                                            )
+                                                                        }
+
                                                                     </label>
+                                                                    <div className="col">
+                                                                        {
+                                                                            ele.products.map((item, itemIndex) => (
+                                                                                <div key={index}>
+                                                                                    <p>{item.name} ({item.productId})
+
+                                                                                    </p>
+                                                                                </div>
+                                                                            ))}
+
+                                                                    </div>
                                                                     <div class="accordion-content">
                                                                         <div className="row">
                                                                             <div className="col">
@@ -370,8 +445,17 @@ const ReqManualOrder = () => {
                                                                             ele.products.length === 0 ? (
                                                                                 <span style={{ color: "red" }}>* You have to select minimum one product</span>
                                                                             ) : (
+                                                                                <>
+                                                                                    {
+                                                                                        ele.accept === -1 ? (
+                                                                                            <button type="button" className="btn btn-primary" onClick={() => handleSubmit(ele.tokenId, ele)} disabled>Confirm Order</button>
 
-                                                                                <button type="button" className="btn btn-primary" onClick={() => handleSubmit(ele.tokenId, ele)}>Place Order</button>
+                                                                                        ) : (
+                                                                                            <button type="button" className="btn btn-primary" onClick={() => handleSubmit(ele.tokenId, ele)}>Confirm Order</button>
+                                                                                        )
+
+                                                                                    }
+                                                                                </>
                                                                             )
                                                                         }
 

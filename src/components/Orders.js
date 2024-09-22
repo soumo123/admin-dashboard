@@ -235,7 +235,7 @@ const Orders = ({ sidebarOpen }) => {
                         </div>
                         <div className="col-sm-3">
 
-                            <button type="button" className='btnSubmit position-relative' onClick={handlReqOrder}>Requested Orders
+                            <button type="button" className='btnSubmit position-relative' onClick={handlReqOrder}>Online Orders
                                 {
                                     totaReqorders > 0 && (
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

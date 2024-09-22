@@ -145,6 +145,40 @@ const Vendor = () => {
 
     }
 
+    const handleCheck1 = async (check, venId) => {
+        let active = undefined
+        console.log(check, "check")
+        if (Number(check)) {
+            active = 0
+        } else {
+            active = 1
+        }
+        try {
+            const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/update_vendor_status?vendorId=${venId}&shopId=${shop_id}&status=${active}`)
+            if (response.status === 200) {
+                setMessageType("success")
+                setMessage("Status Update")
+                setTimeout(() => {
+                    setMessage(false)
+                   
+                }, 2000);
+                setRefresh1(new Date().getMilliseconds())
+            }
+        } catch (error) {
+            setMessageType("error")
+            setMessage("Status Not Update")
+            setTimeout(() => {
+                setMessage(false)
+            }, 2000);
+        }
+
+
+
+    }
+
+
+
+
     useEffect(() => {
         if (lastTypingTime1) {
             const timer = setTimeout(() => {
@@ -242,6 +276,8 @@ const Vendor = () => {
                                         <th>Name</th>
                                         <th>Phone</th>
                                         <th>Action</th>
+                                        <th>Status</th>
+
                                     </tr>
                                 </thead>
                                 {
@@ -275,6 +311,11 @@ const Vendor = () => {
 
                                                                         <div className="data-icons">
                                                                             <span data-toggle="tooltip" data-placement="top" title="View" style={{ cursor: "pointer" }} onClick={() => hanldeOpen(ele.vendorId, undefined, 1)}><VisibilityIcon /></span>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="form-check form-switch">
+                                                                            <input data-toggle="tooltip" data-placement="top" title="Availability" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked1" value={ele.status} checked={ele.status} onChange={(e) => handleCheck1(e.target.value, ele.vendorId)} />
                                                                         </div>
                                                                     </td>
                                                                 </tr>
