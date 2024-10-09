@@ -28,6 +28,7 @@ const ReqManualOrder = () => {
     const [messageType, setMessageType] = useState("")
     const [ref, setRef] = useState(false)
     const [err, setErr] = useState(false)
+    const [mode, setMode] = useState("offline")
 
     const getTax = async () => {
 
@@ -110,6 +111,11 @@ const ReqManualOrder = () => {
         setOffset((value - 1) * limit);
     };
 
+    const handleMode = (e) => {
+        setMode(e);
+    }
+
+    console.log("mode", mode)
 
     const handleInputChange = (tokenId, field, value) => {
         setOrderChanges(prevState => ({
@@ -153,6 +159,7 @@ const ReqManualOrder = () => {
             discount: Number(changes.discount) || Number(ele.discount),
             paid: true,
             order_method: "direct",
+            paymentmethod: mode,
             deliver_date: new Date(),
             status: 4
         };
@@ -440,24 +447,40 @@ const ReqManualOrder = () => {
                                                                             </div>
 
                                                                         </div>
+                                                                        <div className="row">
+                                                                            <div className="col">
+                                                                                <label for="inputEmail4" class="form-label">Order method</label>
+                                                                                <select id="inputState" class="form-select" value={mode} onChange={(e) => handleMode(e.target.value)}>
+                                                                                    <option value="offline">Cash Payment</option>
+                                                                                    <option value="online">Online Payment</option>
 
-                                                                        {
-                                                                            ele.products.length === 0 ? (
-                                                                                <span style={{ color: "red" }}>* You have to select minimum one product</span>
-                                                                            ) : (
-                                                                                <>
-                                                                                    {
-                                                                                        ele.accept === -1 ? (
-                                                                                            <button type="button" className="btn btn-primary" onClick={() => handleSubmit(ele.tokenId, ele)} disabled>Confirm Order</button>
+                                                                                </select>
+                                                                            </div>
 
-                                                                                        ) : (
-                                                                                            <button type="button" className="btn btn-primary" onClick={() => handleSubmit(ele.tokenId, ele)}>Confirm Order</button>
-                                                                                        )
+                                                                        </div>
+                                                                        <div class="row mt-4">
+                                                                            <div className="col">
 
-                                                                                    }
-                                                                                </>
-                                                                            )
-                                                                        }
+                                                                                {
+                                                                                    ele.products.length === 0 ? (
+                                                                                        <span style={{ color: "red" }}>* You have to select minimum one product</span>
+                                                                                    ) : (
+                                                                                        <>
+                                                                                            {
+                                                                                                ele.accept === -1 ? (
+                                                                                                    <button type="button" className="btn btn-primary" onClick={() => handleSubmit(ele.tokenId, ele)} disabled>Confirm Order</button>
+
+                                                                                                ) : (
+                                                                                                    <button type="button" className="btn btn-primary" onClick={() => handleSubmit(ele.tokenId, ele)}>Confirm Order</button>
+                                                                                                )
+
+                                                                                            }
+                                                                                        </>
+                                                                                    )
+                                                                                }
+
+                                                                            </div>
+                                                                        </div>
 
                                                                     </div>
                                                                 </div>

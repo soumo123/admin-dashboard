@@ -122,6 +122,12 @@ const TransactionSlip = ({ recShow, setRecShow, agId, shop_id, transactionId }) 
                             </table>
                         </div>
                         <div className="total">
+                            {
+                                tranData?.returcost===0 ? (""):(
+                            <p>Return Cost: <span>₹ {tranData?.returncost}</span></p>
+
+                                )
+                            }
                             <p>Total Price: <span>₹ {tranData?.totalAmount?.toFixed(2)}</span></p>
                             <p>Balance: <span>₹ {tranData?.balance?.toFixed(2)}</span></p>
                         </div>

@@ -50,7 +50,7 @@
     transition: 1s;
   }
   .accordion-item input[type="checkbox"]:checked ~ .accordion-content {
-    max-height: 100vh;
+    max-height: 130vh;
   
     transition: 1s;
   }

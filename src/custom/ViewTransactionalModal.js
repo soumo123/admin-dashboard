@@ -78,6 +78,12 @@ const ViewTransactionalModal = ({ viewTranModal, setVewTranMiodal, agId, shop_id
               
             ):("")
              }
+             {
+              tranData?.returncost===0 ? (""):(
+              <h3>Return Cost :  ₹ {tranData?.returncost}</h3>
+
+              ) 
+             }
               <h3>Total Price :  ₹ {tranData?.totalAmount}</h3>
               <h3>Balance :  ₹ {tranData?.balance}</h3>
               <h3>Paid :  ₹ {tranData?.paid ? "Paid" :"Not Paid"}</h3>

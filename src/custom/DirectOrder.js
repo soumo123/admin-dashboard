@@ -282,24 +282,24 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                     },
                     withCredentials: true
                 }
-                // const result = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/create?adminId=${adminId}&type=${type}&shop_id=${shop_id}`, json, config)
-                // if (result.status === 201) {
-                //     setMessage("Order Created")
-                //     setMessageType("success")
-                //     setLoader(false)
-                //     setProducts([])
-                //     setOrderItems([])
-                //     setSelectedId("");
-                //     setWeight([]);
-                //     setSelectedWeight("");
-                //     setPrice("");
-                //     setQuantity(1);
-                //     setDirectModal(false)
-                //     setTimeout(() => {
-                //         setMessage(false)
-                //     }, 2000);
-                //     dispatch(setRef(new Date().getSeconds()))
-                // }
+                const result = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/create?adminId=${adminId}&type=${type}&shop_id=${shop_id}`, json, config)
+                if (result.status === 201) {
+                    setMessage("Order Created")
+                    setMessageType("success")
+                    setLoader(false)
+                    setProducts([])
+                    setOrderItems([])
+                    setSelectedId("");
+                    setWeight([]);
+                    setSelectedWeight("");
+                    setPrice("");
+                    setQuantity(1);
+                    setDirectModal(false)
+                    setTimeout(() => {
+                        setMessage(false)
+                    }, 2000);
+                    dispatch(setRef(new Date().getSeconds()))
+                }
             } else {
                 setAddErr(true)
                 setLoader(false)
