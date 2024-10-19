@@ -13,6 +13,7 @@ const EditProduct = () => {
     const adminId = localStorage.getItem("adminId");
     const shop_id = localStorage.getItem("id");
     const type = localStorage.getItem("type");
+    const adminToken = localStorage.getItem("adminToken")
 
     const [message, setMessage] = useState(false)
     const [messageType, setMessageType] = useState("")
@@ -228,9 +229,11 @@ const EditProduct = () => {
             formData.set('isBranded', check8);
             formData.append('weight11', JSON.stringify(productData.weight))
             formData.append('size1', JSON.stringify(selectedOptions2))
+
             const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/update/${adminId}?productId=${id}`, formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${adminToken}` 
                 }
             });
             if (response.status === 201) {

@@ -6,6 +6,7 @@ const ViewProduct = () => {
     const adminId = localStorage.getItem("adminId");
     const shop_id = localStorage.getItem("id");
     const type = localStorage.getItem("type");
+    const adminToken = localStorage.getItem("adminToken")
 
     const [check5, setCheck5] = useState(false)
     const [check6, setCheck6] = useState(false)
@@ -66,7 +67,12 @@ const ViewProduct = () => {
     const getProduct = async () => {
 
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/getProductById?productId=${id}&type=${type}&adminId=${adminId}`);
+            const config = {
+                headers: {
+                  'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+              };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/getProductById?productId=${id}&type=${type}&adminId=${adminId}`,config);
             if (response.status === 200) {
                 setProductData({
                     name: response.data.data[0].name,

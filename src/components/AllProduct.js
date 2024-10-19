@@ -36,8 +36,9 @@ const AllProduct = ({ sidebarOpen }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [limit, setLimit] = useState(5);
   const [offset, setOffset] = useState(0)
-  const[expired,setExpired] = useState("")
+  const [expired, setExpired] = useState("")
 
+  const adminToken = localStorage.getItem("adminToken")
   const handleClose = () => {
     setOpen(false);
     setProductId("")
@@ -70,8 +71,12 @@ const AllProduct = ({ sidebarOpen }) => {
   const getAllProductsByAdmin = async () => {
 
     try {
-
-      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=${searchQuery}&startprice=${startPrice}&lastprice=${lastPrice}&limit=${limit}&offset=${offset}&expired=${expired}`)
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+        }
+      };
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=${searchQuery}&startprice=${startPrice}&lastprice=${lastPrice}&limit=${limit}&offset=${offset}&expired=${expired}`, config)
       if (response.status === 200) {
         setloader(true)
         setProducts(response.data.data)
@@ -91,8 +96,12 @@ const AllProduct = ({ sidebarOpen }) => {
   const deleteProduct = async () => {
 
     try {
-
-      const response = await axios.delete(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/delete_product_by_admin?adminId=${adminId}&type=${type}&productId=${productId}`)
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+        }
+      };
+      const response = await axios.delete(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/delete_product_by_admin?adminId=${adminId}&type=${type}&productId=${productId}`, config)
       if (response.status = 200) {
         setOpen(false)
         setMessageType("success")
@@ -128,7 +137,12 @@ const AllProduct = ({ sidebarOpen }) => {
       const timer = setTimeout(() => {
         const getAllProductsByAdmin = async () => {
           try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=${searchQuery}&startprice=${startPrice}&lastprice=${lastPrice}&limit=${limit}&offset=${offset}&expired=${expired}`)
+            const config = {
+              headers: {
+                'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+              }
+            };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=${searchQuery}&startprice=${startPrice}&lastprice=${lastPrice}&limit=${limit}&offset=${offset}&expired=${expired}`, config)
             if (response.status === 200) {
               console.log("response.data.data", response.data.data)
               setProducts(response.data.data)
@@ -144,19 +158,22 @@ const AllProduct = ({ sidebarOpen }) => {
       }, 1000);
       return () => clearTimeout(timer)
     }
-  }, [searchQuery, startPrice, lastPrice,offset, limit])
+  }, [searchQuery, startPrice, lastPrice, offset, limit])
 
   const handleCheck = async (check, pdId) => {
     let active = undefined
-    console.log(check, "check")
     if (Number(check)) {
       active = 0
     } else {
       active = 1
     }
-    console.log("activee", active)
     try {
-      const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/active?adminId=${adminId}&type=${type}&productId=${pdId}&active=${active}`)
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+        }
+      };
+      const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/active?adminId=${adminId}&type=${type}&productId=${pdId}&active=${active}`,"" ,config)
       if (response.status === 200) {
         setMessageType("success")
         setMessage("Status Update")
@@ -179,15 +196,15 @@ const AllProduct = ({ sidebarOpen }) => {
 
   const handlePageChange = (event, value) => {
     setOffset((value - 1) * limit);
-};
+  };
 
-const handleExpireChange = (e)=>{
-  setExpired(e)
-}
+  const handleExpireChange = (e) => {
+    setExpired(e)
+  }
 
   useEffect(() => {
     getAllProductsByAdmin()
-  }, [dataRefe,expired,offset, limit])
+  }, [dataRefe, expired, offset, limit])
 
 
 
@@ -225,8 +242,8 @@ const handleExpireChange = (e)=>{
             <div className="col-sm-3">
               <div className="form-group">
                 <label>Sort</label>
-                <select className='form-control' value={expired} onChange={(e)=>handleExpireChange(e.target.value)}>
-                <option value={""}>All</option>
+                <select className='form-control' value={expired} onChange={(e) => handleExpireChange(e.target.value)}>
+                  <option value={""}>All</option>
                   <option value={true}>Expired</option>
                   <option value={false}>Not Expired</option>
 
@@ -277,12 +294,12 @@ const handleExpireChange = (e)=>{
                             <td>
                               <div className="">
 
-                              <img src={ele.barcodeUrl} style={{width: '100%', height: '100%'}}/>
+                                <img src={ele.barcodeUrl} style={{ width: '100%', height: '100%' }} />
                               </div>
-                              </td>
+                            </td>
                             <td>{ele.name}</td>
                             <td>{ele.description}</td>
-                            <td>{ele.expired ? <p style={{color: 'red'}}>Expired</p>:<p style={{color: 'green'}}>Not Expire</p>}</td>
+                            <td>{ele.expired ? <p style={{ color: 'red' }}>Expired</p> : <p style={{ color: 'green' }}>Not Expire</p>}</td>
 
                             <td>{ele.delivery_partner}</td>
                             <td>
@@ -290,8 +307,8 @@ const handleExpireChange = (e)=>{
 
                                 ele.weight && ele.weight.map((item) => (
                                   <>
-                                  <p>Weight : {item.weight} {ele.unit}, Quantity : {item.stock} , Price : ₹ {item.price}</p>
-                                  
+                                    <p>Weight : {item.weight} {ele.unit}, Quantity : {item.stock} , Price : ₹ {item.price}</p>
+
                                   </>
                                 ))
 
@@ -323,7 +340,7 @@ const handleExpireChange = (e)=>{
                         <div className="row">
                           <div className="col-12">
                             <div className="text-center">
-                              No Products Product Found
+                              No Products Found
                             </div>
                           </div>
                         </div>

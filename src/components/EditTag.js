@@ -18,13 +18,16 @@ const EditTag = ({ edit, setEdit, editName, seteditName, setEditId, editId, setE
     const [message, setMessage] = useState(false)
     const [messageType, setMessageType] = useState("")
     const [imagePreview, setImagePreview] = useState("")
+    const [disabled, setDisabled] = useState(false)
+    const [err, setErr] = useState(false)
     const [formsdata, setFormsData] = useState({
-        name: editName,
+        name: "",
         file: null,
         type: type
     })
-
+    console.log("editName", formsdata)
     const handleChange = (e) => {
+        setErr(false)
         if (e.target.type === 'file') {
             setFormsData({ ...formsdata, file: e.target.files[0] });
             const reader = new FileReader();
@@ -43,6 +46,8 @@ const EditTag = ({ edit, setEdit, editName, seteditName, setEditId, editId, setE
     }
 
     const handleCloseInvite = () => {
+        setErr(false)
+
         setEdit(false)
         seteditName("")
         setEditId("")
@@ -52,6 +57,11 @@ const EditTag = ({ edit, setEdit, editName, seteditName, setEditId, editId, setE
     const handleSubmit = async () => {
         try {
             let { name, file, type } = formsdata
+            if (!name) {
+                setErr(true)
+                return
+            }
+            setDisabled(true)
             const config = {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -64,6 +74,8 @@ const EditTag = ({ edit, setEdit, editName, seteditName, setEditId, editId, setE
             formDataToSend.append("file", file)
             const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/update_tags/${adminId}/${editId}`, formDataToSend, config);
             if (response.status === 201) {
+                setDisabled(false)
+                setErr(false)
                 setMessageType("success")
                 setMessage("Tag Updated")
                 setEdit(false)
@@ -78,6 +90,7 @@ const EditTag = ({ edit, setEdit, editName, seteditName, setEditId, editId, setE
                 }, 2000);
             }
         } catch (error) {
+            setDisabled(false)
             setMessageType("error")
             setMessage("Tag Not Updated")
             setTimeout(() => {
@@ -89,7 +102,12 @@ const EditTag = ({ edit, setEdit, editName, seteditName, setEditId, editId, setE
 
     useEffect(() => {
         setImagePreview(editImage)
-    }, [editImage])
+        setFormsData({
+            name: editName,
+            file: null,
+            type: type
+        })
+    }, [editImage, editName])
 
 
     return (
@@ -107,28 +125,49 @@ const EditTag = ({ edit, setEdit, editName, seteditName, setEditId, editId, setE
                 dialogclassNameName="modal-md patient_notes_popup"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title classNameName="text-center">Add Tag</Modal.Title>
+                    <Modal.Title classNameName="text-center">Edit Tag</Modal.Title>
                 </Modal.Header>
                 <Modal.Body classNameName="">
-                    <div className="form-group">
-                        <label>* Tag Name</label>
-                        <input type="text" className="form-control" placeholder="Tag Name" name="name" value={formsdata.name} onChange={handleChange} />
+                    <div className="row">
+                        <div className="col">
+                            <div className="form-group">
+                                <label>* Tag Name</label>
+                                <input type="text" className="form-control" placeholder="Tag Name" name="name" value={formsdata.name} onChange={handleChange} />
 
+                            </div>
+
+                            <div className="form-group">
+                            <label for="inputEmail4" class="form-label">Logo</label>
+                                {
+                                    console.log("imagePreview", imagePreview)
+                                }
+                                <img style={{ width: '30%', height: '30%' }} id="selectedImage" src={imagePreview} alt="Selected Image" class="default-image" />
+                                <input type="file" id="imageUpload" name="file" onChange={handleChange} />
+                            </div>
+                            {
+                                err ? (
+                                    <p style={{ color: "red" }}>* Please fill mandatory fields</p>
+
+                                ) : ("")
+                            }
+                        </div>
                     </div>
 
-                    <div className="form-group">
-                        <label>Logo</label>
-                        {
-                            console.log("imagePreview", imagePreview)
-                        }
-                        <img id="selectedImage" src={imagePreview} alt="Selected Image" class="default-image" />
-                        <input type="file" id="imageUpload" name="file" onChange={handleChange} />
-                    </div>
 
                 </Modal.Body>
                 <Modal.Footer>
-                    <button type="submit" onClick={handleSubmit}>Update</button>
-                    <button type="submit" onClick={handleCloseInvite}>Close</button>
+
+                    {
+                        disabled ? (
+                            <button class="btnSubmit1" type="button" disabled={disabled}>Updating...</button>
+                        ) : (
+                            <>
+                                <button type="button" class={disabled ? "btnSubmit1" : "btnSubmit"} onClick={handleSubmit} disabled={disabled}>Update</button>
+                                <button type="button" className="btnSubmit" onClick={handleCloseInvite}>Close</button>
+                            </>
+                        )
+                    }
+
 
                 </Modal.Footer>
             </Modal >
