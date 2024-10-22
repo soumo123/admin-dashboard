@@ -34,6 +34,7 @@ const AddVendorProducts = () => {
   const [title, setTitle] = useState("")
   const [err, setErr] = useState(false)
   const [loader, setLoader] = useState(false)
+  const adminToken = localStorage.getItem("adminToken")
 
   const handleAddWeight = (formIndex) => {
     setErr(false)
@@ -120,7 +121,8 @@ const AddVendorProducts = () => {
       setLoader(true)
       const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/addinventory?adminId=${adminId}&agentId=${agentId}&vendorId=${vendorId}&type=${type}&shop_id=${shop_id}`, products, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminToken}`
         }
       });
       if (response.status === 201) {
@@ -190,7 +192,12 @@ const AddVendorProducts = () => {
       const timer = setTimeout(() => {
         const searchResult = async () => {
           try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/search_vendor?adminId=${adminId}&key=${searchQuery}`)
+            const config = {
+              headers: {
+                'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+              }
+            };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/search_vendor?adminId=${adminId}&key=${searchQuery}`,config)
             if (response.status === 200) {
 
               setSerachData(response.data.data)

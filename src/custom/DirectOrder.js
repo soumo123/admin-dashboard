@@ -51,6 +51,9 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
     const [depositeErr, setDepoErr] = useState(false)
     const [loader, setLoader] = useState(false)
     const [scannedCode, setScannedCode] = useState('');
+
+  const adminToken = localStorage.getItem("adminToken")
+
     let totalPrice = 0
     const handleClose = () => {
         setDirectModal(false);
@@ -118,7 +121,12 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
     const getAllProductsByAdmin = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=&startprice=&lastprice=&limit=${10000000}&offset=${0}&expired=false`);
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+            }
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=&startprice=&lastprice=&limit=${10000000}&offset=${0}&expired=false`,config);
             if (response.status === 200) {
                 setProducts(response.data.data);
             }
@@ -279,6 +287,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                 const config = {
                     headers: {
                         'Content-Type': "application/json",
+                        'Authorization': `Bearer ${adminToken}` // Bearer Token Format
                     },
                     withCredentials: true
                 }

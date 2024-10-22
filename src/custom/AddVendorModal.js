@@ -14,6 +14,7 @@ const AddVendorModal = ({ modalShow1, setModalShow1,setRefresh1,setMode }) => {
 
   const dispatch = useDispatch()
   const shop_id = localStorage.getItem("shop_id");
+  const adminId = localStorage.getItem("adminId");
   const [imagePreview, setImagePreview] = useState("./avatar.jpg")
   const [message, setMessage] = useState(false)
   const [messageType, setMessageType] = useState("")
@@ -23,6 +24,8 @@ const AddVendorModal = ({ modalShow1, setModalShow1,setRefresh1,setMode }) => {
     mobile: '',
     file: null // for storing the selected file
   });
+  const adminToken = localStorage.getItem("adminToken")
+
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleClose = () => {
@@ -62,11 +65,12 @@ const AddVendorModal = ({ modalShow1, setModalShow1,setRefresh1,setMode }) => {
 
       const config = {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${adminToken}` // Bearer Token Format
         }
       };
 
-      const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/addVendor?shop_id=${shop_id}`, formDataToSend, config);
+      const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/addVendor?shop_id=${shop_id}&adminId=${adminId}`, formDataToSend, config);
 
       if (response.status === 201) {
         setFormData({})
@@ -82,7 +86,6 @@ const AddVendorModal = ({ modalShow1, setModalShow1,setRefresh1,setMode }) => {
 
       }
     } catch (error) {
-      console.error('Error signing up:', error);
       setMessageType("error")
         setMessage(error.response.data.message)
         setTimeout(() => {

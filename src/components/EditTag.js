@@ -26,6 +26,8 @@ const EditTag = ({ edit, setEdit, editName, seteditName, setEditId, editId, setE
         type: type
     })
     console.log("editName", formsdata)
+  const adminToken = localStorage.getItem("adminToken")
+
     const handleChange = (e) => {
         setErr(false)
         if (e.target.type === 'file') {
@@ -64,7 +66,8 @@ const EditTag = ({ edit, setEdit, editName, seteditName, setEditId, editId, setE
             setDisabled(true)
             const config = {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${adminToken}`
                 },
                 withCredentials: true
             }

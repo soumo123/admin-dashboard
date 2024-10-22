@@ -68,6 +68,7 @@ const UpdateStock = ({ sidebarOpen }) => {
   const [disMode, setDisMode] = useState("1")
   const[addedPrice,setAddedPrice] = useState(0)
   const[savePrice,setSavePrice] = useState(0)
+  const adminToken = localStorage.getItem("adminToken")
 
   const handleSearch = (query) => {
     setLastTypingTime(new Date().getTime());
@@ -86,7 +87,12 @@ const UpdateStock = ({ sidebarOpen }) => {
 
   const getAllAgents = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=${1}`);
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+        }
+      };
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=${1}&adminId=${adminId}`,config);
       if (response.status === 200) {
         setAgentData(response.data.data);
       } else {

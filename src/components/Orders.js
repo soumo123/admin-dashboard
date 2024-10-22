@@ -46,7 +46,7 @@ const Orders = ({ sidebarOpen }) => {
     const [totalPages, setTotalPages] = useState(0);
     const [ordertype, setOrderType] = useState("")
     const [totaReqorders, setTotalReqOrders] = useState(0)
-
+    const adminToken = localStorage.getItem("adminToken")
     const handleClose = () => {
         setShow(false);
         setText("")
@@ -72,7 +72,12 @@ const Orders = ({ sidebarOpen }) => {
 
     const getOrderDetails = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${""}&limit=${limit}&offset=${offset}&ordertype=${ordertype}`)
+            const config = {
+                headers: {
+                  'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+              };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${""}&limit=${limit}&offset=${offset}&ordertype=${ordertype}&adminId=${adminId}`,config)
             if (response.status === 200) {
                 setloader(true)
                 setOrders(response.data.data)
@@ -98,7 +103,12 @@ const Orders = ({ sidebarOpen }) => {
             const timer = setTimeout(() => {
                 const getOrderDetails = async () => {
                     try {
-                        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${searchQuery}&ordertype=${ordertype}`)
+                        const config = {
+                            headers: {
+                              'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                            }
+                          };
+                        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${searchQuery}&ordertype=${ordertype}&adminId=${adminId}`,config)
                         if (response.status === 200) {
                             setloader(true)
                             setOrders(response.data.data)
@@ -173,7 +183,12 @@ const Orders = ({ sidebarOpen }) => {
             } else {
                 setInvo(true)
             }
-            const result = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorder/${id}`)
+            const config = {
+                headers: {
+                  'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+              };
+            const result = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorder/${id}/${adminId}`,config)
             if (result.status === 200) {
                 setViewData(result.data.data)
             }
@@ -210,6 +225,7 @@ const Orders = ({ sidebarOpen }) => {
                 ) : ("")
             }
             <div className={`all-product ${sidebarOpen ? 'sidebar-open' : ''}`}>
+                <h3>Manage Orders</h3>
                 <div className='form'>
                     <div className="row">
                         <div className="col-sm-3">

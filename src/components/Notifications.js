@@ -21,10 +21,16 @@ const Notifications = () => {
   const [messageType, setMessageType] = useState("")
   const [ref, setRef] = useState(false)
   const [loader, setLoader] = useState(false)
+  const adminToken = localStorage.getItem("adminToken")
 
   const getAllNotifications = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/get_notification?adminId=${adminId}&type=${type}`);
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+        }
+      };
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/get_notification?adminId=${adminId}&type=${type}`,config);
       if (response.status === 200) {
         setNotifications(response.data.data);
         setLoader(true)

@@ -32,6 +32,9 @@ const Vendor = () => {
     const [mode, setMode] = useState(0)
     const [option, setOption] = useState(0)
     const [viewdata, setViewData] = useState({})
+
+    const adminToken = localStorage.getItem("adminToken")
+
     const handleOpen1 = (mode) => {
         if (Number(mode) === 1) {
             setMode(1)
@@ -44,7 +47,12 @@ const Vendor = () => {
 
     const getAllvendors = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_all_vendors?shop_id=${shop_id}&search=`)
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+            };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_all_vendors?shop_id=${shop_id}&adminId=${adminId}&search=`, config)
             if (response.status === 200) {
                 setloader(true)
                 setVendorData(response.data.data)
@@ -59,7 +67,12 @@ const Vendor = () => {
 
     const getAllagents = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=`)
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+            };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&adminId=${adminId}&key=&statustype=`, config)
             if (response.status === 200) {
                 setloader1(true)
                 setAgentData(response.data.data)
@@ -104,7 +117,12 @@ const Vendor = () => {
 
     const viewAgentvendor = async (vendorId, agentId, option) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/view_agent_vendor?agentId=${agentId}&vendorId=${vendorId}&shop_id=${shop_id}&key=${option}`)
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+            };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/view_agent_vendor?agentId=${agentId}&vendorId=${vendorId}&adminId=${adminId}&shop_id=${shop_id}&key=${option}`,config)
             if (response.status === 200) {
                 setViewData(response.data.data)
             }
@@ -123,15 +141,20 @@ const Vendor = () => {
             active = 1
         }
         try {
-            const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/update_agent_status?agentId=${agentId}&shopId=${shop_id}&status=${active}`)
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+            };
+            const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/update_agent_status?agentId=${agentId}&shopId=${shop_id}&status=${active}&adminId=${adminId}`,'',config)
             if (response.status === 200) {
                 setMessageType("success")
                 setMessage("Status Update")
                 setTimeout(() => {
                     setMessage(false)
-                   
+
                 }, 2000);
-               setRefresh2(new Date().getMilliseconds())
+                setRefresh2(new Date().getMilliseconds())
             }
         } catch (error) {
             setMessageType("error")
@@ -154,13 +177,18 @@ const Vendor = () => {
             active = 1
         }
         try {
-            const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/update_vendor_status?vendorId=${venId}&shopId=${shop_id}&status=${active}`)
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+            };
+            const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/update_vendor_status?vendorId=${venId}&shopId=${shop_id}&status=${active}&adminId=${adminId}`, '', config)
             if (response.status === 200) {
                 setMessageType("success")
                 setMessage("Status Update")
                 setTimeout(() => {
                     setMessage(false)
-                   
+
                 }, 2000);
                 setRefresh1(new Date().getMilliseconds())
             }
@@ -184,7 +212,12 @@ const Vendor = () => {
             const timer = setTimeout(() => {
                 const getAllagents = async () => {
                     try {
-                        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=${key1}&statustype=`)
+                        const config = {
+                            headers: {  
+                                'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                            }
+                        };
+                        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&adminId=${adminId}&key=${key1}&statustype=`,config)
                         if (response.status === 200) {
                             setloader1(true)
                             setAgentData(response.data.data)
@@ -211,7 +244,12 @@ const Vendor = () => {
             const timer = setTimeout(() => {
                 const getAllvendors = async () => {
                     try {
-                        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_all_vendors?shop_id=${shop_id}&search=${key}`)
+                        const config = {
+                            headers: {
+                                'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                            }
+                        };
+                        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_all_vendors?shop_id=${shop_id}&adminId=${adminId}&search=${key}`, config)
                         if (response.status === 200) {
                             setloader(true)
                             setVendorData(response.data.data)

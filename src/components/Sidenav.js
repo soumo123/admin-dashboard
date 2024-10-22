@@ -44,6 +44,8 @@ const Sidenav = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+    const adminToken = localStorage.getItem("adminToken")
+
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -62,8 +64,12 @@ const Sidenav = () => {
     const countNotification = async () => {
 
         try {
-
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/count_notification?adminId=${adminId}&type=${type}`)
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+            };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/count_notification?adminId=${adminId}&type=${type}`, config)
             if (response.status === 200) {
                 setCount(response.data.data)
             }
@@ -73,7 +79,7 @@ const Sidenav = () => {
         }
     }
 
-    const handleLogout = async()=>{
+    const handleLogout = async () => {
         localStorage.removeItem("adminId")
         localStorage.removeItem("shop_id")
         localStorage.removeItem("type")
@@ -145,10 +151,10 @@ const Sidenav = () => {
                 <Box sx={{ flexGrow: 0 }} className="profile-icon">
                     <Tooltip title="Open settings">
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                            <Avatar alt="Remy Sharp" src={image} /> 
-                          
+                            <Avatar alt="Remy Sharp" src={image} />
+
                         </IconButton>
-                       
+
                     </Tooltip>
                     {`${adminId}`}
                     <Menus

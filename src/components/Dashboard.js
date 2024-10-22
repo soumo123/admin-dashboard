@@ -14,10 +14,16 @@ const Dashboard = () => {
   const adminId = localStorage.getItem("adminId");
   const shop_id = localStorage.getItem("id");
   const type = localStorage.getItem("type");
+  const adminToken = localStorage.getItem("adminToken")
 
   const getDetails = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/getdashbordDetails?type=${type}&shop_id=${shop_id}&year=${year}`);
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+        }
+      };
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/getdashbordDetails?type=${type}&shop_id=${shop_id}&year=${year}&adminId=${adminId}`,config);
       if (response.status === 200) {
         setUserCount(response.data.users)
         setProductCount(response.data.products)

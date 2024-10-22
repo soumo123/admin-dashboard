@@ -30,6 +30,8 @@ const ReqManualOrder = () => {
     const [err, setErr] = useState(false)
     const [mode, setMode] = useState("offline")
 
+    const adminToken = localStorage.getItem("adminToken")
+
     const getTax = async () => {
 
         try {
@@ -55,7 +57,12 @@ const ReqManualOrder = () => {
     const getOrders = async () => {
 
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getmanualorders?type=${type}&limit=${limit}&offset=${offset}&key=${searchQuery}`);
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+            }
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getmanualorders?type=${type}&limit=${limit}&offset=${offset}&key=${searchQuery}&adminId=${adminId}`,config);
             if (response.status === 200) {
                 setLoader(true)
                 setOrders(response.data.data)
@@ -85,7 +92,12 @@ const ReqManualOrder = () => {
             const timer = setTimeout(() => {
                 const getOrders = async () => {
                     try {
-                        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getmanualorders?type=${type}&limit=${limit}&offset=${offset}&key=${searchQuery}`)
+                        const config = {
+                            headers: {
+                                'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                            }
+                        }
+                        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getmanualorders?type=${type}&limit=${limit}&offset=${offset}&key=${searchQuery}&adminId=${adminId}`,config)
                         if (response.status === 200) {
                             setLoader(true)
                             setOrders(response.data.data)
@@ -171,6 +183,7 @@ const ReqManualOrder = () => {
             const config = {
                 headers: {
                     'Content-Type': "application/json",
+                    'Authorization': `Bearer ${adminToken}`
                 },
                 withCredentials: true
             }
@@ -229,11 +242,11 @@ const ReqManualOrder = () => {
         try {
             const config = {
                 headers: {
-                    'Content-Type': "application/json",
+                    'Authorization': `Bearer ${adminToken}`
                 },
                 withCredentials: true
             }
-            const result = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/accept_reject_order?adminId=${adminId}&type=${type}&tokenId=${tokId}&accept=${accept}`, config)
+            const result = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/accept_reject_order?adminId=${adminId}&type=${type}&tokenId=${tokId}&accept=${accept}`,'',config)
             if (result.status === 200) {
                 setMessage(result.data.message)
                 setMessageType("success")

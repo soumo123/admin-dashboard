@@ -14,11 +14,17 @@ const Expiredproducts = ({ sidebarOpen }) => {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(5);
     const [offset, setOffset] = useState(0)
+    const adminToken = localStorage.getItem("adminToken")
 
 
     const getAllAgents = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=1`);
+            const config = {
+                headers: {
+                  'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+              };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=1&adminId=${adminId}`,config);
             if (response.status === 200) {
                 setAgentData(response.data.data);
             } else {

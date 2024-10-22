@@ -12,22 +12,24 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import Message from './Message';
 
 
-const AddAgentModal = ({ modalShow2, setModalShow2,setRefresh2 ,vendorData , setMode}) => {
+const AddAgentModal = ({ modalShow2, setModalShow2, setRefresh2, vendorData, setMode }) => {
 
   const dispatch = useDispatch()
   const shop_id = localStorage.getItem("shop_id");
   const [imagePreview, setImagePreview] = useState("./avatar.jpg")
-  const[vendorId,setVendorId] = useState("")
+  const [vendorId, setVendorId] = useState("")
   const [message, setMessage] = useState(false)
   const [messageType, setMessageType] = useState("")
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     mobile: '',
-    address:'',
+    address: '',
     file: null // for storing the selected file
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const adminToken = localStorage.getItem("adminToken")
+  const adminId = localStorage.getItem("adminId");
 
   const handleClose = () => {
     setModalShow2(false)
@@ -52,8 +54,8 @@ const AddAgentModal = ({ modalShow2, setModalShow2,setRefresh2 ,vendorData , set
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, mobile, address , file } = formData;
-    if (!name || !email || !mobile || !address || !file || vendorId==="0") {
+    const { name, email, mobile, address, file } = formData;
+    if (!name || !email || !mobile || !address || !file || vendorId === "0") {
       setErrorMessage('Please fill in all fields');
       return;
     }
@@ -67,11 +69,12 @@ const AddAgentModal = ({ modalShow2, setModalShow2,setRefresh2 ,vendorData , set
 
       const config = {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${adminToken}` // Bearer Token Format
         }
       };
 
-      const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/addAgent?shop_id=${shop_id}&vendor_id=${vendorId}`, formDataToSend, config);
+      const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/addAgent?shop_id=${shop_id}&vendor_id=${vendorId}&adminId=${adminId}`, formDataToSend, config);
 
       if (response.status === 201) {
         setFormData({})
@@ -88,31 +91,31 @@ const AddAgentModal = ({ modalShow2, setModalShow2,setRefresh2 ,vendorData , set
     } catch (error) {
       console.error('Error signing up:', error);
       setMessageType("error")
-        setMessage(error.response.data.message)
-        setTimeout(() => {
-          setMessage(false)
-        }, 2000);
+      setMessage(error.response.data.message)
+      setTimeout(() => {
+        setMessage(false)
+      }, 2000);
     }
   };
 
-  const modifyVendorData = vendorData && vendorData.map((ele)=>{
+  const modifyVendorData = vendorData && vendorData.map((ele) => {
     return {
-        label:`${ele.vendor_name} (${ele.vendorId})`,
-        value:`${ele.vendorId}`
+      label: `${ele.vendor_name} (${ele.vendorId})`,
+      value: `${ele.vendorId}`
     }
-        
-    
+
+
   })
-console.log("modifyVendorData",modifyVendorData)
+  console.log("modifyVendorData", modifyVendorData)
 
 
   return (
     <>
-    {
-                message ? (
-                    <Message type={messageType} message={message} />
-                ) : ("")
-            }
+      {
+        message ? (
+          <Message type={messageType} message={message} />
+        ) : ("")
+      }
       <Modal
         show={modalShow2}
         size="lg"
@@ -144,13 +147,13 @@ console.log("modifyVendorData",modifyVendorData)
                     <label className="name-label" >
                       <StorefrontIcon />
                     </label>
-                    <select value={vendorId} onChange={(e)=>setVendorId(e.target.value)}>
-                        <option value="0">Select</option>
-                        {
-                            modifyVendorData && modifyVendorData.map((ele)=>(
-                                <option value={ele.value}>{ele.label}</option>
-                            ))
-                        }
+                    <select value={vendorId} onChange={(e) => setVendorId(e.target.value)}>
+                      <option value="0">Select</option>
+                      {
+                        modifyVendorData && modifyVendorData.map((ele) => (
+                          <option value={ele.value}>{ele.label}</option>
+                        ))
+                      }
                     </select>
                   </div>
                 </div>

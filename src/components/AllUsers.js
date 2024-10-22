@@ -13,12 +13,17 @@ const AllUsers = ({ sidebarOpen }) => {
     const shop_id = localStorage.getItem("id");
     const type = localStorage.getItem("type");
     const [loader, setloader] = useState(false);
+    const adminToken = localStorage.getItem("adminToken")
 
 
     const handleOpen = async (id) => {
         setOpen(true)
-
-        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/get_user_details?type=${type}&userId=${id}`)
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+            }
+        };
+        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/get_user_details?type=${type}&userId=${id}&adminId=${adminId}`,config)
         if (response.status === 200) {
             setDetails(response.data)
         } else {
@@ -31,8 +36,12 @@ const AllUsers = ({ sidebarOpen }) => {
     const getAllUsersByAdmin = async () => {
 
         try {
-
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/get_users_by_admin?type=${type}`)
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+            };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/get_users_by_admin?type=${type}&adminId=${adminId}`, config)
             if (response.status === 200) {
                 setloader(true)
                 setUsers(response.data.data)

@@ -47,6 +47,7 @@ const Tags = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [limit, setLimit] = useState(5);
   const [offset, setOffset] = useState(0)
+  const adminToken = localStorage.getItem("adminToken")
 
   const handleChange = (e) => {
     setErr(false)
@@ -98,7 +99,8 @@ const Tags = () => {
 
       const config = {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${adminToken}` 
         },
         withCredentials: true
       }
@@ -162,10 +164,11 @@ const Tags = () => {
       const config = {
         headers: {
           'Content-Type': "application/json",
+          'Authorization': `Bearer ${adminToken}` 
         },
         withCredentials: true
       }
-      const response = await axios.delete(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/delete_tags/${adminId}?tagId=${tagId}&type=${type}`);
+      const response = await axios.delete(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/delete_tags/${adminId}?tagId=${tagId}&type=${type}`,config);
       if (response.status === 200) {
 
         setMessageType("success")
@@ -207,7 +210,12 @@ const Tags = () => {
     }
 
     try {
-      const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/category_update?userId=${adminId}&type=${type}&tag_id=${id}&status=${active}`)
+      const config = {
+        headers: {
+            'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+        }
+    };
+      const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/category_update?userId=${adminId}&type=${type}&tag_id=${id}&status=${active}`,'',config)
       if (response.status === 200) {
         setMessageType("success")
         setMessage("Status Update")
