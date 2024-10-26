@@ -227,7 +227,7 @@ const Orders = ({ sidebarOpen }) => {
             <div className={`all-product ${sidebarOpen ? 'sidebar-open' : ''}`}>
                 <h3>Manage Orders</h3>
                 <div className='form'>
-                    <div className="row">
+                    <div className="row align-items-center">
                         <div className="col-sm-3">
                             <div className="form-group">
                                 <label>Search Orders</label>
@@ -246,10 +246,11 @@ const Orders = ({ sidebarOpen }) => {
                             </div>
 
                         </div>
-                        <div className='col-sm-3 text-end '>
-                            <button type="button" className='btnSubmit' onClick={handleOpenModal}>+Take Order</button>
+                        <div className='col-sm-3 d-flex justify-content-end '>
+                            <button type="button" className='btnSubmit' onClick={handleOpenModal}>+Take Offline Order</button>
                         </div>
-                        <div className="col-sm-3">
+                        
+                        <div className="col-sm-3 d-flex justify-content-end">
 
                             <button type="button" className='btnSubmit position-relative' onClick={handlReqOrder}>Online Orders
                                 {
@@ -263,14 +264,11 @@ const Orders = ({ sidebarOpen }) => {
                             </button>
 
                         </div>
-
-
-                        {/* <div className="col-sm-4">
+                        <div className="col-sm-4 d-flex justify-content-end">
                             <div className="form-group">
-                                <label>To</label>
-                                <input type="number" placeholder="Enter Last Price" className='form-control' value={lastPrice} onChange={(e) => handleLastPrice(e.target.value)} />
+                            <button type="button" className='btnSubmit'>Zomato /Swiggy / Zepto Orders</button>
                             </div>
-                        </div> */}
+                        </div>
                     </div>
                 </div>
 

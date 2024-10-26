@@ -64,7 +64,7 @@ const AddVendorProducts = () => {
   const handleWeightInputChange = (formIndex, field, value) => {
     setErr(false)
     const newForms = [...forms];
-    newForms[formIndex].weightInput[field] = Number(value);
+    newForms[formIndex].weightInput[field] = value;
     setForms(newForms);
   };
 
@@ -109,7 +109,7 @@ const AddVendorProducts = () => {
     }
   };
 
-
+console.log("productsporductsproductsproducts",products)
 
   const addAgentProduct = async () => {
 
@@ -197,7 +197,7 @@ const AddVendorProducts = () => {
                 'Authorization': `Bearer ${adminToken}` // Bearer Token Format
               }
             };
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/search_vendor?adminId=${adminId}&key=${searchQuery}`,config)
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/search_vendor?adminId=${adminId}&key=${searchQuery}`, config)
             if (response.status === 200) {
 
               setSerachData(response.data.data)
@@ -222,7 +222,7 @@ const AddVendorProducts = () => {
     }
   }, [selectedOption])
 
-  console.log("productsssforms",products,forms)
+  console.log("productsssforms", products, forms)
 
 
   return (
@@ -365,17 +365,29 @@ const AddVendorProducts = () => {
                   label="Weight"
                   fullWidth
                   margin="normal"
-                  type="number"
+                  type="text"
                   value={form.weightInput.weight}
-                  onChange={(e) => handleWeightInputChange(formIndex, 'weight', e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^\d*\.?\d*$/.test(value)) {  // Allows only numbers and decimal point
+                      handleWeightInputChange(formIndex, 'weight', value);
+                    }
+                  }}
+                  inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
                 />
                 <TextField
                   label="Price"
                   fullWidth
                   margin="normal"
-                  type="number"
+                  type="text"
                   value={form.weightInput.purchaseprice}
-                  onChange={(e) => handleWeightInputChange(formIndex, 'purchaseprice', e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^\d*\.?\d*$/.test(value)) {  // Allows only numbers and decimal point
+                      handleWeightInputChange(formIndex, 'purchaseprice', value);
+                    }
+                  }}
+                  inputProps={{ inputMode: 'decimal', pattern: '[0-9.]*' }}
                 />
                 <TextField
                   label="Stock"
@@ -383,7 +395,13 @@ const AddVendorProducts = () => {
                   margin="normal"
                   type="number"
                   value={form.weightInput.stock}
-                  onChange={(e) => handleWeightInputChange(formIndex, 'stock', e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^\d*\.?\d*$/.test(value)) {  // Allows only numbers and decimal point
+                      handleWeightInputChange(formIndex, 'stock', value);
+                    }
+                  }}
+                  inputProps={{ inputMode: 'decimal', pattern: '[0-9.]*' }}
                 />
               </DialogContent>
               <DialogActions>
@@ -422,7 +440,7 @@ const AddVendorProducts = () => {
                 <List>
                   {product.weights.map((weight, weightIndex) => (
                     <ListItem key={weightIndex}>
-                      <ListItemText primary={`Weight: ${weight.weight}, Price: ${weight.price}, Stock: ${weight.stock}`} />
+                      <ListItemText primary={`Weight: ${weight.weight}, Price: ${weight.purchaseprice}, Stock: ${weight.stock}`} />
                     </ListItem>
                   ))}
                 </List>

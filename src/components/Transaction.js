@@ -16,6 +16,7 @@ const Transaction = () => {
   const [agentData, setAgentData] = useState([]);
   const [show, setShow] = useState(false)
   const [recShow, setRecShow] = useState(false)
+  const adminId = localStorage.getItem("adminId");
   const shop_id = localStorage.getItem("shop_id");
   const [agId, setAgId] = useState("")
   const [totalBalance, setTotalBalance] = useState(0);
@@ -33,6 +34,8 @@ const Transaction = () => {
   const [total, setTotal] = useState(0)
   const [totalUnpaidAmount, setTotalUnpaidAmount] = useState(0)
   const [totalpaidAmount, setTotalpaidAmount] = useState(0)
+
+  const adminToken = localStorage.getItem("adminToken")
 
 
   const handleRowClick = (e) => {
@@ -107,7 +110,12 @@ const Transaction = () => {
 
   const getAllAgents = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=1`);
+      const config = {
+        headers: {
+            'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+        }
+    }
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=1&adminId=${adminId}`,config);
       if (response.status === 200) {
         setAgentData(response.data.data);
       } else {

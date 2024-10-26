@@ -126,7 +126,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                     'Authorization': `Bearer ${adminToken}` // Bearer Token Format
                 }
             }
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=&startprice=&lastprice=&limit=${10000000}&offset=${0}&expired=false`,config);
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=&startprice=&lastprice=&limit=${10000000}&offset=${0}&expired=false&action=${1}`,config);
             if (response.status === 200) {
                 setProducts(response.data.data);
             }

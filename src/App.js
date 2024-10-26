@@ -26,6 +26,7 @@ import Requestedorders from './components/Requestedorders';
 import Authentication from './components/Authentication';
 import ReqManualOrder from './components/ReqManualOrder';
 import { jwtDecode } from "jwt-decode";
+import Employe from './components/Employe';
 
 
 function App() {
@@ -126,6 +127,9 @@ function App() {
                       <Route exact={true} path="/requests" element={<Requestedorders />} />
 
                       <Route exact={true} path="/manualorders" element={<ReqManualOrder />} />
+
+                      <Route exact={true} path="/employee" element={<Employe />} />
+
 
                     </Routes>
                   )

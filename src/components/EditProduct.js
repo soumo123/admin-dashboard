@@ -5,6 +5,9 @@ import { Multiselect } from "multiselect-react-dropdown";
 import Message from '../custom/Message';
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import CreatableSelect from 'react-select/creatable';
+import EditIcon from '@mui/icons-material/Edit';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 const EditProduct = () => {
 
@@ -14,7 +17,12 @@ const EditProduct = () => {
     const shop_id = localStorage.getItem("id");
     const type = localStorage.getItem("type");
     const adminToken = localStorage.getItem("adminToken")
-
+    const [show, setShow] = useState(false)
+    const[load,setLoad] = useState(false)
+    const[updatePrice,setUpdatedPrice] = useState({
+        purchase_price:"",
+        weight:""
+    })
     const [message, setMessage] = useState(false)
     const [messageType, setMessageType] = useState("")
 
@@ -48,6 +56,7 @@ const EditProduct = () => {
 
     const [productData, setProductData] = useState({
         name: '',
+        transaction_id:'',
         description: '',
         // price: 0,
         purchase_price: '',
@@ -149,6 +158,27 @@ const EditProduct = () => {
 
 
     };
+
+    const handleShow = (price,weight)=>{
+        setUpdatedPrice(prevState => ({
+            ...prevState,
+            weight: weight,
+            purchase_price:Number(price)
+        }));
+        setShow(true)
+    }
+    const handlePurchasePricechange = (price)=>{
+        setUpdatedPrice(prevState => ({
+            ...prevState,
+            purchase_price:Number(price)
+        }));
+    }
+console.log("updateepricse",updatePrice)
+
+    const handleClose = () => {
+        setShow(false)
+        setUpdatedPrice("")
+      }
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
@@ -263,6 +293,7 @@ const EditProduct = () => {
                 setProductData({
                     name: '',
                     description: '',
+                    transaction_id:'',
                     // price: 0,
                     purchase_price: '',
                     delivery_partner: '',
@@ -460,10 +491,16 @@ const EditProduct = () => {
     const getProduct = async () => {
 
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/getProductById?productId=${id}&type=${type}&adminId=${adminId}`);
+            const config = {
+                headers: {
+                  'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+              };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/getProductById?productId=${id}&type=${type}&adminId=${adminId}`,config);
             if (response.status === 200) {
                 setProductData({
                     name: response.data.data[0].name,
+                    transaction_id:response.data.data[0].transaction_id,
                     description: response.data.data[0].description,
                     // price: response.data.data[0].price,
                     purchase_price: response.data.data[0].purchase_price,
@@ -526,12 +563,53 @@ const EditProduct = () => {
         }
     }
 
-    console.log("check5check5", check5)
+   
+    const handleUpdatePurchaseprice = async(e)=>{
+        e.preventDefault()
+
+        if(updatePrice.purchase_price===0 || updatePrice.purchase_price===""){
+            setMessageType("error")
+            setMessage("Purchase price can't be empty or Zero")
+            setTimeout(() => {
+                setMessage(false)
+            }, 3000);
+            return
+        }
+        try {
+            const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/update_purchaseprice?adminId=${adminId}&productId=${id}&type=${type}&transaction_id=${productData.transaction_id}`, updatePrice, {
+                headers: {
+                       'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${adminToken}` 
+                }
+            });
+            if(response.status===200){
+                setLoad(new Date().getSeconds())
+                setMessageType("success")
+                setMessage("Price Updated")
+                setShow(false)
+                setUpdatedPrice({})
+                      setTimeout(() => {
+                    setMessage(false)
+                }, 2000);
+            }
+            
+        } catch (error) {
+            setShow(false)
+            setUpdatedPrice({})
+            setMessageType("error")
+            setMessage("Price Not Update")
+            setTimeout(() => {
+                setMessage(false)
+            }, 3000);
+        }
+    }
+
+
 
     useEffect(() => {
         getProduct()
         getAlltags()
-    }, [])
+    }, [load])
 
 
 
@@ -782,6 +860,7 @@ const EditProduct = () => {
                                                             readOnly
                                                         />
                                                     </div>
+                                                    <span data-toggle="tooltip" data-placement="top" title="Edit purchase price" style={{ cursor: "pointer" }} onClick={(e)=>handleShow(ele.purchaseprice,ele.weight)}><EditIcon/></span>
                                                 </div>
                                                 <div className="col-sm-4">
                                                     <div className="form-group">
@@ -1016,6 +1095,31 @@ const EditProduct = () => {
 
                 </div>
             </div >
+
+
+            <Modal
+        show={show}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header>
+          <Modal.Title id="contained-modal-title-vcenter">
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className='col'>
+            <div className='col-md-4'>
+              <label>Update purchase price</label>
+              <input class="form-control" type="number" value={updatePrice.purchase_price} onChange={(e)=>handlePurchasePricechange(e.target.value)}/>
+            </div>
+          </div>
+          <Button className="mt-3" type="submit" onClick={handleUpdatePurchaseprice}>update</Button>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleClose}>Close</Button>
+        </Modal.Footer>
+      </Modal>
 
         </>
     )

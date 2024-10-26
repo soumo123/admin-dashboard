@@ -492,35 +492,76 @@ const Vendor = () => {
                 ) : ("")
             }
 
-            <Modal
-                show={show}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
+<Modal
+            show={show}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            style={{
+                borderRadius: '10px', // Rounded corners
+                overflow: 'hidden' // Prevent overflow
+            }}
+        >
+            <Modal.Header
+                style={{
+                    backgroundColor: '#68033f', // Bootstrap primary color
+                    color: 'white',
+                    borderBottom: 'none'
+                }}
             >
-                <Modal.Header>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        View {option === 1 ? ("Vendor") : ("Agent")}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className='container'>
-                        <div className="row">
-                            <div className='col'>
-                                <h3>Image :<img src={viewdata.image} /></h3>
-                                <h3>Vendor Id :{viewdata.id}</h3>
-                                {viewdata.ag_id ? (<h3>Agent Id :{viewdata.ag_id}</h3>) : ("")}
-                                <h3>Name : {viewdata.name}</h3>
-                                <h3>Email : {viewdata.email}</h3>
-                                <h3>Phone :{viewdata.phone}</h3>
-                            </div>
-                        </div>
-                    </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={handleClose}>Close</Button>
-                </Modal.Footer>
-            </Modal>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    View {option === 1 ? "Vendor" : "Agent"}
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body
+                style={{
+                    padding: '20px', // Padding for body
+                    textAlign: 'center', // Centered text
+                    maxHeight: '400px', overflowY: 'auto'
+                }}
+
+            >
+                <div>
+                    <img 
+                        src={viewdata.image} 
+                        alt={`${viewdata.name}`} 
+                        style={{
+                            maxWidth: '100%', // Responsive image
+                            height: 'auto', // Maintain aspect ratio
+                            borderRadius: '10px', // Rounded corners for the image
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Subtle shadow
+                            marginBottom: '20px' // Space below the image
+                        }} 
+                    />
+                    <h3 style={{ fontWeight: 500, color: '#333', margin: '10px 0' }}>
+                        Vendor ID: {viewdata.id}
+                    </h3>
+                    {viewdata.ag_id && (
+                        <h3 style={{ fontWeight: 500, color: '#333', margin: '10px 0' }}>
+                            Agent ID: {viewdata.ag_id}
+                        </h3>
+                    )}
+                    <h3 style={{ fontWeight: 500, color: '#333', margin: '10px 0' }}>
+                        Name: {viewdata.name}
+                    </h3>
+                    <h3 style={{ fontWeight: 500, color: '#333', margin: '10px 0' }}>
+                        Email: {viewdata.email}
+                    </h3>
+                    <h3 style={{ fontWeight: 500, color: '#333', margin: '10px 0' }}>
+                        Phone: {viewdata.phone}
+                    </h3>
+                </div>
+            </Modal.Body>
+            <Modal.Footer
+                style={{
+                    borderTop: 'none'
+                }}
+            >
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+            </Modal.Footer>
+        </Modal>
         </>
     )
 }
