@@ -17,6 +17,7 @@ import Slip from '../custom/Slip.js';
 import DirectOrder from '../custom/DirectOrder.js';
 import dayjs from 'dayjs';
 import 'dayjs/locale/en-gb';
+import AddManualOnlineOrders from '../custom/AddManualOnlineOrders.js';
 
 const Orders = ({ sidebarOpen }) => {
 
@@ -41,6 +42,7 @@ const Orders = ({ sidebarOpen }) => {
     const [modalShow, setModalShow] = useState(false);
     const [invo, setInvo] = useState(false)
     const [directModal, setDirectModal] = useState(false)
+    const[onlineModal,setOnlineModal] = useState(false)
     const [limit, setLimit] = useState(5);
     const [offset, setOffset] = useState(0)
     const [totalPages, setTotalPages] = useState(0);
@@ -211,6 +213,10 @@ const Orders = ({ sidebarOpen }) => {
         navigate("/manualorders")
     }
 
+    const handleOnlineopenModal = ()=>{
+        setOnlineModal(true)
+    }
+
     useEffect(() => {
         getOrderDetails()
     }, [ordertype, offset, limit, ref])
@@ -266,7 +272,7 @@ const Orders = ({ sidebarOpen }) => {
                         </div>
                         <div className="col-sm-4 d-flex justify-content-end">
                             <div className="form-group">
-                            <button type="button" className='btnSubmit'>Zomato /Swiggy / Zepto Orders</button>
+                            <button type="button" className='btnSubmit' onClick={handleOnlineopenModal}>Zomato /Swiggy / Zepto Orders</button>
                             </div>
                         </div>
                     </div>
@@ -286,6 +292,7 @@ const Orders = ({ sidebarOpen }) => {
                                 <th>Created on</th>
                                 <th>Payment Method</th>
                                 <th>Order Method</th>
+                                <th>Platform</th>
                                 <th>Delivery Date</th>
                                 <th>Items</th>
                                 {/* <th>Remaining</th> */}
@@ -317,6 +324,8 @@ const Orders = ({ sidebarOpen }) => {
                                                         <td>{(new Date(ele.created_at).toISOString().slice(0, 10).split('-').reverse().join('/'))}</td>
                                                         <td className='text-capitalize'>{ele.paymentmethod}</td>
                                                         <td className='text-capitalize'>{ele.order_method}</td>
+                                                        <td className='text-capitalize'>{ele.plat_type ? ele.plat_type.label : ""}</td>
+
                                                         <td>{ele.deliver_date === null || ele.deliver_date === "" ? "" : dayjs(ele.deliver_date).format('DD/MM/YYYY, hh:mm A')}</td>
                                                         <td>{ele.products.length}</td>
                                                         {/* <td>₹ {ele.initialDeposit}</td> */}
@@ -429,6 +438,12 @@ const Orders = ({ sidebarOpen }) => {
             {
                 directModal ? (
                     <DirectOrder directModal={directModal} setDirectModal={setDirectModal} setRef={setRef} />
+                ) : ("")
+            }
+
+            {
+                onlineModal ? (
+                    <AddManualOnlineOrders onlineModal={onlineModal} setOnlineModal={setOnlineModal}/>
                 ) : ("")
             }
 

@@ -18,6 +18,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AirplayIcon from '@mui/icons-material/Airplay';
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
@@ -148,6 +149,7 @@ const Sidenav = () => {
 
                     <Link to="/requests" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ViewListIcon />}>Request Orders</MenuItem></Link>
 
+                    <Link to="/platforms" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AirplayIcon />}>Platforms</MenuItem></Link>
 
                 </Menu>
                 <Box sx={{ flexGrow: 0 }} className="profile-icon">

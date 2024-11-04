@@ -48,7 +48,9 @@ const LineGraph = ({ordersGraph}) => {
   return (
    <>
 
+<div style={{ width: '458px', height: '400px' }}>
     <Line data={data} options={options} />
+  </div>
    
    </>
   )

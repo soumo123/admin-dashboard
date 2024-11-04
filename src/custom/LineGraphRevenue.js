@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Bar,Line } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,36 +21,36 @@ ChartJS.register(
   Legend
 );
 
-const LineGraphRevenue = ({ordersGraph}) => {
+const LineGraphRevenue = ({ ordersGraph }) => {
 
-    console.log("ordersGraph && ordersGraph.map((ele)=>ele.month),",ordersGraph && ordersGraph.map((ele)=>ele.month),)
-    const data = {
-        labels: ordersGraph && ordersGraph.map((ele)=>ele.month),
-        datasets: [
-          {
-            label: 'Revenue',
-            data: ordersGraph && ordersGraph.map((ele)=>ele.totalRevenue),
-            fill: false,
-            borderColor: '#d7783b',
-            tension: 0.1
-          }
-        ]
-      };
-    
-      const options = {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      };
+  console.log("ordersGraph && ordersGraph.map((ele)=>ele.month),", ordersGraph && ordersGraph.map((ele) => ele.month),)
+  const data = {
+    labels: ordersGraph && ordersGraph.map((ele) => ele.month),
+    datasets: [
+      {
+        label: 'Revenue',
+        data: ordersGraph && ordersGraph.map((ele) => ele.totalRevenue),
+        fill: false,
+        borderColor: '#d7783b',
+        tension: 0.1
+      }
+    ]
+  };
+
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
 
   return (
-   <>
-
-    <Line data={data} options={options} />
-   
-   </>
+    <>
+      <div style={{ width: '506px', height: '400px' }}>
+        <Line data={data} options={options} />
+      </div>
+    </>
   )
 }
 

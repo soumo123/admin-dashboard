@@ -8,20 +8,21 @@ import CreatableSelect from 'react-select/creatable';
 import EditIcon from '@mui/icons-material/Edit';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import CloseIcon from '@mui/icons-material/Close';
 
 const EditProduct = () => {
 
     const navigate = useNavigate()
     const { id } = useParams()
     const adminId = localStorage.getItem("adminId");
-    const shop_id = localStorage.getItem("id");
+    const shop_id = localStorage.getItem("shop_id");
     const type = localStorage.getItem("type");
     const adminToken = localStorage.getItem("adminToken")
     const [show, setShow] = useState(false)
-    const[load,setLoad] = useState(false)
-    const[updatePrice,setUpdatedPrice] = useState({
-        purchase_price:"",
-        weight:""
+    const [load, setLoad] = useState(false)
+    const [updatePrice, setUpdatedPrice] = useState({
+        purchase_price: "",
+        weight: ""
     })
     const [message, setMessage] = useState(false)
     const [messageType, setMessageType] = useState("")
@@ -37,13 +38,20 @@ const EditProduct = () => {
     const [check13, setCheck13] = useState(false)
     const [disabled, setDisabled] = useState(false)
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const [selectedOptions3, setSelectedOptions3] = useState([]);
+    const [selectedOptions4, setSelectedOptions4] = useState([]);
+    const [selectedWeight, setSelectedWeight] = useState("");
+    const [onlineprice, setOnlineprice] = useState("")
     const [tagId, setTagId] = useState([])
+    const [sellingType, setSellingType] = useState([])
+    const [platItems, setPlatitems] = useState([]);
+    const [active, setActive] = useState(false)
     // const [actualPriceAfterDiscount, setActualPriceAfterDiscount] = useState("")
     const [expiryTime, setExpiryTime] = useState("")
 
     const [selectedOptions1, setSelectedOptions1] = useState([]);
     const [selectedOptions2, setSelectedOptions2] = useState([]);
-
+    const [weight, setWeight] = useState([]);
     const [error, setError] = useState('');
     const handleChange1 = (selectedOptions) => {
         setSelectedOptions1(selectedOptions);
@@ -53,15 +61,14 @@ const EditProduct = () => {
     };
 
 
-
     const [productData, setProductData] = useState({
         name: '',
-        transaction_id:'',
+        transaction_id: '',
         description: '',
         // price: 0,
         purchase_price: '',
         delivery_partner: '',
-        selling_price_method: '',
+        // selling_price_method: [],
         // discount: 0,
         other_description1: '',
         other_description2: '',
@@ -73,14 +80,6 @@ const EditProduct = () => {
         size: '',
         product_type: '',
         deliverydays: 0,
-        zomato_service: false,
-        zomato_service_price: "",
-        swiggy_service: false,
-        swiggy_service_price: "",
-        zepto_service: false,
-        zepto_service_price: "",
-        blinkit_service: false,
-        blinkit_service_price: "",
         tags: [],
         isBestSelling: false,
         isFeatured: false,
@@ -93,7 +92,7 @@ const EditProduct = () => {
         expiry_date: ""
     });
 
-    console.log("productDataproductData", productData)
+
     const [check1, setCheck1] = useState(false)
     const [check2, setCheck2] = useState(false)
     const [check3, setCheck3] = useState(false)
@@ -111,6 +110,7 @@ const EditProduct = () => {
     const [sellingPriceMethderr, setSellingPriceMethodErr] = useState('')
     const [deliveryServiceErr, setDeliveryServiceErr] = useState("")
     const [tagsData, setTagsData] = useState([])
+    const[platforms,setPlatforms] = useState([])
 
 
 
@@ -159,26 +159,25 @@ const EditProduct = () => {
 
     };
 
-    const handleShow = (price,weight)=>{
+    const handleShow = (price, weight) => {
         setUpdatedPrice(prevState => ({
             ...prevState,
             weight: weight,
-            purchase_price:Number(price)
+            purchase_price: Number(price)
         }));
         setShow(true)
     }
-    const handlePurchasePricechange = (price)=>{
+    const handlePurchasePricechange = (price) => {
         setUpdatedPrice(prevState => ({
             ...prevState,
-            purchase_price:Number(price)
+            purchase_price: Number(price)
         }));
     }
-console.log("updateepricse",updatePrice)
 
     const handleClose = () => {
         setShow(false)
         setUpdatedPrice("")
-      }
+    }
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
@@ -215,15 +214,15 @@ console.log("updateepricse",updatePrice)
         // if (productData.selling_price_method === "offline" && !productData.price) {
         //     setPriceError('Please enter a price.');
         //     return;
+        // // }
+        // if (productData.selling_price_method === "online" && !productData.zomato_service_price && !productData.swiggy_service && !productData.swiggy_service_price && !productData.zepto_service_price && !productData.blinkit_service_price) {
+        //     setDeliveryServiceErr('Please choose atleast one');
+        //     return;
         // }
-        if (productData.selling_price_method === "online" && !productData.zomato_service_price && !productData.swiggy_service && !productData.swiggy_service_price && !productData.zepto_service_price && !productData.blinkit_service_price) {
-            setDeliveryServiceErr('Please choose atleast one');
-            return;
-        }
-        if (productData.selling_price_method === "online" && !productData.zomato_service && !productData.swiggy_service && !productData.zepto_service && !productData.blinkit_service && !productData.blinkit_service) {
-            setDeliveryServiceErr('Please choose atleast one');
-            return;
-        }
+        // if (productData.selling_price_method === "online" && !productData.zomato_service && !productData.swiggy_service && !productData.zepto_service && !productData.blinkit_service && !productData.blinkit_service) {
+        //     setDeliveryServiceErr('Please choose atleast one');
+        //     return;
+        // }
         // if (!productData.stock) {
         //     setStockError('Please enter stock.');
         //     return;
@@ -247,7 +246,8 @@ console.log("updateepricse",updatePrice)
                 } else if (key === 'tags') {
                     // Append tagId to formData under the 'tags' field
                     tagId.forEach(id => formData.append('tags', Number(id)));
-                } else {
+                }
+                else {
                     formData.append(key, productData[key]);
                 }
             }
@@ -259,11 +259,14 @@ console.log("updateepricse",updatePrice)
             formData.set('isBranded', check8);
             formData.append('weight11', JSON.stringify(productData.weight))
             formData.append('size1', JSON.stringify(selectedOptions2))
+            formData.append('platforms', JSON.stringify(platItems))
+            formData.append('selling_price_method1', JSON.stringify(productData.selling_price_method))
+
 
             const response = await axios.post(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/update/${adminId}?productId=${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${adminToken}` 
+                    'Authorization': `Bearer ${adminToken}`
                 }
             });
             if (response.status === 201) {
@@ -293,11 +296,11 @@ console.log("updateepricse",updatePrice)
                 setProductData({
                     name: '',
                     description: '',
-                    transaction_id:'',
+                    transaction_id: '',
                     // price: 0,
                     purchase_price: '',
                     delivery_partner: '',
-                    selling_price_method: '',
+                    selling_price_method: [],
                     // discount: 0,
                     other_description1: '',
                     other_description2: '',
@@ -309,14 +312,6 @@ console.log("updateepricse",updatePrice)
                     size: '',
                     product_type: '',
                     deliverydays: 0,
-                    zomato_service: false,
-                    zomato_service_price: "",
-                    swiggy_service: false,
-                    swiggy_service_price: "",
-                    zepto_service: false,
-                    zepto_service_price: "",
-                    blinkit_service: false,
-                    blinkit_service_price: "",
                     tags: [],
                     isBestSelling: false,
                     isFeatured: false,
@@ -356,6 +351,23 @@ console.log("updateepricse",updatePrice)
         setSelectedOptions(event);
         setTagId(getID);
     };
+    const selectOption3 = (event) => {
+        console.log("event",event)
+        const getID = event.map(option => option.label);
+        setSelectedOptions3(event);
+        setSellingType(getID);
+        setProductData(prevState => ({
+            ...prevState,
+            selling_price_method: event,
+        }));
+    };
+    const selectOption4 = (event) => {
+        setSelectedOptions4(event);
+    };
+
+    const handleRemoveItem = (value, weight) => {
+        setPlatitems(platItems.filter(item => item.value !== value || item.weight !== weight));
+    };
 
     const getAlltags = async () => {
         try {
@@ -371,6 +383,29 @@ console.log("updateepricse",updatePrice)
 
 
     }
+
+    const getAllPlatforms = async () => {
+        try {
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                }
+            }
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/platforms?adminId=${adminId}&shop_id=${shop_id}&action=${1}`,config)
+            if (response.status === 200) {
+                setPlatforms(response.data.data)
+            } else {
+                setPlatforms([])
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+
+    }
+
+
+
 
 
     const handleDescChange = () => {
@@ -493,14 +528,14 @@ console.log("updateepricse",updatePrice)
         try {
             const config = {
                 headers: {
-                  'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
                 }
-              };
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/getProductById?productId=${id}&type=${type}&adminId=${adminId}`,config);
+            };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/getProductById?productId=${id}&type=${type}&adminId=${adminId}`, config);
             if (response.status === 200) {
                 setProductData({
                     name: response.data.data[0].name,
-                    transaction_id:response.data.data[0].transaction_id,
+                    transaction_id: response.data.data[0].transaction_id,
                     description: response.data.data[0].description,
                     // price: response.data.data[0].price,
                     purchase_price: response.data.data[0].purchase_price,
@@ -540,7 +575,7 @@ console.log("updateepricse",updatePrice)
                 setTagId(response.data.data[0].tags)
                 setSelectedOptions1(response.data.data[0].weight)
                 setSelectedOptions2(response.data.data[0].size)
-
+                setSelectedOptions3(response.data.data[0].selling_price_method)
                 setCheck1(response.data.data[0].other_description1 ? true : false)
                 setCheck2(response.data.data[0].weight.length ? true : false)
                 setCheck3(response.data.data[0].color ? true : false)
@@ -556,6 +591,8 @@ console.log("updateepricse",updatePrice)
                 setCheck11(response.data.data[0].swiggy_service)
                 setCheck12(response.data.data[0].zepto_service)
                 setCheck13(response.data.data[0].blinkit_service)
+                setWeight(response.data.data[0].weight)
+                setPlatitems(response.data.data[0].platforms)
             }
 
         } catch (error) {
@@ -563,11 +600,11 @@ console.log("updateepricse",updatePrice)
         }
     }
 
-   
-    const handleUpdatePurchaseprice = async(e)=>{
+
+    const handleUpdatePurchaseprice = async (e) => {
         e.preventDefault()
 
-        if(updatePrice.purchase_price===0 || updatePrice.purchase_price===""){
+        if (updatePrice.purchase_price === 0 || updatePrice.purchase_price === "") {
             setMessageType("error")
             setMessage("Purchase price can't be empty or Zero")
             setTimeout(() => {
@@ -578,21 +615,21 @@ console.log("updateepricse",updatePrice)
         try {
             const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/update_purchaseprice?adminId=${adminId}&productId=${id}&type=${type}&transaction_id=${productData.transaction_id}`, updatePrice, {
                 headers: {
-                       'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${adminToken}` 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${adminToken}`
                 }
             });
-            if(response.status===200){
+            if (response.status === 200) {
                 setLoad(new Date().getSeconds())
                 setMessageType("success")
                 setMessage("Price Updated")
                 setShow(false)
                 setUpdatedPrice({})
-                      setTimeout(() => {
+                setTimeout(() => {
                     setMessage(false)
                 }, 2000);
             }
-            
+
         } catch (error) {
             setShow(false)
             setUpdatedPrice({})
@@ -609,12 +646,34 @@ console.log("updateepricse",updatePrice)
     useEffect(() => {
         getProduct()
         getAlltags()
+        getAllPlatforms()
     }, [load])
 
 
+    const handleWeightChange = (e) => {
+        const selectedWeight = e.target.value;
+        setSelectedWeight(selectedWeight);
+    }
 
+    const handleOnlineprice = (e) => {
+        setOnlineprice(Number(e))
+    }
 
-
+    const handleSaveProduct = () => {
+        const result = {
+            weight: Number(selectedWeight),
+            price: Number(onlineprice),
+            label: selectedOptions4[0]?.label,
+            value: selectedOptions4[0].value,
+            active: active
+        };
+        setPlatitems([...platItems, result])
+        setSelectedWeight("");
+        setOnlineprice("")
+        setActive(false)
+        setSelectedOptions4(null)
+    }
+    console.log("platItems", platItems)
 
     const handlePriceChange = (index, newPrice) => {
         const newWeights = [...productData.weight];
@@ -715,7 +774,10 @@ console.log("updateepricse",updatePrice)
         setExpiryTime(checkExpiry(productData.expiry_date))
     }, [productData])
 
-    console.log("productDataproductDataproductData", productData)
+    const isOnlineSelected = selectedOptions3.some(option => option.label === "online");
+
+
+
     return (
         <>
             {
@@ -788,47 +850,105 @@ console.log("updateepricse",updatePrice)
                             </div>
 
                             {
-                                productData?.selling_price_method === "online" ? (
-                                    <div class="col-sm-3 col-md-4">
-                                        <div class="form-group">
+                                isOnlineSelected ? (
+                                    <>
+                                        <div class="row row mt-5 align-items-end" style={{ border: "2px solid black", padding: "10px" }}>
+
                                             <label>Choose Delivery Services</label>
-                                            <div className="col" style={{ border: "2px solid black", padding: "10px" }}>
-                                                <label>Zomato</label>
-                                                <input type="checkbox" name="zomato" value={check10} checked={check10} onChange={handleZomatoService} />
-                                                {
-                                                    check10 ? (
-                                                        <input type="number" placeholder="₹ :" value={productData.zomato_service_price} name="zomato_service_price" onChange={handleChange} />
-                                                    ) : ("")
-                                                }
-                                                <label>Swiggy</label>
-                                                <input type="checkbox" name="swiggy" value={check11} checked={check11} onChange={handleSwiggyService} />
-                                                {
-                                                    check11 ? (
-                                                        <input type="number" placeholder="₹ :" value={productData.swiggy_service_price} name="swiggy_service_price" onChange={handleChange} />
-                                                    ) : ("")
-                                                }
 
-                                                <label>Zepto</label>
-                                                <input type="checkbox" name="zepto" value={check12} checked={check12} onChange={handleZeptoService} />
-                                                {
-                                                    check12 ? (
-                                                        <input type="number" placeholder="₹ :" value={productData.zepto_service_price} name="zepto_service_price" onChange={handleChange} />
-                                                    ) : ("")
-                                                }
+                                            {/* <div className="col" style={{ border: "2px solid black", padding: "10px" }}>
+        <label>Zomato</label>
+        <input type="checkbox" name="zomato" value={check10} checked={check10} onChange={handleZomatoService} />
+        {
+            check10 ? (
+                <input type="number" placeholder="₹ :" value={productData.zomato_service_price} name="zomato_service_price" onChange={handleChange} />
+            ) : ("")
+        }
+        <label>Swiggy</label>
+        <input type="checkbox" name="swiggy" value={check11} checked={check11} onChange={handleSwiggyService} />
+        {
+            check11 ? (
+                <input type="number" placeholder="₹ :" value={productData.swiggy_service_price} name="swiggy_service_price" onChange={handleChange} />
+            ) : ("")
+        }
 
-                                                <label>Blinkit</label>
-                                                <input type="checkbox" name="blinkit" value={check13} checked={check13} onChange={handleBlinkitService} />
-                                                {
-                                                    check13 ? (
-                                                        <input type="number" placeholder="₹ :" value={productData.blinkit_service_price} name="blinkit_service_price" onChange={handleChange} />
-                                                    ) : ("")
-                                                }
+        <label>Zepto</label>
+        <input type="checkbox" name="zepto" value={check12} checked={check12} onChange={handleZeptoService} />
+        {
+            check12 ? (
+                <input type="number" placeholder="₹ :" value={productData.zepto_service_price} name="zepto_service_price" onChange={handleChange} />
+            ) : ("")
+        }
 
+        <label>Blinkit</label>
+        <input type="checkbox" name="blinkit" value={check13} checked={check13} onChange={handleBlinkitService} />
+        {
+            check13 ? (
+                <input type="number" placeholder="₹ :" value={productData.blinkit_service_price} name="blinkit_service_price" onChange={handleChange} />
+            ) : ("")
+        }
+
+    </div>
+    <span className="error-message">{deliveryServiceErr}</span> */}
+                                            <div className="col" >
+                                                <label for="inputEmail4" class="form-label">Select Platform</label>
+
+                                                <Multiselect
+                                                    options={platforms}
+                                                    onSelect={(event) => selectOption4(event)}
+                                                    onRemove={(event) => selectOption4(event)}
+                                                    displayValue="label"
+                                                    name="label"
+                                                    className="multi_select_main"
+                                                    selectedValues={selectedOptions4}
+                                                    singleSelect={true}
+
+
+                                                />
                                             </div>
-                                            <span className="error-message">{deliveryServiceErr}</span>
+
+                                            <div class="col">
+                                                <label for="inputEmail4" class="form-label">* Select Variation</label>
+                                                <select id="inputState4" class="form-select" value={selectedWeight} onChange={handleWeightChange} >
+                                                    <option value="">Select Variation</option>
+                                                    {weight && weight.map((ele) => (
+                                                        <option key={ele.weight} value={ele.weight}>{`${ele.weight} ${productData.unit}`}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label for="inputEmail4" class="form-label">*Price</label>
+                                                <input type="text" class="form-control" placeholder="Price" aria-label="price" value={onlineprice} onChange={(e) => handleOnlineprice(e.target.value)} />
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value={active} id="flexCheckChecked" checked={active} onChange={(e) => setActive(e.target.checked)} />
+                                                <label class="form-check-label" for="flexCheckChecked">
+                                                    Activate
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <button type="button" class="btn btn-primary" onClick={handleSaveProduct}>Save</button>
+                                            </div>
+
+
 
                                         </div>
-                                    </div>
+                                        <div className='row'>
+                                            <div className='col'>
+                                                {platItems.map((item, index) => (
+                                                    <div key={index}>
+                                                        <p>{item.label} - {item.weight} {productData.unit} - Price: ₹ {item.price} Activate- {item.active ? "Activate" : "Deactivate"}
+                                                            <button className="btn btn-danger" onClick={() => handleRemoveItem(item.value,item.weight)}>
+                                                                <CloseIcon />
+                                                            </button>
+                                                        </p>
+
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </>
+
                                 ) : ("")
                             }
 
@@ -860,7 +980,7 @@ console.log("updateepricse",updatePrice)
                                                             readOnly
                                                         />
                                                     </div>
-                                                    <span data-toggle="tooltip" data-placement="top" title="Edit purchase price" style={{ cursor: "pointer" }} onClick={(e)=>handleShow(ele.purchaseprice,ele.weight)}><EditIcon/></span>
+                                                    <span data-toggle="tooltip" data-placement="top" title="Edit purchase price" style={{ cursor: "pointer" }} onClick={(e) => handleShow(ele.purchaseprice, ele.weight)}><EditIcon /></span>
                                                 </div>
                                                 <div className="col-sm-4">
                                                     <div className="form-group">
@@ -938,11 +1058,35 @@ console.log("updateepricse",updatePrice)
 
                                 <div class="form-group">
                                     <label>Selling Price Method <span>*</span></label>
-                                    <select class="form-select form-control" aria-label="Default select example" name="selling_price_method" value={productData.selling_price_method} onChange={handleChange}>
+
+                                    <Multiselect
+                                        options={
+                                            [
+                                                {
+                                                    label: "online",
+                                                    value: 1
+                                                },
+                                                {
+                                                    label: "offline",
+                                                    value: 2
+                                                }
+
+                                            ]
+
+                                        }
+                                        onSelect={(event) => selectOption3(event)}
+                                        onRemove={(event) => selectOption3(event)}
+                                        displayValue="label"
+                                        name="label"
+                                        className="multi_select_main"
+                                        selectedValues={selectedOptions3}
+                                    // showCheckbox
+                                    />
+                                    {/* <select class="form-select form-control" aria-label="Default select example" name="selling_price_method" value={productData.selling_price_method} onChange={handleChange}>
                                         <option selected value="">Select</option>
                                         <option value="online">Online</option>
                                         <option value="offline">Offline</option>
-                                    </select>
+                                    </select> */}
                                     <span className="error-message">{sellingPriceMethderr}</span>
                                 </div>
                             </div>
@@ -1098,28 +1242,28 @@ console.log("updateepricse",updatePrice)
 
 
             <Modal
-        show={show}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header>
-          <Modal.Title id="contained-modal-title-vcenter">
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className='col'>
-            <div className='col-md-4'>
-              <label>Update purchase price</label>
-              <input class="form-control" type="number" value={updatePrice.purchase_price} onChange={(e)=>handlePurchasePricechange(e.target.value)}/>
-            </div>
-          </div>
-          <Button className="mt-3" type="submit" onClick={handleUpdatePurchaseprice}>update</Button>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={handleClose}>Close</Button>
-        </Modal.Footer>
-      </Modal>
+                show={show}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className='col'>
+                        <div className='col-md-4'>
+                            <label>Update purchase price</label>
+                            <input class="form-control" type="number" value={updatePrice.purchase_price} onChange={(e) => handlePurchasePricechange(e.target.value)} />
+                        </div>
+                    </div>
+                    <Button className="mt-3" type="submit" onClick={handleUpdatePurchaseprice}>update</Button>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={handleClose}>Close</Button>
+                </Modal.Footer>
+            </Modal>
 
         </>
     )
