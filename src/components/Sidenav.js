@@ -41,7 +41,7 @@ const Sidenav = () => {
     const [count, setCount] = useState("")
     const image = localStorage.getItem("adminImage")
     const dataRefe = useSelector((state) => state.noteRef.arr);
-
+    const access = useSelector((state) => state.systemaccess.access)
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -110,12 +110,12 @@ const Sidenav = () => {
                         style={{ textAlign: "center" }}
                     >
                         {" "}
-                        <h2>Admin</h2>
+                        <h2>{adminId.includes("ADMIN") ? ("Admin"):("Employee")}</h2>
                     </MenuItem>
 
-                    <Link to="/" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<HomeOutlinedIcon />}>Dashboard</MenuItem></Link>
+                    {access.dashboard && (<Link to="/" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<HomeOutlinedIcon />}>Dashboard</MenuItem></Link>)}
 
-                    <Link to="/notifications" style={{ textDecoration: "none", color: "black" }}>
+                    {access.notification && (<Link to="/notifications" style={{ textDecoration: "none", color: "black" }}>
 
                         <MenuItem icon={<NotificationsIcon />}>
                             <div className="d-flex">
@@ -131,25 +131,25 @@ const Sidenav = () => {
                             </div>
 
                         </MenuItem>
-                    </Link>
-                    <Link to="/addVendorProduct" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AddCircleIcon />}>Add Products</MenuItem></Link>
-                    <Link to="/allproducts" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<CategoryIcon />}>Products</MenuItem></Link>
-                    <Link to="/allusers" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<GroupIcon />}>Users</MenuItem></Link>
-                    <Link to="/employee" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<BadgeIcon />}>Employes</MenuItem></Link>
+                    </Link>)}
+                  {access.addprod && (<Link to="/addVendorProduct" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AddCircleIcon />}>Add Products</MenuItem></Link>)}  
+                   {access.products && (<Link to="/allproducts" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<CategoryIcon />}>Products</MenuItem></Link>)} 
+                   {access.users && (<Link to="/allusers" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<GroupIcon />}>Users</MenuItem></Link>)} 
+                   {access.employees && (<Link to="/employee" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<BadgeIcon />}>Employes</MenuItem></Link>)} 
+                
+                    {access.tags && (<Link to="/tags" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SellIcon />}>Tags</MenuItem></Link>)} 
+                    {access.orders && (<Link to="/manage-order" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<StorefrontIcon />}>Manage Order</MenuItem></Link>)} 
+                    {access.settings && (<Link to="/settings" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SettingsIcon />}>Settings</MenuItem></Link>)} 
+                    {access.vendor && (<Link to="/vendors" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AddBusinessIcon />}>Vendors</MenuItem></Link>)} 
 
-                    <Link to="/tags" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SellIcon />}>Tags</MenuItem></Link>
-                    <Link to="/manage-order" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<StorefrontIcon />}>Manage Order</MenuItem></Link>
-                    <Link to="/settings" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SettingsIcon />}>Settings</MenuItem></Link>
-                    <Link to="/vendors" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AddBusinessIcon />}>Vendors</MenuItem></Link>
+                    {access.stocks && (<Link to="/stocks" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<Inventory2Icon />}>Stocks</MenuItem></Link>)} 
+                    {access.trasnsaction && (<Link to="/transaction" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<PaidIcon />}>Transaction</MenuItem></Link>)} 
+                    {access.tax && (<Link to="/tax" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AccountBalanceIcon />}>Manage Tax</MenuItem></Link>)} 
+                    {access.expproducts && (<Link to="/expired" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ReportGmailerrorredIcon />}>Expired Products</MenuItem></Link>)} 
 
-                    <Link to="/stocks" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<Inventory2Icon />}>Stocks</MenuItem></Link>
-                    <Link to="/transaction" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<PaidIcon />}>Transaction</MenuItem></Link>
-                    <Link to="/tax" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AccountBalanceIcon />}>Manage Tax</MenuItem></Link>
-                    <Link to="/expired" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ReportGmailerrorredIcon />}>Expired Products</MenuItem></Link>
+                    {access.reqorders && ( <Link to="/requests" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ViewListIcon />}>Request Orders</MenuItem></Link>)}
 
-                    <Link to="/requests" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ViewListIcon />}>Request Orders</MenuItem></Link>
-
-                    <Link to="/platforms" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AirplayIcon />}>Platforms</MenuItem></Link>
+                    {access.platforms && (<Link to="/platforms" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AirplayIcon />}>Platforms</MenuItem></Link>)} 
 
                 </Menu>
                 <Box sx={{ flexGrow: 0 }} className="profile-icon">

@@ -6,9 +6,14 @@ import Onlinegraph from '../custom/Onlinegraph'
 import NorthIcon from '@mui/icons-material/North';
 import SouthIcon from '@mui/icons-material/South';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-
+import {
+  getAccessSuccess,
+  getAccessFail
+} from '../redux/actions/userAction'
+import { useSelector,useDispatch } from 'react-redux';
 
 const Dashboard = () => {
+  const dispatch = useDispatch()
   const [userCount, setUserCount] = useState("")
   const [prdouctCout, setProductCount] = useState("")
   const [orderCount, setOrderCount] = useState("")
@@ -84,6 +89,25 @@ const Dashboard = () => {
     }
   }
 
+  
+  const handleAccess = async () => {
+    try {
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+        }
+      };
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/access?shop_id=${shop_id}&adminId=${adminId}`, config);
+      if (response.status === 200) {
+        dispatch(getAccessSuccess(response.data.data))
+      }
+
+    } catch (error) {
+      dispatch(getAccessFail(error.response.data.message))
+      console.log(error)
+    }
+  }
+
   console.log("onlineGraph", onlineGraph)
 
   useEffect(() => {
@@ -96,6 +120,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getAllPlatforms()
+    handleAccess()
   }, [])
 
 
@@ -170,8 +195,9 @@ const Dashboard = () => {
                   <option value="2027">2027</option>
                   <option value="2028">2028</option>
 
-                </select>
+                </select> till date
               </div>
+             
               <div className="col-6">
                 <h2>Revenue</h2>
                 <div className="col">

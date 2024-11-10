@@ -2,12 +2,13 @@ import {createStore,combineReducers,applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import noteRef from './redux/reducers/noteRef'
-
+import accessDetailsReducer from './redux/reducers/access.reducer'
 
 
 
 const reducer = combineReducers({
-    noteRef:noteRef
+    noteRef:noteRef,
+    systemaccess:accessDetailsReducer
 })
 
 

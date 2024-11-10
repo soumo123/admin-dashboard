@@ -1,0 +1,2 @@
+export const ACCESS_SUCCESS = "ACCESS_SUCCESS"
+export const ACCESS_FAIL = "ACCESS_FAIL"

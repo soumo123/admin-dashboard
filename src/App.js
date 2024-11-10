@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import CreateProduct from './components/CreateProduct';
@@ -29,17 +29,24 @@ import { jwtDecode } from "jwt-decode";
 import Employe from './components/Employe';
 import Platforms from './components/Platforms';
 import AddEmployee from './components/AddEmployee';
-
+import Editemployee from './components/Editemployee';
+import axios from 'axios';
+import {
+  getAccessSuccess,
+  getAccessFail
+} from './redux/actions/userAction'
+import { useSelector,useDispatch } from 'react-redux';
 
 function App() {
   const location = useLocation();
-
+  const dispatch = useDispatch()
   const queryParams = new URLSearchParams(location.search); // Parse query parameters
   const type = queryParams.get('type');
   const adminId = queryParams.get('adminId');
   const shop_id = queryParams.get('shop_id');
   const adminToken = localStorage.getItem("adminToken")
 
+  const access = useSelector((state)=>state.systemaccess.access)
 
 
 
@@ -79,6 +86,33 @@ function App() {
   }, 10000);
 
 
+  const handleAccess = async () => {
+    try {
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+        }
+      };
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/access?shop_id=${exactShopId}&adminId=${exactadminId}`, config);
+      if (response.status === 200) {
+        dispatch(getAccessSuccess(response.data.data))
+      }
+
+    } catch (error) {
+      dispatch(getAccessFail(error.response.data.message))
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if(exactadminId && exactShopId){
+
+      handleAccess()
+    }
+  }, [exactadminId,exactShopId])
+
+  console.log("access111", access)
+
   return (
     <>
 
@@ -107,31 +141,32 @@ function App() {
                     </Routes>
                   ) : (
                     <Routes>
-                      <Route exact={true} path={`/`} element={<Dashboard />} />
-                      {/* <Route exact={true} path={`/create`} element={<CreateProduct />} /> */}
-                      <Route exact={true} path="/allproducts" element={<AllProduct />} />
-                      <Route exact={true} path="/updateproduct/:id" element={<EditProduct />} />
-                      <Route exact={true} path="/vewProduct/:id" element={<ViewProduct />} />
-                      <Route exact={true} path="/allusers" element={<AllUsers />} />
-                      <Route exact={true} path="/tags" element={<Tags />} />
-                      <Route exact={true} path="/settings" element={<Settings />} />
-                      <Route exact={true} path="/manage-order" element={<Orders />} />
-                      <Route exact={true} path="/vendors" element={<Vendor />} />
+                     {access.dashboard ? (<Route exact={true} path={`/`} element={<Dashboard />} />) : (<Route exact={true} path="/" element={<Orders />} />)} 
+                    {access.products ? (<Route exact={true} path="/allproducts" element={<AllProduct />} />) : ( <Route exact={true} path="/" element={<Orders />} />)}  
+                    {access.products ? (<Route exact={true} path="/updateproduct/:id" element={<EditProduct />} />) : (<Route exact={true} path="/" element={<Orders />} />)}  
+                    {access.products ?  ( <Route exact={true} path="/vewProduct/:id" element={<ViewProduct />} />) : (<Route exact={true} path="/" element={<Orders />} />)} 
+                    {access.users ? ( <Route exact={true} path="/allusers" element={<AllUsers />} />) : (<Route exact={true} path="/" element={<Orders />} />)} 
+                    {access.tags ? ( <Route exact={true} path="/tags" element={<Tags />} />) : (<Route exact={true} path="/" element={<Orders />} />)} 
+                    {access.settings ? (<Route exact={true} path="/settings" element={<Settings />} />): (<Route exact={true} path="/" element={<Orders />} />)}  
+                    {access.orders ? ( <Route exact={true} path="/manage-order" element={<Orders />} />) : (<Route exact={true} path="/" element={<Orders />} />)} 
+                    {access.vendor ? ( <Route exact={true} path="/vendors" element={<Vendor />} />) : (<Route exact={true} path="/" element={<Orders />} />)} 
 
-                      <Route exact={true} path="/addVendorProduct" element={<AddVendorProducts />} />
-                      <Route exact={true} path="/stocks" element={<UpdateStock />} />
-                      <Route exact={true} path="/transaction" element={<Transaction />} />
-                      <Route exact={true} path="/tax" element={<Taxes />} />
+                    {access.addprod ? (<Route exact={true} path="/addVendorProduct" element={<AddVendorProducts />} />): (<Route exact={true} path="/" element={<Orders />} />)}
+                    {access.stocks ? (<Route exact={true} path="/stocks" element={<UpdateStock />} />) : (<Route exact={true} path="/" element={<Orders />} />)}  
+                    {access.trasnsaction ? ( <Route exact={true} path="/transaction" element={<Transaction />} />) : (<Route exact={true} path="/" element={<Orders />} />)} 
+                    {access.tax ? (<Route exact={true} path="/tax" element={<Taxes />} />) : (<Route exact={true} path="/" element={<Orders />} />)}  
 
-                      <Route exact={true} path="/notifications" element={<Notifications />} />
-                      <Route exact={true} path="/expired" element={<Expiredproducts />} />
-                      <Route exact={true} path="/requests" element={<Requestedorders />} />
+                    {access.notification ? (<Route exact={true} path="/notifications" element={<Notifications />} />) : (<Route exact={true} path="/" element={<Orders />} />)}  
+                    {access.expproducts ? (<Route exact={true} path="/expired" element={<Expiredproducts />} />) : (<Route exact={true} path="/" element={<Orders />} />)}  
+                    {access.reqorders ? (<Route exact={true} path="/requests" element={<Requestedorders />} />) : (<Route exact={true} path="/" element={<Orders />} />)} 
 
-                      <Route exact={true} path="/manualorders" element={<ReqManualOrder />} />
+                    {access.orders ? (<Route exact={true} path="/manualorders" element={<ReqManualOrder />} />) : (<Route exact={true} path="/" element={<Orders />} />)}  
 
-                      <Route exact={true} path="/employee" element={<Employe />} />
-                      <Route exact={true} path="/addemp" element={<AddEmployee/>}/>
-                      <Route exact={true} path="/platforms" element={<Platforms />} />
+                    {access.employees ? (<Route exact={true} path="/employee" element={<Employe />} />) : (<Route exact={true} path="/" element={<Orders />} />)}  
+                    {access.employees ? ( <Route exact={true} path="/addemp" element={<AddEmployee />} />) : (<Route exact={true} path="/" element={<Orders />} />)} 
+                    {access.employees ? (<Route exact={true} path="/editemp/:id" element={<Editemployee />} />) : (<Route exact={true} path="/" element={<Orders />} />)}  
+
+                     {access.platforms ? (<Route exact={true} path="/platforms" element={<Platforms />} />):(<Route exact={true} path="/" element={<Orders />} />)} 
 
 
 

@@ -340,10 +340,11 @@ const AddManualOnlineOrders = ({ onlineModal, setOnlineModal, setRef }) => {
                     setPlatName("")
                     setPlatId("")
                     setOnlineModal(false)
+                    dispatch(setRef(new Date().getSeconds()))
                     setTimeout(() => {
                         setMessage(false)
                     }, 2000);
-                    dispatch(setRef(new Date().getSeconds()))
+                    
                 }
             } else {
                 setAddErr(true)

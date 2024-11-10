@@ -443,7 +443,7 @@ const Orders = ({ sidebarOpen }) => {
 
             {
                 onlineModal ? (
-                    <AddManualOnlineOrders onlineModal={onlineModal} setOnlineModal={setOnlineModal}/>
+                    <AddManualOnlineOrders onlineModal={onlineModal} setOnlineModal={setOnlineModal} setRef={setRef}/>
                 ) : ("")
             }
 

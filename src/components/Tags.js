@@ -30,7 +30,7 @@ const Tags = () => {
   const [editId, setEditId] = useState("")
   const [editImage, setEditImage] = useState("")
   const adminId = localStorage.getItem("adminId");
-  const shop_id = localStorage.getItem("id");
+  const shop_id = localStorage.getItem("shop_id");
   const type = localStorage.getItem("type");
   const [loader, setloader] = useState(false);
   const [message, setMessage] = useState(false)
