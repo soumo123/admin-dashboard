@@ -195,7 +195,7 @@ const Dashboard = () => {
                   <option value="2027">2027</option>
                   <option value="2028">2028</option>
 
-                </select> till date
+                </select> till {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
               </div>
              
               <div className="col-6">
