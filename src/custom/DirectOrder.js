@@ -23,6 +23,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
     const [selectedId, setSelectedId] = useState("");
     const [selectedWeight, setSelectedWeight] = useState("");
     const [price, setPrice] = useState("");
+    const[purchasePrice,setPurchasePrice]=useState(0)
     const[maxQuantity,setMaxQuantity] = useState(0)
     const[quanErr,setQuanerr] = useState(false)
     const [quantity, setQuantity] = useState(1);
@@ -180,10 +181,11 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
             if (selectedProduct) {
                 const weightInfo = selectedProduct.weight.find(w => Number(w.weight) === Number(selectedWeight));
-
+                console.log("weightInfo",weightInfo)
                 if (weightInfo) {
                     setMaxQuantity(weightInfo.stock)
                     setPrice(weightInfo.price);
+                    setPurchasePrice(weightInfo.purchaseprice)
                 } else {
                     setPrice("");
                 }
@@ -222,6 +224,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
         if (selectedId && selectedWeight && quantity>=1 && price) {
             if(!quanErr){
                 const selectedProduct = products.find(p => p.productId === selectedId);
+                console.log("selectedProduct",selectedProduct)
                 const orderItem = {
                     productId: selectedId,
                     name: selectedProduct.name,
@@ -230,6 +233,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                     thumbImage: selectedProduct.thumbnailimage,
                     weight: Number(selectedWeight),
                     price: Number(price),
+                    purchasePrice:Number(purchasePrice),
                     itemCount: Number(quantity),
                     totalPrice: price * quantity,
                 };
@@ -238,6 +242,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                 setSelectedId("");
                 setWeight([]);
                 setSelectedWeight("");
+                setPurchasePrice(0)
                 setPrice("");
                 setQuantity(1);
             }else{
@@ -301,6 +306,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                     setSelectedId("");
                     setWeight([]);
                     setSelectedWeight("");
+                    setPurchasePrice(0)
                     setPrice("");
                     setQuantity(1);
                     setDirectModal(false)

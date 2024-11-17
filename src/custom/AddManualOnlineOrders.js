@@ -24,6 +24,8 @@ const AddManualOnlineOrders = ({ onlineModal, setOnlineModal, setRef }) => {
     const [selectedId, setSelectedId] = useState("");
     const [selectedWeight, setSelectedWeight] = useState("");
     const [price, setPrice] = useState("");
+    const[purchasePrice,setPurchasePrice]=useState(0)
+
     const [maxQuantity, setMaxQuantity] = useState(0)
     const [quanErr, setQuanerr] = useState(false)
     const [quantity, setQuantity] = useState(1);
@@ -213,6 +215,7 @@ const AddManualOnlineOrders = ({ onlineModal, setOnlineModal, setRef }) => {
                 if (priceInfo) {
                     setMaxQuantity(weightInfo.stock)
                     setPrice(priceInfo.price);
+                    setPurchasePrice(weightInfo.purchaseprice)
                 } else {
                     setPrice("");
                 }
@@ -259,6 +262,7 @@ const AddManualOnlineOrders = ({ onlineModal, setOnlineModal, setRef }) => {
                     thumbImage: selectedProduct.thumbnailimage,
                     weight: Number(selectedWeight),
                     price: Number(price),
+                    purchasePrice:Number(purchasePrice),
                     itemCount: Number(quantity),
                     totalPrice: price * quantity,
                 };
@@ -268,6 +272,7 @@ const AddManualOnlineOrders = ({ onlineModal, setOnlineModal, setRef }) => {
                 setSelectedId("");
                 setWeight([]);
                 setSelectedWeight("");
+                setPurchasePrice(0)
                 setPrice("");
                 setQuantity(1);
             } else {
@@ -335,6 +340,7 @@ const AddManualOnlineOrders = ({ onlineModal, setOnlineModal, setRef }) => {
                     setSelectedId("");
                     setWeight([]);
                     setSelectedWeight("");
+                    setPurchasePrice(0)
                     setPrice("");
                     setQuantity(1);
                     setPlatName("")

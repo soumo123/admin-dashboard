@@ -29,6 +29,7 @@ const ReqManualOrder = () => {
     const [ref, setRef] = useState(false)
     const [err, setErr] = useState(false)
     const [mode, setMode] = useState("offline")
+    const[purchasePrice,setPurchasePrice]=useState(0)
 
     const adminToken = localStorage.getItem("adminToken")
 

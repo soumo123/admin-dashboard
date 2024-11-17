@@ -36,6 +36,7 @@ import {
   getAccessFail
 } from './redux/actions/userAction'
 import { useSelector,useDispatch } from 'react-redux';
+import Transactionreport from './components/Transactionreport';
 
 function App() {
   const location = useLocation();
@@ -166,9 +167,9 @@ function App() {
                     {access.employees ? ( <Route exact={true} path="/addemp" element={<AddEmployee />} />) : (<Route exact={true} path="/" element={<Orders />} />)} 
                     {access.employees ? (<Route exact={true} path="/editemp/:id" element={<Editemployee />} />) : (<Route exact={true} path="/" element={<Orders />} />)}  
 
-                     {access.platforms ? (<Route exact={true} path="/platforms" element={<Platforms />} />):(<Route exact={true} path="/" element={<Orders />} />)} 
+                    {access.platforms ? (<Route exact={true} path="/platforms" element={<Platforms />} />):(<Route exact={true} path="/" element={<Orders />} />)} 
 
-
+                    {access.report ? (<Route exact={true} path="/reports" element={<Transactionreport />} />):(<Route exact={true} path="/" element={<Orders />} />)} 
 
                     </Routes>
                   )

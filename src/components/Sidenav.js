@@ -30,6 +30,7 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItems from '@mui/material/MenuItem';
 import BadgeIcon from '@mui/icons-material/Badge';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 
 const settings = ['Logout'];
 
@@ -150,6 +151,8 @@ const Sidenav = () => {
                     {access.reqorders && ( <Link to="/requests" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ViewListIcon />}>Request Orders</MenuItem></Link>)}
 
                     {access.platforms && (<Link to="/platforms" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AirplayIcon />}>Platforms</MenuItem></Link>)} 
+                    {access.report && (<Link to="/reports" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SummarizeIcon />}>Reports</MenuItem></Link>)} 
+
 
                 </Menu>
                 <Box sx={{ flexGrow: 0 }} className="profile-icon">

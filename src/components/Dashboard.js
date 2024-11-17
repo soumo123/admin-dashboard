@@ -59,7 +59,7 @@ const Dashboard = () => {
           'Authorization': `Bearer ${adminToken}` // Bearer Token Format
         }
       };
-      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/graphs?type=${type}&shop_id=${shop_id}&adminId=${adminId}&platformId=${platId}`, config);
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/graphs?type=${type}&shop_id=${shop_id}&adminId=${adminId}&platformId=${platId}&year=${year}`, config);
       if (response.status === 200) {
         setOnlineGraph(response.data.result)
         setOnlineRev(response.data.totalrevenue)
@@ -116,7 +116,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getDetails1()
-  }, [platId])
+  }, [platId,year])
 
   useEffect(() => {
     getAllPlatforms()
@@ -225,7 +225,7 @@ const Dashboard = () => {
 
             </div>
             <div className='row'>
-              <div className=''>
+              <div className='col'>
                 Platform  :
                 {
                   <select value={platId} onChange={(e) => setPlatid(e.target.value)}>
@@ -237,6 +237,20 @@ const Dashboard = () => {
                   </select>
                 }
 
+              </div>
+              <div className=''>
+      
+                Year :
+
+                <select value={year} onChange={(e) => setYear(e.target.value)}>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                  <option value="2027">2027</option>
+                  <option value="2028">2028</option>
+
+                </select> till {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+  
               </div>
               <div className="col-6">
                 <h2>Platform revenue</h2>
