@@ -9,7 +9,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import CloseIcon from '@mui/icons-material/Close';
-
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 const EditProduct = () => {
 
     const navigate = useNavigate()
@@ -89,7 +93,8 @@ const EditProduct = () => {
         files: [], // Store selected files here,
         imagePreviews: [],
         manufacture_date: "",
-        expiry_date: ""
+        expiry_date: "",
+        till_date:null
     });
 
 
@@ -108,9 +113,10 @@ const EditProduct = () => {
     const [purchaseError, setPurchaseError] = useState('')
     const [deliveryPartnerErr, setDeliveryPartnerErr] = useState('');
     const [sellingPriceMethderr, setSellingPriceMethodErr] = useState('')
+    const[dateError,setDateError]=useState(false)
     const [deliveryServiceErr, setDeliveryServiceErr] = useState("")
     const [tagsData, setTagsData] = useState([])
-    const[platforms,setPlatforms] = useState([])
+    const [platforms, setPlatforms] = useState([])
 
 
 
@@ -189,6 +195,15 @@ const EditProduct = () => {
         }));
         setFileError('');
     };
+
+    const handleDateChange = (newDate) => {
+        const formattedDate = dayjs(newDate).format('YYYY-MM-DD'); // Or any format you prefer
+        setProductData(prevState => ({
+            ...prevState,
+            till_date:formattedDate
+        }));
+      };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!productData.name) {
@@ -210,6 +225,11 @@ const EditProduct = () => {
         if (!productData.selling_price_method) {
             setSellingPriceMethodErr('Please enter price method');
             return;
+        }
+        if(productData.till_date===null || productData.till_date==""){
+            setDateError('Please deletect the date')
+            return;
+
         }
         // if (productData.selling_price_method === "offline" && !productData.price) {
         //     setPriceError('Please enter a price.');
@@ -352,7 +372,7 @@ const EditProduct = () => {
         setTagId(getID);
     };
     const selectOption3 = (event) => {
-        console.log("event",event)
+        console.log("event", event)
         const getID = event.map(option => option.label);
         setSelectedOptions3(event);
         setSellingType(getID);
@@ -391,7 +411,7 @@ const EditProduct = () => {
                     'Authorization': `Bearer ${adminToken}` // Bearer Token Format
                 }
             }
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/platforms?adminId=${adminId}&shop_id=${shop_id}&action=${1}`,config)
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/platforms?adminId=${adminId}&shop_id=${shop_id}&action=${1}`, config)
             if (response.status === 200) {
                 setPlatforms(response.data.data)
             } else {
@@ -938,7 +958,7 @@ const EditProduct = () => {
                                                 {platItems.map((item, index) => (
                                                     <div key={index}>
                                                         <p>{item.label} - {item.weight} {productData.unit} - Price: ₹ {item.price} Activate- {item.active ? "Activate" : "Deactivate"}
-                                                            <button className="btn btn-danger" onClick={() => handleRemoveItem(item.value,item.weight)}>
+                                                            <button className="btn btn-danger" onClick={() => handleRemoveItem(item.value, item.weight)}>
                                                                 <CloseIcon />
                                                             </button>
                                                         </p>
@@ -1210,7 +1230,23 @@ const EditProduct = () => {
                                     <label>Is the product offered ?</label>
                                     <input class="form-check-input7" type="checkbox" name="isOffered" value={check9} checked={check9} id="flexCheckDefault7" onChange={() => setCheck9(!check9)} />
                                 </div>
-
+                                {
+                                   check9 ? (
+                                    <div className='form-group'>
+                                    <label>Till Date</label>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DemoContainer components={['DatePicker']}>
+                                            <DatePicker
+                                                label="Manufacture Date"
+                                                value={dayjs(productData.till_date)} // Convert it back to a Dayjs object if needed
+                                                onChange={(newDate) => handleDateChange(newDate)}
+                                            />
+                                        </DemoContainer>
+                                    </LocalizationProvider>
+                                </div>
+                                   ) :("")
+                                }
+                              
 
                                 <div class="form-group">
                                     <label>Is the product belongs to fetured category ?</label>

@@ -31,7 +31,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItems from '@mui/material/MenuItem';
 import BadgeIcon from '@mui/icons-material/Badge';
 import SummarizeIcon from '@mui/icons-material/Summarize';
-
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 const settings = ['Logout'];
 
 const Sidenav = () => {
@@ -111,7 +112,7 @@ const Sidenav = () => {
                         style={{ textAlign: "center" }}
                     >
                         {" "}
-                        <h2>{adminId.includes("ADMIN") ? ("Admin"):("Employee")}</h2>
+                        <h2>{adminId.includes("ADMIN") ? ("Admin") : ("Employee")}</h2>
                     </MenuItem>
 
                     {access.dashboard && (<Link to="/" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<HomeOutlinedIcon />}>Dashboard</MenuItem></Link>)}
@@ -133,25 +134,39 @@ const Sidenav = () => {
 
                         </MenuItem>
                     </Link>)}
-                  {access.addprod && (<Link to="/addVendorProduct" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AddCircleIcon />}>Add Products</MenuItem></Link>)}  
-                   {access.products && (<Link to="/allproducts" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<CategoryIcon />}>Products</MenuItem></Link>)} 
-                   {access.users && (<Link to="/allusers" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<GroupIcon />}>Users</MenuItem></Link>)} 
-                   {access.employees && (<Link to="/employee" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<BadgeIcon />}>Employes</MenuItem></Link>)} 
-                
-                    {access.tags && (<Link to="/tags" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SellIcon />}>Tags</MenuItem></Link>)} 
-                    {access.orders && (<Link to="/manage-order" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<StorefrontIcon />}>Manage Order</MenuItem></Link>)} 
-                    {access.settings && (<Link to="/settings" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SettingsIcon />}>Settings</MenuItem></Link>)} 
-                    {access.vendor && (<Link to="/vendors" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AddBusinessIcon />}>Vendors</MenuItem></Link>)} 
+                    {access.addprod && (<Link to="/addVendorProduct" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AddCircleIcon />}>Add Products</MenuItem></Link>)}
+                    {access.products && (
 
-                    {access.stocks && (<Link to="/stocks" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<Inventory2Icon />}>Stocks</MenuItem></Link>)} 
-                    {access.trasnsaction && (<Link to="/transaction" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<PaidIcon />}>Transaction</MenuItem></Link>)} 
-                    {access.tax && (<Link to="/tax" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AccountBalanceIcon />}>Manage Tax</MenuItem></Link>)} 
-                    {access.expproducts && (<Link to="/expired" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ReportGmailerrorredIcon />}>Expired Products</MenuItem></Link>)} 
+                        <Link to="/allproducts" style={{ textDecoration: "none", color: "black" }}>
 
-                    {access.reqorders && ( <Link to="/requests" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ViewListIcon />}>Request Orders</MenuItem></Link>)}
+                            <MenuItem icon={<CategoryIcon />}>
+                                <SimpleTreeView>
+                                    <TreeItem itemId="grid" label=" Products">
+                                        <Link to="/sales" style={{ textDecoration: "none", color: "black" }}>
+                                        <TreeItem itemId="grid-community" label="Deal products" />
+                                        </Link>
+                                    </TreeItem>
+                                </SimpleTreeView>
+                            </MenuItem>
 
-                    {access.platforms && (<Link to="/platforms" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AirplayIcon />}>Platforms</MenuItem></Link>)} 
-                    {access.report && (<Link to="/reports" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SummarizeIcon />}>Reports</MenuItem></Link>)} 
+                        </Link>)}
+                    {access.users && (<Link to="/allusers" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<GroupIcon />}>Users</MenuItem></Link>)}
+                    {access.employees && (<Link to="/employee" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<BadgeIcon />}>Employes</MenuItem></Link>)}
+
+                    {access.tags && (<Link to="/tags" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SellIcon />}>Tags</MenuItem></Link>)}
+                    {access.orders && (<Link to="/manage-order" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<StorefrontIcon />}>Manage Order</MenuItem></Link>)}
+                    {access.settings && (<Link to="/settings" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SettingsIcon />}>Settings</MenuItem></Link>)}
+                    {access.vendor && (<Link to="/vendors" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AddBusinessIcon />}>Vendors</MenuItem></Link>)}
+
+                    {access.stocks && (<Link to="/stocks" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<Inventory2Icon />}>Stocks</MenuItem></Link>)}
+                    {access.trasnsaction && (<Link to="/transaction" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<PaidIcon />}>Transaction</MenuItem></Link>)}
+                    {access.tax && (<Link to="/tax" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AccountBalanceIcon />}>Manage Tax</MenuItem></Link>)}
+                    {access.expproducts && (<Link to="/expired" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ReportGmailerrorredIcon />}>Expired Products</MenuItem></Link>)}
+
+                    {access.reqorders && (<Link to="/requests" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<ViewListIcon />}>Request Orders</MenuItem></Link>)}
+
+                    {access.platforms && (<Link to="/platforms" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AirplayIcon />}>Platforms</MenuItem></Link>)}
+                    {access.report && (<Link to="/reports" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SummarizeIcon />}>Reports</MenuItem></Link>)}
 
 
                 </Menu>

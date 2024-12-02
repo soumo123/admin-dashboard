@@ -190,7 +190,7 @@ const Orders = ({ sidebarOpen }) => {
                   'Authorization': `Bearer ${adminToken}` // Bearer Token Format
                 }
               };
-            const result = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorder/${id}/${adminId}`,config)
+            const result = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorder/${id}?adminId=${adminId}`,config)
             if (result.status === 200) {
                 setViewData(result.data.data)
             }

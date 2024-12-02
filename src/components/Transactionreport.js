@@ -4,6 +4,8 @@ import Pagination from '@mui/material/Pagination';
 import * as XLSX from 'xlsx'; // Import the xlsx library
 import jsPDF from 'jspdf'; // Import the jsPDF library
 import 'jspdf-autotable'; // Import the autotable plugin
+import dayjs from 'dayjs';
+import 'dayjs/locale/en-gb';
 
 const Transactionreport = () => {
     const [loader, setloader] = useState(false);
@@ -146,6 +148,7 @@ const Transactionreport = () => {
                     <table className="table data-tables">
                         <thead>
                             <tr>
+                                <th>Date</th>
                                 <th>Product name</th>
                                 <th>Order Id</th>
                                 <th>Quantity</th>
@@ -170,6 +173,7 @@ const Transactionreport = () => {
                                     <tbody>
                                         {reports.map((ele, index) => (
                                             <tr key={index}>
+                                                <td>{ele.date === null || ele.date === "" ? "" : dayjs(ele.date).format('DD/MM/YYYY, hh:mm A')}</td>
                                                 <td>{ele.productname} ({ele.productId})</td>
                                                 <td>{ele.orderId}</td>
                                                 <td>{ele.quantity}</td>
