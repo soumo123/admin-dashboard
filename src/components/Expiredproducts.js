@@ -95,7 +95,7 @@ const Expiredproducts = ({ sidebarOpen }) => {
                     </div>
                 </div>
 
-                <div className="table-responsive-lg">
+                <div className="table-responsive-lg mt-5">
                     <table className="table data-tables">
                         <thead>
                             <tr>
