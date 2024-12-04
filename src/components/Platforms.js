@@ -49,9 +49,14 @@ const Platforms = () => {
   const adminToken = localStorage.getItem("adminToken")
 
   const handlePlatnameChange = (e) => {
-    setErr(false)
-    // setFormsData({ ...formsdata, [e.target.name]: e.target.value });
-    setPlatName(e.target.value)
+    setErr(false);
+
+    const value = e.target.value;
+  
+    // Regular expression to allow only non-numeric characters
+    if (/^[^0-9]*$/.test(value)) {
+      setPlatName(value);
+    }
   };
   const handlePlatactivateChange = (e) => {
     setErr(false)
@@ -346,7 +351,7 @@ const Platforms = () => {
                               {ele.label}
                             </td>
                             <td>
-                              <div class="form-check form-switch">
+                              <div class="form-check actives">
                                 {
                                   ele.active ? (
 
