@@ -46,8 +46,11 @@ const Editplatform = ({ edit, setEdit, editName, seteditName, setEditId, editId,
 
     const handlePlatnameChange = (e) => {
         setErr(false)
+        const value = e.target.value;
         // setFormsData({ ...formsdata, [e.target.name]: e.target.value });
-        setPlatName(e.target.value)
+        if (/^[^0-9]*$/.test(value)) {
+            setPlatName(value);
+          }
     };
 
     const handlePlatactivateChange = (e) => {
