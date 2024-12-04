@@ -93,23 +93,23 @@ const Taxes = () => {
         <h1>Add Tax</h1>
         <div class="row">
           <div class="col">
-            <p>SGST : <input type="number" name="sgst" value={sgst} onChange={(e) => setSgst(e.target.value)} />%</p>
+            <p>SGST(%) : <input class="form-control" id="inputEmail4"  type="number" name="sgst" value={sgst} onChange={(e) => setSgst(e.target.value)} /></p>
           </div>
           <div class="col">
-            <p>Value : <input type="number" name="sgst" value={value1} readOnly /></p>
+            <p>Value : <input type="number" class="form-control" id="inputEmail4"  name="sgst" value={value1} readOnly /></p>
           </div>
 
         </div>
         <div class="row">
           <div class="col">
-            <p>CGST : <input type="number" value={cgst} onChange={(e) => setCgst(e.target.value)} />%</p>
+            <p>CGST(%) : <input type="number" class="form-control" id="inputEmail4" value={cgst} onChange={(e) => setCgst(e.target.value)} /></p>
           </div>
           <div class="col">
-            <p>Value : <input type="number" value={value2} readOnly /></p>
+            <p>Value : <input type="number" class="form-control" id="inputEmail4"  value={value2} readOnly /></p>
           </div>
 
         </div>
-        <button type="button" className='btn btn-primary' onClick={updateTax}>Save</button>
+        <button type="button" className='btnSubmit' onClick={updateTax}>Save</button>
       </div>
     </>
   )
