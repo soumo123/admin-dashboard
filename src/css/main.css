@@ -1066,6 +1066,57 @@ box-shadow: 5px 5px 30px 7px rgba(0,0,0,0.25), -5px -5px 30px 7px rgba(0,0,0,0.2
 
 
 
+.admin-bottom{
+  display: none;
+}
+
+@media (min-width: 320px) and (max-width: 767px){
+  .admin-sidebar{
+    display: none;
+  }
+  .admin-bottom{
+    display: block;
+  }
+  main{
+    height: 80vh;
+    overflow-y: scroll;
+  }
+
+  .add-prod {
+  padding: 0px !important
+}
+.add-prod h4{
+  font-size: 20px;
+}
+
+
+.admin-content {
+  flex: 1;
+  margin: 1px 3px 2px;
+  /* margin-left: 2rem;
+  margin-right: 2rem;
+  padding: 2rem 0; */
+}
+
+.actives{
+  padding-left: 0.5rem;
+}
+.data-tables th {
+  font-size: 8px;
+  background-color: #68033f;
+  color: #fff;
+  font-weight: 600;
+}
+.data-tables td {
+  font-size: 8px;
+  padding: 8px;
+  word-wrap: break-word;
+}
+.container3{
+  margin: 3px 4px 5px;
+}
+
+}
 
 
 
