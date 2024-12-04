@@ -247,7 +247,8 @@ const Transaction = () => {
 
         {
           Object.keys(transactions).length ? (
-            <table className="transaction-table" style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 10px' }}>
+            <div className="table-responsive-lg">
+            <table className="transaction-table table data-tables" style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 10px' }}>
               <thead>
                 <tr>
                   <th>Transaction Id</th>
@@ -276,6 +277,7 @@ const Transaction = () => {
                 )}
               </tbody>
             </table>
+            </div>
           ) : (
             <div className="container">
               <div className="row">
