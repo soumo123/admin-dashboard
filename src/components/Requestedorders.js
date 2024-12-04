@@ -45,78 +45,80 @@ const Requestedorders = () => {
 
   return (
     <>
-  <h1>Requested Orders to Agents</h1>
+      <h1>Requested Orders to Agents</h1>
       <div className='container'>
-        <div className='row'>
-          <div className='col'>
-          <table class="table table-warning">
-        <thead>
-          <tr>
+        <div className='row'> 
+          <div className='col table-responsive-lg'>
+            <table class="table table-warning table data-tables">
+              <thead>
 
-            <th scope="col">Agent Name</th>
-            <th scope="col">Agent Email</th>
-            <th scope="col">Agent Phone</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Message</th>
+                <tr>
 
-          </tr>
-        </thead>
-        {
-          !loader ? (
-            <div className="container">
-              <div className="row">
-                <div className="col-12">
-                  <div className="text-center">
-                  loading....
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <>
+                  <th scope="col">Agent Name</th>
+                  <th scope="col">Agent Email</th>
+                  <th scope="col">Agent Phone</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Message</th>
+
+                </tr>
+
+              </thead>
               {
-                redata && redata.length > 0 ? (
-                  <tbody>
-                    {
-                      redata.map((ele) => (
-                        <tr  key={ele?._id}>
-
-                          <td>{ele?.agentInfo?.agentname} {`(${ele?.agentInfo?.agentId})`}</td>
-                          <td>{ele?.agentInfo?.email}</td>
-                          <td>{ele?.agentInfo?.phone}</td>
-                          <td>{ele?.quantity}</td>
-                          <td>{ele?.message}</td>
-
-                        </tr>
-                      ))
-                    }
-
-
-
-                  </tbody>
-                ) : (
+                !loader ? (
                   <div className="container">
                     <div className="row">
                       <div className="col-12">
                         <div className="text-center">
-                          No Products Product Found
+                          loading....
                         </div>
                       </div>
                     </div>
                   </div>
+                ) : (
+                  <>
+                    {
+                      redata && redata.length > 0 ? (
+                        <tbody>
+                          {
+                            redata.map((ele) => (
+                              <tr key={ele?._id}>
+
+                                <td>{ele?.agentInfo?.agentname} {`(${ele?.agentInfo?.agentId})`}</td>
+                                <td>{ele?.agentInfo?.email}</td>
+                                <td>{ele?.agentInfo?.phone}</td>
+                                <td>{ele?.quantity}</td>
+                                <td>{ele?.message}</td>
+
+                              </tr>
+                            ))
+                          }
+
+
+
+                        </tbody>
+                      ) : (
+                        <div className="container">
+                          <div className="row">
+                            <div className="col-12">
+                              <div className="text-center">
+                                No Products Product Found
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    }
+
+                  </>
                 )
               }
 
-            </>
-          )
-        }
-
-      </table>
-      <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
+            </table>
+            <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
           </div>
         </div>
       </div>
-    
+
     </>
   )
 }
