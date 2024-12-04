@@ -227,14 +227,16 @@ console.log("productsporductsproductsproducts",products)
 
   return (
     <>
+
       {
         message ? (
           <Message type={messageType} message={message} />
         ) : ("")
       }
-      <Box sx={{ p: 4, maxWidth: 800, mx: 'auto' }}>
+      <h1>Add Products From Agent</h1>
+      <Box sx={{ p: 4, maxWidth: 800, mx: 'auto' }} className="add-prod">
         <Typography variant="h4" gutterBottom>
-          Add Products From Agent
+         
           <Stack spacing={2} sx={{ width: 300 }}>
 
             <Autocomplete
@@ -242,6 +244,7 @@ console.log("productsporductsproductsproducts",products)
               id="vendor-agent-autocomplete"
               disableClearable={false} // Allow clearing with the clear icon
               clearOnEscape={true}
+              
               clearIcon={<ClearIcon />} // Add the clear icon
               options={searchData}
               getOptionLabel={(option) => option.title || ""}
@@ -277,13 +280,14 @@ console.log("productsporductsproductsproducts",products)
 
           </Stack>
 
-          <Stack spacing={2} sx={{ width: 300 }}>
-            <label for="inputEmail4" class="form-label">Agent & Vendor</label>
-            <input type="text" className='form-control' value={title} readOnly />
 
-          </Stack>
 
         </Typography>
+        <Stack spacing={2} sx={{ width: 300 }}>
+            {/* <label for="inputEmail4" class="form-label"></label> */}
+            <input type="text" className='form-control' value={title} placeholder='Agent & Vendor'readOnly />
+
+          </Stack>
         {/* <div class="row">
           <div className='col'>
         
@@ -296,8 +300,8 @@ console.log("productsporductsproductsproducts",products)
           </Button>
         )}
         {forms.map((form, formIndex) => (
-          <Box key={form.id} sx={{ mb: 4, p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
-            <Typography variant="h6">Product {formIndex + 1}</Typography>
+          <Box style={{marginTop:"10px"}}key={form.id} sx={{ mb: 4, p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
+            <Typography variant="h6">Add Product </Typography>
             <form onSubmit={(e) => {
               e.preventDefault();
               handleAddProduct(formIndex);
@@ -314,7 +318,12 @@ console.log("productsporductsproductsproducts",products)
                 fullWidth
                 margin="normal"
                 value={form.unit}
-                onChange={(e) => handleFormChange(formIndex, 'unit', e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^[^0-9]*$/.test(value)) { // Regular expression to allow only non-numeric characters
+                    handleFormChange(formIndex, 'unit', value);
+                  }
+                }}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
@@ -349,13 +358,13 @@ console.log("productsporductsproductsproducts",products)
                       </IconButton>
                     }
                   >
-                    <ListItemText primary={`Weight: ${weight.weight}, Price: ${weight.purchaseprice}, Stock: ${weight.stock}`} />
+                    <ListItemText primary={`Weight: ${weight.weight}, Price: ₹${weight.purchaseprice}, Stock: ${weight.stock}`} />
                   </ListItem>
                 ))}
               </List>
-              <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+              <button type="submit" className="btnSubmit">
                 Save Product
-              </Button>
+              </button>
             </form>
 
             <Dialog open={form.weightFormVisible} onClose={() => handleFormChange(formIndex, 'weightFormVisible', false)}>
@@ -405,12 +414,12 @@ console.log("productsporductsproductsproducts",products)
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => handleAddWeight(formIndex)} color="primary" variant="contained">
+                <button type="button"onClick={() => handleAddWeight(formIndex)}  className="btnSubmit">
                   Add
-                </Button>
-                <Button onClick={() => handleFormChange(formIndex, 'weightFormVisible', false)} color="secondary" variant="outlined">
+                </button>
+                <button onClick={() => handleFormChange(formIndex, 'weightFormVisible', false)} className='btn btn-danger'>
                   Cancel
-                </Button>
+                </button>
               </DialogActions>
             </Dialog>
           </Box>
@@ -440,7 +449,7 @@ console.log("productsporductsproductsproducts",products)
                 <List>
                   {product.weights.map((weight, weightIndex) => (
                     <ListItem key={weightIndex}>
-                      <ListItemText primary={`Weight: ${weight.weight}, Price: ${weight.purchaseprice}, Stock: ${weight.stock}`} />
+                      <ListItemText primary={`Weight: ${weight.weight}, Price: ₹ ${weight.purchaseprice}, Stock: ${weight.stock}`} />
                     </ListItem>
                   ))}
                 </List>
@@ -448,20 +457,22 @@ console.log("productsporductsproductsproducts",products)
             </Card>
           ))}
         </Box>
-        {
+
+      </Box>
+      {
+          
           loader ? (
-            <button class="btn btn-primary" type="button" disabled>
+            <button type="button" className="btnSubmit" disabled>
               <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
               Uploading ....
             </button>
           ) : (
 
-            <Button type="button" variant="contained" color="primary" onClick={addAgentProduct}>
+            <button type="button" className="btnSubmit" onClick={addAgentProduct}>
               Submit
-            </Button>
+            </button>
           )
         }
-      </Box>
     </>
   );
 };
