@@ -37,6 +37,8 @@ import {
 } from './redux/actions/userAction'
 import { useSelector,useDispatch } from 'react-redux';
 import Transactionreport from './components/Transactionreport';
+import BottomBar from './components/BottomBar';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const location = useLocation();
@@ -130,10 +132,19 @@ function App() {
             }
 
           </div>
+          <div className="admin-bottom">
+            {
+              exactadminId === "" || exactadminId === null || exactShopId === "" || exactShopId === null || exactType === "" || exactType === null ? (
+                ""
+              ) : (
+                <BottomBar />
+              )
+            }
+
+          </div>
 
           <div className="admin-content">
-            <main>
-              <div style={{}}>
+         
                 {
                   exactadminId === "" || exactadminId === null || exactShopId === "" || exactShopId === null || exactType === "" || exactType === null ? (
                     <Routes>
@@ -180,8 +191,7 @@ function App() {
 
 
 
-              </div>
-            </main>
+             
           </div>
         </div >
 
