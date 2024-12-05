@@ -21,10 +21,10 @@ const Expiredproducts = ({ sidebarOpen }) => {
         try {
             const config = {
                 headers: {
-                  'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
                 }
-              };
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=1&adminId=${adminId}`,config);
+            };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=1&adminId=${adminId}`, config);
             if (response.status === 200) {
                 setAgentData(response.data.data);
             } else {
@@ -81,7 +81,7 @@ const Expiredproducts = ({ sidebarOpen }) => {
         <>
             <h1>Expired Products</h1>
             <div className={`all-product ${sidebarOpen ? 'sidebar-open' : ''}`}>
-                <div class="row">
+                {/* <div class="row">
                     <div className='col-md-3'>
                         <label style={{ fontSize: "18px", fontWeight: "600" }}>Distributor Name : </label>
                         <select class="form-control" value={agId} onChange={(e) => handleSelectAgentId(e.target.value)} >
@@ -93,10 +93,28 @@ const Expiredproducts = ({ sidebarOpen }) => {
                             }
                         </select>
                     </div>
+                </div> */}
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-4 mb-3 mb-md-0">
+                        <label className='fw-bold'>Select Agent</label>
+                        <select class="form-control" value={agId} onChange={(e) => handleSelectAgentId(e.target.value)} >
+                            <option value="">Select agent id</option>
+                            {
+                                agentData && agentData.map((ele) => (
+                                    <option key={ele.agentId} value={ele.agentId}>{`${ele.agent_name}(${ele.agentId})`}</option>
+                                ))
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4 mb-3 mb-md-0">
+                        
+                    </div>
+                    <div class="col-12 col-md-4">
+                    
+                    </div>
                 </div>
-
-                <div className="table-responsive-lg mt-5">
-                    <table className="table data-tables">
+                <div className="table-responsive">
+                <table className="table custom-table-header">
                         <thead>
                             <tr>
                                 <th>Image</th>
@@ -134,7 +152,7 @@ const Expiredproducts = ({ sidebarOpen }) => {
                                                         >
                                                             <td>
                                                                 <div className="">
-                                                                    <img src={ele.image} style={{ width: '100%', height: '100%' }} />
+                                                                    <img src={ele.image} style={{ width: '50%', height: '50%' }} />
                                                                 </div>
                                                             </td>
                                                             <td>{ele?.productId}</td>
@@ -158,7 +176,6 @@ const Expiredproducts = ({ sidebarOpen }) => {
                                                     ))
                                                 }
 
-                                                <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
                                             </tbody>
 
                                         ) : (
@@ -179,6 +196,7 @@ const Expiredproducts = ({ sidebarOpen }) => {
                         }
                     </table>
                 </div>
+                <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
 
 
             </div>
