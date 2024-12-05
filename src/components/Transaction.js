@@ -247,7 +247,7 @@ const Transaction = () => {
 
         {
           Object.keys(transactions).length ? (
-            <div className="table-responsive-lg">
+            <div className="table-responsive">
             <table className="transaction-table table data-tables" style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 10px' }}>
               <thead>
                 <tr>
