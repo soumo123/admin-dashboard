@@ -91,12 +91,12 @@ body {
   margin-left: 0;
 }
 
-.table {
+/* .table {
   width: 100%;
   border-collapse: collapse;
-}
+} */
 
-.table th,
+/* .table th,
 .table td {
   padding: 8px;
   text-align: left;
@@ -106,7 +106,7 @@ body {
 .table th {
   background-color: #f2f2f2;
   font-weight: bold;
-}
+} */
 
 .btn {
   padding: 8px 12px;
@@ -157,7 +157,7 @@ body {
   flex: 1;
   margin-left: 2rem;
   margin-right: 2rem;
-  padding: 2rem 0;
+  padding: 1px 0px;
 }
 
 .data-tables th {
@@ -206,12 +206,12 @@ body {
   overflow: auto;
 }
 
-thead,
+/* thead,
 tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
-}
+} */
 
 .ps-menu-root ul li a {
   font-size: 14px;
