@@ -109,43 +109,42 @@ const Transactionreport = () => {
     return (
         <>
             <div className={`all-product`}>
-                <h3>Transaction Reports</h3>
-                <div className="form">
-                    <div className="row">
-                        <div className="col-sm-6">
-                            <label>Total : {totalCount}</label>
+                <h2>Transaction Reports</h2>
+            
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-4 mb-3 mb-md-0">
+                        <label className='fw-bold'>Total : {totalCount}</label>
+                    </div>
+                    <div class="col-12 col-md-4 mb-3 mb-md-0">
+                        <div className="form-group">
+                            <label className='fw-bold'>Export Data</label>
+                            <select className="form-control" onChange={handleExport}>
+                                <option value={""}>Select</option>
+                                <option value="1">Export in Excel</option>
+                                <option value="2">Export in PDF</option>
+                            </select>
                         </div>
-                        <div className="col-sm-3">
-                            <div className="form-group">
-                                <label>Export Data</label>
-                                <select className="form-control" onChange={handleExport}>
-                                    <option value={""}>Select</option>
-                                    <option value="1">Export in Excel</option>
-                                    <option value="2">Export in PDF</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className="col-sm-3">
-                            <div className="form-group">
-                                <label>Choose limits</label>
-                                <select
-                                    className="form-control"
-                                    onChange={(e) => setLimit(Number(e.target.value))}
-                                >
-                                    <option value={10}>Select</option>
-                                    <option value={10000000000}>All</option>
-                                    <option value={20}>20</option>
-                                    <option value={40}>40</option>
-                                    <option value={60}>60</option>
-                                    <option value={80}>80</option>
-                                </select>
-                            </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div className="form-group">
+                            <label className="fw-bold">Choose limits</label>
+                            <select
+                                className="form-control"
+                                onChange={(e) => setLimit(Number(e.target.value))}
+                            >
+                                <option value={10}>Select</option>
+                                <option value={10000000000}>All</option>
+                                <option value={20}>20</option>
+                                <option value={40}>40</option>
+                                <option value={60}>60</option>
+                                <option value={80}>80</option>
+                            </select>
                         </div>
                     </div>
                 </div>
-
-                <div className="table-responsive-lg">
-                    <table className="table data-tables">
+            
+                <div className="table-responsive">
+                    <table className="table custom-table-header ">
                         <thead>
                             <tr>
                                 <th>Date</th>
@@ -193,17 +192,20 @@ const Transactionreport = () => {
                                         </div>
                                     </div>
                                 )}
-                                <Pagination
-                                    count={totalPages}
-                                    variant="outlined"
-                                    color="secondary"
-                                    onChange={handlePageChange}
-                                />
+
                             </>
                         )}
                     </table>
+
                 </div>
+                <Pagination
+                    count={totalPages}
+                    variant="outlined"
+                    color="secondary"
+                    onChange={handlePageChange}
+                />
             </div>
+
         </>
     );
 };
