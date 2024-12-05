@@ -52,7 +52,7 @@ const Platforms = () => {
     setErr(false);
 
     const value = e.target.value;
-  
+
     // Regular expression to allow only non-numeric characters
     if (/^[^0-9]*$/.test(value)) {
       setPlatName(value);
@@ -226,96 +226,26 @@ const Platforms = () => {
           <Message type={messageType} message={message} />
         ) : ("")
       }
-      {/* <div className="container mx-auto px-4 sm:px-8">
-        <div className="py-8">
-          <div className="flex flex-row mb-1 sm:mb-0 justify-between w-full">
-            <h2 className="text-2xl leading-tight">
-              All Tags
-            </h2>
-            <div className="text-end">
-              <form className="flex w-full max-w-sm space-x-3">
-
-                <button className="flex-shrink-0 px-4 py-2 text-base text-white bg-purple-600 rounded hover:bg-purple-700 focus:outline-none focus:shadow-outline" type="button" onClick={() => setShowAddTag(true)}>
-                  + Add Tag
-                </button>
-              </form>
-            </div>
-          </div>
-          <div className="text-zinc-600">
-            {allTags.length} Results
-          </div>
-          <div className="py-4">
-            <div className="overflow-x-auto overflow-y-auto">
-              <table className="min-w-full leading-normal">
-                <thead>
-                  <tr>
-                    <th className="px-5 py-3 border-b-2 border-zinc-200 bg-purple-800 text-left text-xs font-semibold text-white uppercase tracking-wider">
-                      S.No
-                    </th>
-                    <th className="px-5 py-3 border-b-2 border-zinc-200 bg-purple-800 text-left text-xs font-semibold text-white uppercase tracking-wider">
-                      Title
-                    </th>
-                    <th className="px-5 py-3 border-b-2 border-zinc-200 bg-purple-800 text-left text-xs font-semibold text-white uppercase tracking-wider">
-                      Action
-                    </th>
-                    <th className="px-5 py-3 border-b-2 border-zinc-200 bg-purple-800 text-left text-xs font-semibold text-white uppercase tracking-wider">
-                      Top Category
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {allTags && allTags.length === 0 ? (
-                    <tr>
-                      <td colspan="3" className="px-5 py-5 border-b border-zinc-200 bg-white text-sm text-center">
-                        No Tags
-                      </td>
-                    </tr>
-                  ) : (
-                    allTags.map((ele, index) => (
-                      <tr key={index}>
-                        <td className="px-5 py-5 border-b border-zinc-200 bg-white text-sm">{index + 1}</td>
-                        <td className="px-5 py-5 border-b border-zinc-200 bg-white text-sm">{ele.label}</td>
-                        <td className="px-5 py-5 border-b border-zinc-200 bg-white text-sm">
-                          <span classNameName="text-zinc-900 leading-none hover:text-purple-600" onClick={() => handleEditOpen(ele.label, ele.value, ele.thumbnailImage)}><FaEdit /></span>
-                          <span classNameName="text-zinc-900 leading-none hover:text-purple-600 pl-6" onClick={() => handleOpenTagModal(ele.value)}><FaTrashAlt /></span>
-                        </td>
-                        <td className="px-5 py-5 border-b border-zinc-200 bg-white text-sm">
-                          <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" value={ele.topCategory} checked={ele.topCategory} onChange={(e) => handleCategoryChange(e.target.value,ele.value)} />
-                            <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-                          </div>
-                        </td>
-
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </div>
-      </div> */}
-
       <div className={`all-product`}>
-        <h3>Platforms</h3>
-        <div className='form'>
-          <div className="row">
-            <div className="col-sm-9">
-            </div>
-            <div className="col-sm-3">
-              <div className="form-group">
+        
+        <div class="row align-items-center">
+          <div class="col-12 col-md-4 mb-3 mb-md-0">
+          <h2>Platforms</h2>
+          </div>
+          <div class="col-12 col-md-4 mb-3 mb-md-0">
 
-                <button data-toggle="tooltip" data-placement="top" title="Add Tag" className="btnSubmit" type="button" onClick={() => setShowAddTag(true)}>
-                  + Add platform
-                </button>
-              </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div className="form-group">
+              <button data-toggle="tooltip" data-placement="top" title="Add Tag" className="btnSubmit" type="button" onClick={() => setShowAddTag(true)}>
+                + Add platform
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="table-responsive-lg">
-          <table className="table data-tables">
+        <div className="table-responsive">
+        <table className="table custom-table-header ">
             <thead>
               <tr>
                 <th>Id</th>
@@ -355,9 +285,9 @@ const Platforms = () => {
                                 {
                                   ele.active ? (
 
-                                    <p style={{color:"green"}}>Active</p>
-                                  ):(
-                                    <p style={{color:"red"}}>Deactive</p>
+                                    <p style={{ color: "green" }}>Active</p>
+                                  ) : (
+                                    <p style={{ color: "red" }}>Deactive</p>
 
                                   )
                                 }
