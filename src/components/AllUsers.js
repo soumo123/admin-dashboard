@@ -23,7 +23,7 @@ const AllUsers = ({ sidebarOpen }) => {
                 'Authorization': `Bearer ${adminToken}` // Bearer Token Format
             }
         };
-        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/get_user_details?type=${type}&userId=${id}&adminId=${adminId}`,config)
+        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/get_user_details?type=${type}&userId=${id}&adminId=${adminId}`, config)
         if (response.status === 200) {
             setDetails(response.data)
         } else {
@@ -64,9 +64,21 @@ const AllUsers = ({ sidebarOpen }) => {
         <>
 
             <div className={`all-product ${sidebarOpen ? 'sidebar-open' : ''} mt-5`}>
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-4 mb-3 mb-md-0">
+                        <h3>Users</h3>
+                    </div>
+                    <div class="col-12 col-md-4 mb-3 mb-md-0">
+                        <div className="form-group">
 
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+
+                    </div>
+                </div>
                 <div className="table-responsive">
-                    <table className="table  data-tables table-hover">
+                    <table className="table custom-table-header">
                         <thead>
                             <tr>
                                 <th>User ID</th>

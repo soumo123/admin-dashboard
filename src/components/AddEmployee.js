@@ -7,6 +7,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Message from '../custom/Message';
+import { Grid, TextField, Typography } from '@mui/material';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -199,106 +200,185 @@ const AddEmployee = () => {
                     <Message type={messageType} message={message} />
                 ) : ("")
             }
-            <h2>Add employee</h2>
-            <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                        <Tab label="Step 1" {...a11yProps(0)} />
-                        <Tab label="Step 2" {...a11yProps(1)} disabled={!isNextTabUnlocked} />
-                        {/* <Tab label="Item Three" {...a11yProps(2)} disabled={!isNextTabUnlocked} /> */}
-                    </Tabs>
-                </Box>
-                <CustomTabPanel value={value} index={0}>
-                    <div style={styles.formContainer}>
-                        <form class="row g-3">
-                            <div class="col-md-4">
-                                <label for="inputEmail4" class="form-label">*First Name</label>
-                                <input type="text" class="form-control" id="inputEmail4" name="firstname" value={empData.firstname} onChange={handleChange1} />
-                            </div>
-                            <div class="col-md-4">
-                                <label for="inputPassword4" class="form-label">*Last Name</label>
-                                <input type="text" class="form-control" id="inputPassword4" name="lastname" value={empData.lastname} onChange={handleChange1} />
-                            </div>
-                            <div class="col-md-4">
-                                <label for="inputPassword4" class="form-label">*Phone number</label>
-                                <input type="text" class="form-control" id="inputPassword4" name="phone" value={empData.phone} onChange={handleChange1} />
-                            </div>
-                            <div class="col-4">
-                                <label for="inputPassword4" class="form-label">*Email</label>
-                                <input type="text" class="form-control" id="inputPassword4" name="email" value={empData.email} onChange={handleChange1} />
-                            </div>
-                            <div class="col-4">
-                                <label for="inputPassword4" class="form-label">*Set Password</label>
-                                <input type="password" class="form-control" id="inputPassword4" name="password" value={empData.password} onChange={handleChange1} />
-                            </div>
-                            <div class="col-12">
-                                <label for="inputAddress" class="form-label">*Address</label>
-                                <input type="text" class="form-control" id="inputAddress" placeholder="" name="address" value={empData.address} onChange={handleChange1} />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="inputCity" class="form-label">*City</label>
-                                <input type="text" class="form-control" id="inputCity" name="city" value={empData.city} onChange={handleChange1} />
-                            </div>
-                            <div class="col-md-4">
-                                <label for="inputState" class="form-label">*State</label>
-                                <input type="text" class="form-control" id="inputAddress" placeholder="State" name="state" value={empData.state} onChange={handleChange1} />
-                            </div>
-                            <div class="col-md-2">
-                                <label for="inputZip" class="form-label">*Zip</label>
-                                <input type="text" class="form-control" id="inputZip" name="postcode" value={empData.postcode} onChange={handleChange1} />
-                            </div>
-                            {
-                                err ? (
-                                    <span style={{ color: "red" }}>*Please fill required fields</span>
-                                ) : ("")
-                            }
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-primary" onClick={handleSave}>Next</button>
-                            </div>
-
-
-                        </form>
-
-                    </div>
-
-
-
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={1}>
-                    <div style={styles.formContainer}>
-                        <form class="row g-3">
-                            <div class="col-md-6">
-                                <label for="inputEmail4" class="form-label">*Upload passport size photo</label>
-                                <input type="file" class="form-control" id="inputEmail4" name="file1" onChange={handleChange1} />
-                                {/* <img style={{ width: '30%', height: '30%' }} id="selectedImage" src={imagePreviewofPassport} alt="Selected Image" class="default-image" /> */}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="inputPassword4" class="form-label">*Identity proof name</label>
-                                <input type="text" class="form-control" id="inputPassword4" name="identity" value={empData.identity} onChange={handleChange1} />
-                            </div>
-                            <div class="col-md-4">
-                                <label for="inputPassword4" class="form-label">* Upload identity proof</label>
-                                <input type="file" class="form-control" id="inputPassword4" name="file2" onChange={handleChange1} />
-                                {/* <img style={{ width: '30%', height: '30%' }} id="selectedImage1" src={imagePreviewofDoc} alt="Selected Image" class="default-image" /> */}
-
-                            </div>
-
-                            {
-                                err ? (
-                                    <span style={{ color: "red" }}>*Please fill required fields</span>
-                                ) : ("")
-                            }
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-primary" onClick={handleSubmit}>Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={2}>
-                    Item Three Content
-                </CustomTabPanel>
+          
+            <Box
+            sx={{
+                height: '77vh', // Full viewport height
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden', // Prevent page overflow
+                p: 3,
+            }}
+        >
+            <Typography variant="h4" sx={{ mb: 3, textAlign: 'center' }}>
+                Add Employee
+            </Typography>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs value={value} onChange={handleChange} aria-label="Employee Form Steps">
+                    <Tab label="Step 1" />
+                    <Tab label="Step 2" disabled={value < 1} />
+                </Tabs>
             </Box>
+            <Box
+                sx={{
+                    flex: 1, // Allow content to fill remaining space
+                    overflow: 'auto', // Make content scrollable
+                    mt: 2,
+                }}
+            >
+                {value === 0 && (
+                    <Box sx={{ p: 3 }}>
+                        <form onSubmit={handleSave}>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} md={4}>
+                                    <TextField
+                                        fullWidth
+                                        label="First Name"
+                                        name="firstname"
+                                        value={empData.firstname || ''}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={4}>
+                                    <TextField
+                                        fullWidth
+                                        label="Last Name"
+                                        name="lastname"
+                                        value={empData.lastname || ''}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={4}>
+                                    <TextField
+                                        fullWidth
+                                        label="Phone Number"
+                                        name="phone"
+                                        value={empData.phone || ''}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        fullWidth
+                                        label="Email"
+                                        name="email"
+                                        type="email"
+                                        value={empData.email || ''}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        fullWidth
+                                        label="Password"
+                                        name="password"
+                                        type="password"
+                                        value={empData.password || ''}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        label="Address"
+                                        name="address"
+                                        value={empData.address || ''}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        fullWidth
+                                        label="City"
+                                        name="city"
+                                        value={empData.city || ''}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={3}>
+                                    <TextField
+                                        fullWidth
+                                        label="State"
+                                        name="state"
+                                        value={empData.state || ''}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={3}>
+                                    <TextField
+                                        fullWidth
+                                        label="Zip Code"
+                                        name="postcode"
+                                        value={empData.postcode || ''}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                            </Grid>
+                            {err && (
+                                <Typography color="error" sx={{ mt: 2 }}>
+                                    *Please fill all required fields
+                                </Typography>
+                            )}
+                            <Box sx={{ mt: 3 }}>
+                                <Button type="submit" variant="contained" color="primary">
+                                    Next
+                                </Button>
+                            </Box>
+                        </form>
+                    </Box>
+                )}
+                {value === 1 && (
+                    <Box sx={{ p: 3 }}>
+                        <form onSubmit={handleSubmit}>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        fullWidth
+                                        required
+                                        type="file"
+                                        label="Passport Photo"
+                                        name="file1"
+                                        InputLabelProps={{ shrink: true }}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        fullWidth
+                                        required
+                                        label="Identity Proof Name"
+                                        name="identity"
+                                        value={empData.identity || ''}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        fullWidth
+                                        required
+                                        type="file"
+                                        label="Upload Identity Proof"
+                                        name="file2"
+                                        InputLabelProps={{ shrink: true }}
+                                        onChange={handleChange1}
+                                    />
+                                </Grid>
+                            </Grid>
+                            {err && (
+                                <Typography color="error" sx={{ mt: 2 }}>
+                                    *Please fill all required fields
+                                </Typography>
+                            )}
+                            <Box sx={{ mt: 3 }}>
+                                <Button type="submit" variant="contained" color="primary">
+                                    Submit
+                                </Button>
+                            </Box>
+                        </form>
+                    </Box>
+                )}
+            </Box>
+        </Box>
 
         </>
     )

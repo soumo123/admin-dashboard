@@ -118,24 +118,25 @@ const Employe = () => {
 
       <div className={`all-product`}>
         <h3>Employees</h3>
-        <div className='form'>
-          <div className="row">
-            <div className="col-sm-9">
-              <label>Total : {totalCount}</label>
-            </div>
-            <div className="col-sm-3">
-              <div className="form-group">
+        <div class="row align-items-center">
+          <div class="col-12 col-md-4 mb-3 mb-md-0">
+          <label>Total : {totalCount}</label>
+          </div>
+          <div class="col-12 col-md-4 mb-3 mb-md-0">
 
-                <button data-toggle="tooltip" data-placement="top" title="Add Tag" className="btnSubmit" type="button" onClick={handleAddEmp}>
+          </div>
+          <div class="col-12 col-md-4">
+            <div className="form-group">
+            <button data-toggle="tooltip" data-placement="top" title="Add Tag" className="btnSubmit" type="button" onClick={handleAddEmp}>
                   + Add employee
                 </button>
-              </div>
             </div>
           </div>
         </div>
 
-        <div className="table-responsive-lg">
-          <table className="table data-tables">
+
+        <div className="table-responsive">
+        <table className="table custom-table-header">
             <thead>
               <tr>
                 <th>ID</th>
@@ -219,13 +220,14 @@ const Employe = () => {
                       </div>
                     )
                   }
-                  <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
                 </>
               )
             }
 
           </table>
         </div>
+        <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
+
       </div>
       <Dialog
         open={open}
@@ -240,8 +242,8 @@ const Employe = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={deleteEmp} variant="contained" color="secondary">Yes</Button>
-          <Button onClick={handleClose} variant="contained" color="primary" autoFocus>No</Button>
+          <button onClick={deleteEmp} type='button' className='btnSubmit'>Yes</button>
+          <button onClick={handleClose} type='button' className='btn btn-danger'>Cancel</button>
         </DialogActions>
       </Dialog>
     </>

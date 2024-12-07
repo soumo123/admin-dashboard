@@ -7,6 +7,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Message from '../custom/Message';
+import { Grid, TextField, Typography, Checkbox, FormControlLabel } from '@mui/material';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -295,191 +296,233 @@ const Editemployee = () => {
                     <Message type={messageType} message={message} />
                 ) : ("")
             }
-            <h2>Add employee</h2>
-            <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                        <Tab label="Step 1" {...a11yProps(0)} />
-                        <Tab label="Step 2" {...a11yProps(1)} disabled={!isNextTabUnlocked} />
-                        {/* <Tab label="Item Three" {...a11yProps(2)} disabled={!isNextTabUnlocked} /> */}
-                    </Tabs>
-                </Box>
-                <CustomTabPanel value={value} index={0}>
-                    <div style={styles.formContainer}>
-                        <form class="row g-3">
-                            <div class="col-md-4">
-                                <label for="inputEmail4" class="form-label">*First Name</label>
-                                <input type="text" class="form-control" id="inputEmail4" name="firstname" value={empData.firstname} onChange={handleChange1} />
-                            </div>
-                            <div class="col-md-4">
-                                <label for="inputPassword4" class="form-label">*Last Name</label>
-                                <input type="text" class="form-control" id="inputPassword4" name="lastname" value={empData.lastname} onChange={handleChange1} />
-                            </div>
-                            <div class="col-md-4">
-                                <label for="inputPassword4" class="form-label">*Phone number</label>
-                                <input type="text" class="form-control" id="inputPassword4" name="phone" value={empData.phone} onChange={handleChange1} />
-                            </div>
-                            <div class="col-4">
-                                <label for="inputPassword4" class="form-label">*Email</label>
-                                <input type="text" class="form-control" id="inputPassword4" name="email" value={empData.email} onChange={handleChange1} />
-                            </div>
-                            <div class="col-4">
-                                <label for="inputPassword4" class="form-label">*Set Password</label>
-                                <input type="password" class="form-control" id="inputPassword4" name="password" value={empData.password} onChange={handleChange1} />
-                            </div>
-                            <div class="col-12">
-                                <label for="inputAddress" class="form-label">*Address</label>
-                                <input type="text" class="form-control" id="inputAddress" placeholder="" name="address" value={empData.address} onChange={handleChange1} />
-                            </div>
+   
+            <Box
+            sx={{
+                height: '77vh', // Full viewport height
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden', // Prevent page overflow
+                p: 3,
+            }}
+        >
 
-                            <div class="col-md-6">
-                                <label for="inputCity" class="form-label">*City</label>
-                                <input type="text" class="form-control" id="inputCity" name="city" value={empData.city} onChange={handleChange1} />
-                            </div>
-                            <div class="col-md-4">
-                                <label for="inputState" class="form-label">*State</label>
-                                <input type="text" class="form-control" id="inputAddress" placeholder="State" name="state" value={empData.state} onChange={handleChange1} />
-                            </div>
-                            <div class="col-md-2">
-                                <label for="inputZip" class="form-label">*Zip</label>
-                                <input type="text" class="form-control" id="inputZip" name="postcode" value={empData.postcode} onChange={handleChange1} />
-                            </div>
-                            {
-                                err ? (
-                                    <span style={{ color: "red" }}>*Please fill required fields</span>
-                                ) : ("")
-                            }
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-primary" onClick={handleSave}>Next</button>
-                            </div>
-
-
-                        </form>
-
-                    </div>
-
-
-
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={1}>
-                    <div style={styles.formContainer}>
-                        <form class="row g-3">
-                            <div class="col-md-6">
-                                <label for="inputEmail4" class="form-label">*Upload passport size photo</label>
-                                <input type="file" class="form-control" id="inputEmail4" name="file1" onChange={handleChange11} />
-                                <img style={{ width: '30%', height: '30%' }} id="selectedImage" src={imagePreviewofPassport} alt="Selected Image" class="default-image" />
-                            </div>
-                            <div class="col-md-6">
-                                <label for="inputPassword4" class="form-label">*Identity proof name</label>
-                                <input type="text" class="form-control" id="inputPassword4" name="identity" value={empData.identity} onChange={handleChange1} />
-                            </div>
-                            <div class="col-md-4">
-                                <label for="inputPassword4" class="form-label">* Upload identity proof</label>
-                                <input type="file" class="form-control" id="inputPassword4" name="file2" onChange={handleChange12} />
-                                <img style={{ width: '30%', height: '30%' }} id="selectedImage1" src={imagePreviewofDoc} alt="Selected Image" class="default-image" />
-
-                            </div>
-                            <div class="col-md-8">
-                                <label for="inputPassword4" class="form-label">Access</label>
-                                {/* <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox" checked={empData.access.dashboard} />
-                                        <label class="form-check-label" for="firstCheckbox">Dashboard</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="secondCheckbox" checked={empData.access.notification} />
-                                        <label class="form-check-label" for="secondCheckbox">Notifications</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox" checked={empData.access.addprod} />
-                                        <label class="form-check-label" for="thirdCheckbox">Add Product</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox1" checked={empData.access.products} />
-                                        <label class="form-check-label" for="thirdCheckbox1">Product</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox2" checked={empData.access.users} />
-                                        <label class="form-check-label" for="thirdCheckbox2">Users</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox3" checked={empData.access.employees} />
-                                        <label class="form-check-label" for="thirdCheckbox3">Employees</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox4" checked={empData.access.tags} />
-                                        <label class="form-check-label" for="thirdCheckbox4">Tags</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox5" checked={empData.access.orders} />
-                                        <label class="form-check-label" for="thirdCheckbox5">Orders</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox6" checked={empData.access.settings} />
-                                        <label class="form-check-label" for="thirdCheckbox6">Settings</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox7" checked={empData.access.vendor} />
-                                        <label class="form-check-label" for="thirdCheckbox7">Vendors</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox8" checked={empData.access.stocks} />
-                                        <label class="form-check-label" for="thirdCheckbox8">Stocks</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox9" checked={empData.access.trasnsaction} />
-                                        <label class="form-check-label" for="thirdCheckbox9">Transactions</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox10" checked={empData.access.tax} />
-                                        <label class="form-check-label" for="thirdCheckbox10">Taxes</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox11" checked={empData.access.expproducts} />
-                                        <label class="form-check-label" for="thirdCheckbox11">Expired Products</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox12" checked={empData.access.reqorders} />
-                                        <label class="form-check-label" for="thirdCheckbox12">Requested Orders</label>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox13" checked={empData.access.platforms} />
-                                        <label class="form-check-label" for="thirdCheckbox13">Platforms</label>
-                                    </li>
-                                </ul> */}
-                                <ul className="list-group">
-                                    {Object.keys(empData.access).map((key) => (
-                                        <li className="list-group-item" key={key}>
-                                            <input
-                                                className="form-check-input me-1"
-                                                type="checkbox"
-                                                id={key}
-                                                checked={empData.access[key]}
-                                                onChange={handleAccessChange}
-                                            />
-                                            <label className="form-check-label" htmlFor={key}>
-                                                {key.charAt(0).toUpperCase() + key.slice(1)}
-                                            </label>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            {
-                                err ? (
-                                    <span style={{ color: "red" }}>*Please fill required fields</span>
-                                ) : ("")
-                            }
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-primary" onClick={handleSubmit}>Update</button>
-                            </div>
-                        </form>
-                    </div>
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={2}>
-                    Item Three Content
-                </CustomTabPanel>
+            <Typography variant="h4" sx={{ mb: 3, textAlign: 'center' }}>
+                Update Employee
+            </Typography>
+                        {/* Tabs Section */}
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs value={value} onChange={handleChange} aria-label="form tabs">
+                    <Tab label="Step 1" {...a11yProps(0)} />
+                    <Tab label="Step 2" {...a11yProps(1)} disabled={!isNextTabUnlocked} />
+                </Tabs>
             </Box>
+            {/* Tab Panels */}
+            <Box
+                sx={{
+                    flex: 1,
+                    overflowY: 'auto',
+                    padding: { xs: 2, sm: 3 },
+                }}
+            >
+                {/* Step 1: User Details Form */}
+                {value === 0 && (
+                    <Box maxWidth="800px" mx="auto">
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    label="First Name"
+                                    name="firstname"
+                                    value={empData.firstname}
+                                    onChange={handleChange1}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    label="Last Name"
+                                    name="lastname"
+                                    value={empData.lastname}
+                                    onChange={handleChange1}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    label="Phone Number"
+                                    name="phone"
+                                    value={empData.phone}
+                                    onChange={handleChange1}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    label="Email"
+                                    name="email"
+                                    value={empData.email}
+                                    onChange={handleChange1}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    type="password"
+                                    label="Set Password"
+                                    name="password"
+                                    value={empData.password}
+                                    onChange={handleChange1}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    label="Address"
+                                    name="address"
+                                    value={empData.address}
+                                    onChange={handleChange1}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    label="City"
+                                    name="city"
+                                    value={empData.city}
+                                    onChange={handleChange1}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    label="State"
+                                    name="state"
+                                    value={empData.state}
+                                    onChange={handleChange1}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={2}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    label="Zip Code"
+                                    name="postcode"
+                                    value={empData.postcode}
+                                    onChange={handleChange1}
+                                />
+                            </Grid>
+                            {err && (
+                                <Grid item xs={12}>
+                                    <Typography color="error">*Please fill all required fields</Typography>
+                                </Grid>
+                            )}
+                            <Grid item xs={12}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    onClick={handleSave}
+                                >
+                                    Next
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                )}
+
+                {/* Step 2: File Upload and Access */}
+                {value === 1 && (
+                    <Box maxWidth="800px" mx="auto">
+                        <Typography variant="h6" gutterBottom>
+                            Upload Documents & Access
+                        </Typography>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    type="file"
+                                    label="Upload Passport Size Photo"
+                                    InputLabelProps={{ shrink: true }}
+                                    name="file1"
+                                    onChange={handleChange1}
+                                />
+                                <img
+                                    src={imagePreviewofPassport}
+                                    alt="Passport Preview"
+                                    style={{ marginTop: 10, width: '100px', height: '100px', objectFit: 'cover' }}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    label="Identity Proof Name"
+                                    name="identity"
+                                    value={empData.identity}
+                                    onChange={handleChange1}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    type="file"
+                                    label="Upload Identity Proof"
+                                    InputLabelProps={{ shrink: true }}
+                                    name="file2"
+                                    onChange={handleChange1}
+                                />
+                                <img
+                                    src={imagePreviewofDoc}
+                                    alt="Identity Proof Preview"
+                                    style={{ marginTop: 10, width: '100px', height: '100px', objectFit: 'cover' }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography>Access Permissions</Typography>
+                                {Object.keys(empData.access).map((key) => (
+                                    <FormControlLabel
+                                        key={key}
+                                        control={
+                                            <Checkbox
+                                                checked={empData.access[key]}
+                                                onChange={() => handleAccessChange(key)}
+                                            />
+                                        }
+                                        label={key.charAt(0).toUpperCase() + key.slice(1)}
+                                    />
+                                ))}
+                            </Grid>
+                            {err && (
+                                <Grid item xs={12}>
+                                    <Typography color="error">*Please fill all required fields</Typography>
+                                </Grid>
+                            )}
+                            <Grid item xs={12}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    onClick={handleSubmit}
+                                >
+                                    Update
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                )}
+            </Box>
+        </Box>
 
         </>
     )
