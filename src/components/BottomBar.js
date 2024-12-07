@@ -1,8 +1,8 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -23,7 +23,33 @@ import SummarizeIcon from '@mui/icons-material/Summarize';
 
 const BottomBar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [value, setValue] = React.useState(0);
+
+  const routes = [
+    '/',
+    '/notifications',
+    '/addVendorProduct',
+    '/allproducts',
+    '/allusers',
+    '/employee',
+    '/tags',
+    '/manage-order',
+    '/settings',
+    '/vendors',
+    '/stocks',
+    '/transaction',
+    '/tax',
+    '/expired',
+    '/requests',
+    '/platforms',
+    '/reports',
+  ];
+  useEffect(() => {
+    const currentRouteIndex = routes.indexOf(location.pathname);
+    setValue(currentRouteIndex >= 0 ? currentRouteIndex : 0);
+  }, [location.pathname]);
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

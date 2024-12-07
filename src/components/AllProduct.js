@@ -173,7 +173,7 @@ const AllProduct = ({ sidebarOpen }) => {
           'Authorization': `Bearer ${adminToken}` // Bearer Token Format
         }
       };
-      const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/active?adminId=${adminId}&type=${type}&productId=${pdId}&active=${active}`,"" ,config)
+      const response = await axios.put(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/active?adminId=${adminId}&type=${type}&productId=${pdId}&active=${active}`, "", config)
       if (response.status === 200) {
         setMessageType("success")
         setMessage("Status Update")
@@ -216,7 +216,8 @@ const AllProduct = ({ sidebarOpen }) => {
         ) : ("")
       }
       <div className={`all-product ${sidebarOpen ? 'sidebar-open' : ''}`}>
-        <div className='form'>
+        <h2>All Products</h2>
+        {/* <div className='form'>
           <div className="row">
             <div className="col-sm-3">
               <div className="form-group">
@@ -251,10 +252,41 @@ const AllProduct = ({ sidebarOpen }) => {
               </div>
             </div>
           </div>
+        </div> */}
+        <div class="row align-items-center">
+          <div class="col-12 col-md-3 mb-3 mb-md-0">
+            <div className="form-group">
+              <label>Search Products</label>
+              <input type="text" placeholder="Search Products By Name and Description" className='form-control' value={searchQuery} name="search" onChange={(e) => handleSearch(e.target.value)} />
+            </div>
+          </div>
+          <div class="col-12 col-md-3 mb-3 mb-md-0">
+            <div className="form-group">
+              <label>Price starts from </label>
+              <input type="number" placeholder="Enter Starting Price" className='form-control' value={startPrice} onChange={(e) => handleStartPrice(e.target.value)} />
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div className="form-group">
+              <label>To</label>
+              <input type="number" placeholder="Enter Last Price" className='form-control' value={lastPrice} onChange={(e) => handleLastPrice(e.target.value)} />
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+          <div className="form-group">
+                <label>Sort</label>
+                <select className='form-control' value={expired} onChange={(e) => handleExpireChange(e.target.value)}>
+                  <option value={""}>All</option>
+                  <option value={true}>Expired</option>
+                  <option value={false}>Not Expired</option>
+
+                </select>
+              </div>
+          </div>
         </div>
 
-        <div className="table-responsive-lg">
-          <table className="table data-tables">
+        <div className="table-responsive">
+        <table className="table custom-table-header ">
             <thead>
               <tr>
                 <th>ID</th>
@@ -353,8 +385,8 @@ const AllProduct = ({ sidebarOpen }) => {
 
           </table>
         </div>
-      </div>
       <Pagination count={totalPages} variant="outlined" color="secondary" onChange={handlePageChange} />
+      </div>
 
       <Dialog
         open={open}

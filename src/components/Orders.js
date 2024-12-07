@@ -42,7 +42,7 @@ const Orders = ({ sidebarOpen }) => {
     const [modalShow, setModalShow] = useState(false);
     const [invo, setInvo] = useState(false)
     const [directModal, setDirectModal] = useState(false)
-    const[onlineModal,setOnlineModal] = useState(false)
+    const [onlineModal, setOnlineModal] = useState(false)
     const [limit, setLimit] = useState(5);
     const [offset, setOffset] = useState(0)
     const [totalPages, setTotalPages] = useState(0);
@@ -76,10 +76,10 @@ const Orders = ({ sidebarOpen }) => {
         try {
             const config = {
                 headers: {
-                  'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
                 }
-              };
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${""}&limit=${limit}&offset=${offset}&ordertype=${ordertype}&adminId=${adminId}`,config)
+            };
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${""}&limit=${limit}&offset=${offset}&ordertype=${ordertype}&adminId=${adminId}`, config)
             if (response.status === 200) {
                 setloader(true)
                 setOrders(response.data.data)
@@ -107,10 +107,10 @@ const Orders = ({ sidebarOpen }) => {
                     try {
                         const config = {
                             headers: {
-                              'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                                'Authorization': `Bearer ${adminToken}` // Bearer Token Format
                             }
-                          };
-                        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${searchQuery}&ordertype=${ordertype}&adminId=${adminId}`,config)
+                        };
+                        const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorders?type=${type}&shopId=${shop_id}&status=${true}&key=${searchQuery}&ordertype=${ordertype}&adminId=${adminId}`, config)
                         if (response.status === 200) {
                             setloader(true)
                             setOrders(response.data.data)
@@ -187,10 +187,10 @@ const Orders = ({ sidebarOpen }) => {
             }
             const config = {
                 headers: {
-                  'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+                    'Authorization': `Bearer ${adminToken}` // Bearer Token Format
                 }
-              };
-            const result = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorder/${id}?adminId=${adminId}`,config)
+            };
+            const result = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/orders/getorder/${id}?adminId=${adminId}`, config)
             if (result.status === 200) {
                 setViewData(result.data.data)
             }
@@ -213,7 +213,7 @@ const Orders = ({ sidebarOpen }) => {
         navigate("/manualorders")
     }
 
-    const handleOnlineopenModal = ()=>{
+    const handleOnlineopenModal = () => {
         setOnlineModal(true)
     }
 
@@ -232,7 +232,7 @@ const Orders = ({ sidebarOpen }) => {
             }
             <div className={`all-product ${sidebarOpen ? 'sidebar-open' : ''}`}>
                 <h3>Manage Orders</h3>
-                <div className='form'>
+                {/* <div className='form'>
                     <div className="row align-items-center">
                         <div className="col-sm-3">
                             <div className="form-group">
@@ -276,16 +276,67 @@ const Orders = ({ sidebarOpen }) => {
                             </div>
                         </div>
                     </div>
+                </div> */}
+                <div className="row align-items-center">
+                    <div className="col-12 col-md-3 mb-3 mb-md-0">
+                    <div className="form-group">
+                                <label>Search Orders</label>
+                                <input type="text" placeholder="Search orders by orderId" className='form-control' value={searchQuery} name="search" onChange={(e) => handleSearch(e.target.value)} />
+                            </div>
+                    </div>
+
+                    {/* Order Type */}
+                    <div className="col-12 col-md-3 mb-3 mb-md-0">
+                    <div className="form-group">
+                                <label>Order Type</label>
+                                <select className='form-control' value={ordertype} onChange={(e) => handleOrderTypeChange(e.target.value)}>
+                                    <option value="">All Orders</option>
+                                    <option value="direct">Direct Order</option>
+                                    <option value="ordered">Ordered</option>
+                                </select>
+                            </div>
+                    </div>
+
+                    {/* Delivery Status */}
+                    <div className="col-12 col-md-3 mb-3 mb-md-0">
+                        <div className="form-group">
+                        <button type="button" className='btnSubmit' onClick={handleOpenModal}>+Take Offline Order</button>
+                        </div>
+                    </div>
+
+                    {/* Zomato/Swiggy/Zepto Orders */}
+                    <div className="col-12 col-md-3">
+                        <div className="d-flex justify-content-start">
+                            <div className="form-group">
+                            <button type="button" className='btnSubmit position-relative' onClick={handlReqOrder}>Online Orders
+                                {
+                                    totaReqorders > 0 && (
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {totaReqorders}
+                                </span>
+
+                                    )
+                                }
+                            </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Additional Columns */}
+                    {/* Payment Mode */}
+                    <div className="col-12 col-md-3 mt-3">
+                        <div className="form-group">
+                        <div className="form-group">
+                            <button type="button" className='btnSubmit' onClick={handleOnlineopenModal}>Zomato /Swiggy / Zepto Orders</button>
+                            </div>
+                        </div>
+                    </div>
+
+            
                 </div>
 
-
-
-
-
-
-
                 <div className="table-responsive">
-                    <table className="table data-tables table-hover">
+                <table className="table custom-table-header">
                         <thead>
                             <tr>
                                 <th>Order ID</th>
@@ -443,7 +494,7 @@ const Orders = ({ sidebarOpen }) => {
 
             {
                 onlineModal ? (
-                    <AddManualOnlineOrders onlineModal={onlineModal} setOnlineModal={setOnlineModal} setRef={setRef}/>
+                    <AddManualOnlineOrders onlineModal={onlineModal} setOnlineModal={setOnlineModal} setRef={setRef} />
                 ) : ("")
             }
 

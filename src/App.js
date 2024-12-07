@@ -132,16 +132,7 @@ function App() {
             }
 
           </div>
-          <div className="admin-bottom">
-            {
-              exactadminId === "" || exactadminId === null || exactShopId === "" || exactShopId === null || exactType === "" || exactType === null ? (
-                ""
-              ) : (
-                <BottomBar />
-              )
-            }
 
-          </div>
 
           <div className="admin-content">
          
@@ -200,6 +191,16 @@ function App() {
 
 
       </div >
+      <div className="admin-bottom">
+            {
+              exactadminId === "" || exactadminId === null || exactShopId === "" || exactShopId === null || exactType === "" || exactType === null ? (
+                ""
+              ) : (
+                <BottomBar />
+              )
+            }
+
+          </div>
     </>
   );
 }
