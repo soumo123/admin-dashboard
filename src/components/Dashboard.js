@@ -143,39 +143,6 @@ const Dashboard = () => {
                 <div class="stat-label">Orders</div>
               </div>
             </div>
-
-            {/* <div class="section">
-              <h2>Revenue</h2>
-              <div className=''>
-                Year : 
-                 
-                <select value={year} onChange={(e)=>setYear(e.target.value)}>
-                  <option value="2024">2024</option>
-                  <option value="2025">2025</option>
-                  <option value="2026">2026</option>
-                  <option value="2027">2027</option>
-                  <option value="2028">2028</option>
-
-                </select>
-              </div>
-          
-              {
-                ordersGraph && ordersGraph.length > 0 ? (<LineGraphRevenue ordersGraph={ordersGraph} />) : ("")
-              }
-            </div>
-            <div class="section">
-              <h2>Orders</h2>
-              
-
-
-              {
-                ordersGraph && ordersGraph.length > 0 ? (<LineGraph ordersGraph={ordersGraph} />) : ("")
-              }
-
-
-            </div> */}
-
-
           </div>
         </div>
 

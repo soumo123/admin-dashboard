@@ -71,7 +71,7 @@ const Expiredproducts = ({ sidebarOpen }) => {
         if (agId) {
             getAllExpiredProducts()
         }
-    }, [agId])
+    }, [agId,limit,offset])
 
     console.log("expireee", expireproducts)
 
@@ -96,6 +96,7 @@ const Expiredproducts = ({ sidebarOpen }) => {
                 </div> */}
                 <div class="row align-items-center">
                     <div class="col-12 col-md-4 mb-3 mb-md-0">
+                
                         <label className='fw-bold'>Select Agent</label>
                         <select class="form-control" value={agId} onChange={(e) => handleSelectAgentId(e.target.value)} >
                             <option value="">Select agent id</option>

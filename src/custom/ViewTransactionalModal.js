@@ -33,80 +33,105 @@ const ViewTransactionalModal = ({ viewTranModal, setVewTranMiodal, agId, shop_id
     shop_id,
     transactionId])
 
-// console.log("tranData",tranData)
+  // console.log("tranData",tranData)
   return (
     <>
       <Modal
         show={viewTranModal}
         size="lg"
+        onHide={handleClose}
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <Modal.Header>
+        <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             View Transaction
           </Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ maxHeight: '80vh', overflowY: 'auto' }}>
-          <div class="row">
-          <div class="col">
-            <div class="">
-             {
-              tranData && tranData ? (
-              <>
-              {
-                tranData?.products?.map((ele)=>(
-                  <>
-                  <p>Product Name : {ele.productName}</p>
-                  <div className=''>
-                  {
-                    ele?.weight?.map((item)=>(
-                      <span>
-                      <p>Weight :{item.weight}</p>
-                      <p>Quantity : {item.quantity}</p>
-                      <p>Price :  ₹ {item.price}</p>
+          <div className="row">
+            <div className="col-12">
+              {tranData ? (
+                <>
+                  <div className="mb-4">
+                    <h5 className="text-primary fw-bold mb-3">Products</h5>
+                    {tranData.products?.map((product, index) => (
+                      <div
+                        key={index}
+                        className="mb-3 border-bottom pb-3"
+                        style={{ paddingBottom: "1rem" }}
+                      >
+                        <h6 className="fw-bold">{product.productName}</h6>
+                        <div className="ms-3">
+                          {product.weight?.map((item, itemIndex) => (
+                            <div
+                              key={itemIndex}
+                              className="d-flex justify-content-between align-items-center mb-2"
+                            >
+                              <span>Weight: {item.weight} {product.unit}</span>
+                              <span>Quantity: {item.quantity}</span>
+                              <span className="text-success fw-semibold">
+                                Price: ₹ {item.price}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {tranData.returncost > 0 && (
+                    <h5 className="text-danger mb-3">
+                      Return Cost: ₹ {tranData.returncost}
+                    </h5>
+                  )}
+
+                  <div className="border-top pt-3">
+                    <h5>
+                      Total Price:{" "}
+                      <span className="text-success fw-bold">₹ {tranData.totalAmount}</span>
+                    </h5>
+                    <h5>
+                      Balance:{" "}
+                      <span className="text-warning fw-bold">₹ {tranData.balance}</span>
+                    </h5>
+                    <h5>
+                      Paid Status:{" "}
+                      <span
+                        className={`fw-bold ${tranData.paid ? "text-success" : "text-danger"
+                          }`}
+                      >
+                        {tranData.paid ? "Paid" : "Not Paid"}
                       </span>
-                    ))
-                  }
-                   </div>
-                 
-                  </>
-                ))
-              }
-              
-              </>
-              
-            ):("")
-             }
-             {
-              tranData?.returncost===0 ? (""):(
-              <h3>Return Cost :  ₹ {tranData?.returncost}</h3>
+                    </h5>
+                  </div>
 
-              ) 
-             }
-              <h3>Total Price :  ₹ {tranData?.totalAmount}</h3>
-              <h3>Balance :  ₹ {tranData?.balance}</h3>
-              <h3>Paid :  ₹ {tranData?.paid ? "Paid" :"Not Paid"}</h3>
-
-              <div className='history'>
-                {
-                  tranData?.paymentInfo?.map((ele)=>(
-                    <div className=''>
-
-                    <p>Pay - {ele.pay}</p>
-                    <p>Date - {ele.date}</p>
-</div>
-                  ))
-                }
-              </div>
+                  <div className="mt-4">
+                    <h5 className="text-primary fw-bold mb-3">Payment History</h5>
+                    {tranData.paymentInfo?.map((payment, index) => (
+                      <div
+                        key={index}
+                        className="d-flex justify-content-between border-bottom py-2"
+                      >
+                        <span>Amount Paid: ₹ {payment.pay}</span>
+                        <span className="text-muted">{payment.date}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <p className="text-center text-muted">No Transaction Data Available</p>
+              )}
             </div>
-          </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleClose}>Close</Button>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
+
     </>
   )
 }

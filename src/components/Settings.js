@@ -139,7 +139,7 @@ const Settings = () => {
         file: null
     })
 
-console.log("fbfb",fb)
+    console.log("fbfb", fb)
 
     const handleImageChange = async (e) => {
         e.preventDefault()

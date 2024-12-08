@@ -298,17 +298,17 @@ const Orders = ({ sidebarOpen }) => {
                     </div>
 
                     {/* Delivery Status */}
-                    <div className="col-12 col-md-3 mb-3 mb-md-0">
+                    <div className="col-4 col-md-3">
                         <div className="form-group">
-                        <button type="button" className='btnSubmit' onClick={handleOpenModal}>+Take Offline Order</button>
+                        <button type="button" className='btnSubmit' onClick={handleOpenModal}>Offline orders</button>
                         </div>
                     </div>
 
                     {/* Zomato/Swiggy/Zepto Orders */}
-                    <div className="col-12 col-md-3">
+                    <div className="col-4 col-md-3">
                         <div className="d-flex justify-content-start">
                             <div className="form-group">
-                            <button type="button" className='btnSubmit position-relative' onClick={handlReqOrder}>Online Orders
+                            <button type="button" className='btnSubmit position-relative' onClick={handlReqOrder}>Request Orders
                                 {
                                     totaReqorders > 0 && (
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -324,10 +324,10 @@ const Orders = ({ sidebarOpen }) => {
 
                     {/* Additional Columns */}
                     {/* Payment Mode */}
-                    <div className="col-12 col-md-3 mt-3">
+                    <div className="col-4 col-md-3">
                         <div className="form-group">
                         <div className="form-group">
-                            <button type="button" className='btnSubmit' onClick={handleOnlineopenModal}>Zomato /Swiggy / Zepto Orders</button>
+                            <button type="button" className='btnSubmit' onClick={handleOnlineopenModal}>Online orders</button>
                             </div>
                         </div>
                     </div>
@@ -335,7 +335,7 @@ const Orders = ({ sidebarOpen }) => {
             
                 </div>
 
-                <div className="table-responsive">
+                <div className="table-responsive order-table">
                 <table className="table custom-table-header">
                         <thead>
                             <tr>
@@ -384,16 +384,16 @@ const Orders = ({ sidebarOpen }) => {
                                                         <td>₹ {ele.orderedPrice?.toFixed(2)}</td>
                                                         <td>{ele.paid === true ? "Paid" : "Not Paid"}</td>
                                                         <td>{ele.status === 0 ? (<>
-                                                            <button type="button" class="btn btn-accept" onClick={() => handleOpen("Are you sure want to accept the order ?", ele.orderId, 1)}>Accept</button>
-                                                            <button type="button" class="btn btn-reject" onClick={() => handleOpen("Are you sure want to reject the order ?", ele.orderId, -1)}>Reject</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-success" onClick={() => handleOpen("Are you sure want to accept the order ?", ele.orderId, 1)}>Accept</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-danger" onClick={() => handleOpen("Are you sure want to reject the order ?", ele.orderId, -1)}>Reject</button>
 
                                                         </>) : ele.status === 1 ? (
 
-                                                            <button type="button" class="btn btn-process" onClick={() => handleOpen("Are you sure want to process the order ?", ele.orderId, 2)}><p style={{ fontSize: "10px", marginTop: "12px" }}>Start Processing</p></button>
+                                                            <button type="button" class="btn btn-sm btn-outline-warning" onClick={() => handleOpen("Are you sure want to process the order ?", ele.orderId, 2)}>Processing</button>
 
-                                                        ) : ele.status === 2 ? (<button type="button" class="btn btn-process" onClick={() => handleOpen("Processing Complete ?", ele.orderId, 3)}><p style={{ fontSize: "10px", marginTop: "12px" }}>Processing...</p></button>) : ele.status === 3 ?
+                                                        ) : ele.status === 2 ? (<button type="button" class="btn btn-sm btn-outline-warning" onClick={() => handleOpen("Processing Complete ?", ele.orderId, 3)}><p style={{ fontSize: "10px", marginTop: "12px" }}>Processing...</p></button>) : ele.status === 3 ?
 
-                                                            (<button type="button" class="btn btn-delivery" onClick={() => handleOpen("Ready for delivery ?", ele.orderId, 4)}><p style={{ fontSize: "10px", marginTop: "12px" }}>Ready for delicvery</p></button>) : ele.status === -1 ? (<p style={{ fontSize: "15px", marginTop: "12px", color: "red" }}>Rejected</p>) : (<p style={{ color: "#1F932B" }}>Complete</p>)
+                                                            (<button type="button" class="btn btn-outline-primary" onClick={() => handleOpen("Ready for delivery ?", ele.orderId, 4)}>Ready for delicvery</button>) : ele.status === -1 ? (<p style={{ fontSize: "15px", marginTop: "12px", color: "red" }}>Rejected</p>) : (<p style={{ color: "#1F932B" }}>Complete</p>)
                                                         }</td>
                                                         <td class="text-center">
                                                             <span className="view-invoice fs-xs" data-bs-toggle="tooltip"

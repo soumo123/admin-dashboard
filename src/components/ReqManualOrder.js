@@ -271,7 +271,7 @@ const ReqManualOrder = () => {
 
     useEffect(() => {
         getOrders()
-    }, [ref])
+    }, [ref,limit,offset])
 
     return (
         <>

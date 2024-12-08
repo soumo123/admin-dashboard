@@ -112,10 +112,10 @@ const Transaction = () => {
     try {
       const config = {
         headers: {
-            'Authorization': `Bearer ${adminToken}` // Bearer Token Format
+          'Authorization': `Bearer ${adminToken}` // Bearer Token Format
         }
-    }
-      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=1&adminId=${adminId}`,config);
+      }
+      const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/inventory/get_al_agents?shop_id=${shop_id}&key=&statustype=1&adminId=${adminId}`, config);
       if (response.status === 200) {
         setAgentData(response.data.data);
       } else {
@@ -187,8 +187,8 @@ const Transaction = () => {
 
   useEffect(() => {
 
-      getTrsanctions()
-   
+    getTrsanctions()
+
   }, [ref, agId])
 
 
@@ -201,130 +201,164 @@ const Transaction = () => {
       }
       <h1>Transaction Details</h1>
 
-      <div>
-        <div class="row">
-          <div className='col-md-3'>
-            <label style={{ fontSize: "18px", fontWeight: "600" }}>Distributor Name : </label>
-            <select class="form-control" value={agId} onChange={(e) => handleSelectAgentId(e.target.value)} >
+      <div className="container-fluid">
+        <div className="row g-3 align-items-center">
+          <div className="col-12 col-md-6 col-lg-3">
+            <label className="fw-bold fs-6">Distributor Name:</label>
+            <select
+              className="form-control"
+              value={agId}
+              onChange={(e) => handleSelectAgentId(e.target.value)}
+            >
               <option value="">Select agent id</option>
-
-              {
-                agentData && agentData.map((ele) => (
-                  <option key={ele.agentId} value={ele.agentId}>{`${ele.agent_name}(${ele.agentId})`}</option>
-
-                ))
-              }
+              {agentData &&
+                agentData.map((ele) => (
+                  <option key={ele.agentId} value={ele.agentId}>
+                    {`${ele.agent_name}(${ele.agentId})`}
+                  </option>
+                ))}
             </select>
           </div>
-          <div className='col-md-2'>
-            <label>Total Unpaid Transaction :</label>
-            <h5>{totalUnpaid}</h5>
+
+          <div className="col-6 col-md-4 col-lg-2">
+            <label className="fw-semibold fs-6">Total Unpaid Transaction:</label>
+            <h5 className="text-primary">{totalUnpaid}</h5>
           </div>
 
-          <div className='col-md-2'>
-            <p>Total paid Transaction :</p>
-            <h5>{totalpaid}</h5>
-
-
+          <div className="col-6 col-md-4 col-lg-2">
+            <label className="fw-semibold fs-6">Total Paid Transaction:</label>
+            <h5 className="text-success">{totalpaid}</h5>
           </div>
-          <div className='col-md-1'>
-            <p>Total Bill Amount :</p>
+
+          <div className="col-6 col-md-4 col-lg-1">
+            <label className="fw-semibold fs-6">Total Bill Amount:</label>
             <h5>₹ {total}</h5>
-
           </div>
-          <div className='col-md-2'>
-            <p>Total Paid Bill Amount:</p>
-            <h5>₹ {totalpaidAmount}</h5>
 
+          <div className="col-6 col-md-4 col-lg-2">
+            <label className="fw-semibold fs-6">Total Paid Bill Amount:</label>
+            <h5 className="text-success">₹ {totalpaidAmount}</h5>
           </div>
-          <div className='col-md-2'>
-            <p>Total unpaid Bill Amount :</p>
-            <h5>₹ {totalUnpaidAmount}</h5>
 
+          <div className="col-6 col-md-4 col-lg-2">
+            <label className="fw-semibold fs-6">Total Unpaid Bill Amount:</label>
+            <h5 className="text-danger">₹ {totalUnpaidAmount}</h5>
           </div>
         </div>
 
-
-        {
-          Object.keys(transactions).length ? (
-            <div className="table-responsive">
-            <table className="transaction-table table data-tables" style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 10px' }}>
-              <thead>
-                <tr>
-                  <th>Transaction Id</th>
-                  <th>Distributor Id</th>
-                  <th>Distributor Name</th>
-                  <th>Total Amount</th>
-                  <th>Pay</th>
-                  <th>Remaining</th>
-                  <th>Paid</th>
-                  <th>Transaction Date</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {renderTransactionRow(transactions.lastTransaction)}
-                {expanded && transactions.remainingTransactions.length > 0 ? (
-                  transactions.remainingTransactions.map(renderTransactionRow)
-                ) : (
-                  expanded && (
-                    <tr>
-                      <td colSpan="9" style={{ backgroundColor: '#B56565', color: 'white', textAlign: 'center' }}>
-                        No previous transactions found
-                      </td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
+        <div className="row mt-4">
+          {Object.keys(transactions).length ? (
+            // Scrollable table for mobile
+            <div className="table-container">
+              <table className="table custom-table-header table-striped table-hover">
+                <thead className="table-dark">
+                  <tr>
+                    <th>Transaction Id</th>
+                    <th>Distributor Id</th>
+                    <th>Distributor Name</th>
+                    <th>Total Amount</th>
+                    <th>Pay</th>
+                    <th>Remaining</th>
+                    <th>Paid</th>
+                    <th>Transaction Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {renderTransactionRow(transactions.lastTransaction)}
+                  {expanded && transactions.remainingTransactions.length > 0 ? (
+                    transactions.remainingTransactions.map(renderTransactionRow)
+                  ) : (
+                    expanded && (
+                      <tr>
+                        <td
+                          colSpan="9"
+                          style={{
+                            backgroundColor: 'rgb(157 123 123)',
+                            color: 'white',
+                            textAlign: 'center',
+                          }}
+                        >
+                          No previous transactions found
+                        </td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
             </div>
           ) : (
-            <div className="container">
-              <div className="row">
-                <div className="col-12">
-                  <div className="text-center" style={{ fontSize: "18px", fontWeight: "600" }}>
-                    No Transactions Found
-                  </div>
-                </div>
-              </div>
+            <div className="container text-center py-4">
+              <div className="text-muted fs-5 fw-semibold">No Transactions Found</div>
             </div>
-
-          )
-        }
-
+          )}
+        </div>
       </div>
+
+
 
       <Modal
         show={show}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
+        onHide={handleClose} // Ensures the modal closes on clicking the cross icon
+        className="custom-modal"
       >
-        <Modal.Header>
-          <Modal.Title id="contained-modal-title-vcenter">
-            <PaidIcon /> Amount Deposit
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter" className="d-flex align-items-center">
+            <PaidIcon className="me-2 text-primary" />
+            <span>Amount Deposit</span>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className='col'>
-            <div className='col-md-4'>
-              <label>Total Amount</label>
-              <input class="form-control" type="number" value={totalAmount} readonly />
+          <div className="row g-3">
+            <div className="col-12 col-md-4">
+              <label className="form-label fw-bold">Total Amount</label>
+              <input
+                className="form-control"
+                type="number"
+                value={totalAmount}
+                readOnly
+                style={{ backgroundColor: "#f9f9f9" }}
+              />
             </div>
-            <div className='col-md-4'>
-              <label>Balance</label>
-              <input class="form-control" type="number" value={totalBalance - pay} readonly />
+            <div className="col-12 col-md-4">
+              <label className="form-label fw-bold">Balance</label>
+              <input
+                className="form-control"
+                type="number"
+                value={totalBalance - pay}
+                readOnly
+                style={{ backgroundColor: "#f9f9f9" }}
+              />
             </div>
-            <div className='col-md-4'>
-              <label>Current Deposit</label>
-              <input class="form-control" type="number" value={pay} onChange={(e) => hamdlePayChange(e.target.value)} />
+            <div className="col-12 col-md-4">
+              <label className="form-label fw-bold">Current Deposit</label>
+              <input
+                className="form-control"
+                type="number"
+                value={pay}
+                onChange={(e) => hamdlePayChange(e.target.value)}
+              />
             </div>
           </div>
-          <Button className="mt-3" type="submit" onClick={updatePayemnt} disabled={loader ? true : false}>{loader ? "Processong.." : "Pay"}</Button>
+          <div className="d-flex justify-content-end mt-4">
+            <button
+              type="button"
+              className="btnSubmit"
+              onClick={updatePayemnt}
+              disabled={loader}
+            >
+              {loader ? "Processing..." : "Pay"}
+            </button>
+          </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={handleClose}>Close</Button>
-        </Modal.Footer>
+        {/* <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer> */}
       </Modal>
 
       {

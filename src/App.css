@@ -237,16 +237,16 @@ tbody tr {
   width: 84px;
   height: 30px;
 
-  background: #1F932B;
+  background: #1F932B !important;
   border-radius: 8px;
   color: #fff;
 
 }
-button.btn.btn-accept:hover {
+/* button.btn.btn-accept:hover {
   background: #09b31a;
   border-radius: 8px;
   color: #fff;
-}
+} */
 
 .btn-reject {
   /* 00 Primary button */
