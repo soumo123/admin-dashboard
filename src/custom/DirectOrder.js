@@ -16,16 +16,16 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
-    
+
     const dispatch = useDispatch()
     const [products, setProducts] = useState([]);
     const [weight, setWeight] = useState([]);
     const [selectedId, setSelectedId] = useState("");
     const [selectedWeight, setSelectedWeight] = useState("");
     const [price, setPrice] = useState("");
-    const[purchasePrice,setPurchasePrice]=useState(0)
-    const[maxQuantity,setMaxQuantity] = useState(0)
-    const[quanErr,setQuanerr] = useState(false)
+    const [purchasePrice, setPurchasePrice] = useState(0)
+    const [maxQuantity, setMaxQuantity] = useState(0)
+    const [quanErr, setQuanerr] = useState(false)
     const [quantity, setQuantity] = useState(1);
     const [orderItems, setOrderItems] = useState([]);
     const adminId = localStorage.getItem("adminId");
@@ -53,7 +53,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
     const [loader, setLoader] = useState(false)
     const [scannedCode, setScannedCode] = useState('');
 
-  const adminToken = localStorage.getItem("adminToken")
+    const adminToken = localStorage.getItem("adminToken")
 
     let totalPrice = 0
     const handleClose = () => {
@@ -127,7 +127,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                     'Authorization': `Bearer ${adminToken}` // Bearer Token Format
                 }
             }
-            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=&startprice=&lastprice=&limit=${10000000}&offset=${0}&expired=false&action=${1}`,config);
+            const response = await axios.get(`${process.env.REACT_APP_PRODUCTION_URL}/api/v1/product/get_admin_products?adminId=${adminId}&type=${type}&keyword=&startprice=&lastprice=&limit=${10000000}&offset=${0}&expired=false&action=${1}`, config);
             if (response.status === 200) {
                 setProducts(response.data.data);
             }
@@ -143,7 +143,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
     const handleProductChange = (e) => {
         const selectedProductId = e.target.value;
-        console.log("selectedProductId",selectedProductId)
+        console.log("selectedProductId", selectedProductId)
         setSelectedId(selectedProductId);
 
         if (selectedProductId) {
@@ -176,12 +176,12 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
         setSelectedWeight(selectedWeight);
 
         if (selectedId) {
-            console.log("selectedId",selectedId)
+            console.log("selectedId", selectedId)
             const selectedProduct = products.find(p => p.productId === selectedId);
 
             if (selectedProduct) {
                 const weightInfo = selectedProduct.weight.find(w => Number(w.weight) === Number(selectedWeight));
-                console.log("weightInfo",weightInfo)
+                console.log("weightInfo", weightInfo)
                 if (weightInfo) {
                     setMaxQuantity(weightInfo.stock)
                     setPrice(weightInfo.price);
@@ -201,7 +201,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
 
     };
 
-    console.log("weight",weight)
+    console.log("weight", weight)
 
     const handleQuantityChange = (e) => {
         setAddErr(false)
@@ -210,21 +210,21 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
         if (e.target.value === 0 || "") {
             setQuantity(1)
         } else {
-            if(e.target.value>maxQuantity){
+            if (e.target.value > maxQuantity) {
                 setQuantity(e.target.value)
                 setQuanerr(true)
-            }else{
+            } else {
                 setQuantity(e.target.value);
             }
         }
     };
 
     const handleSaveProduct = () => {
-        console.log("quanErr",quanErr)
-        if (selectedId && selectedWeight && quantity>=1 && price) {
-            if(!quanErr){
+        console.log("quanErr", quanErr)
+        if (selectedId && selectedWeight && quantity >= 1 && price) {
+            if (!quanErr) {
                 const selectedProduct = products.find(p => p.productId === selectedId);
-                console.log("selectedProduct",selectedProduct)
+                console.log("selectedProduct", selectedProduct)
                 const orderItem = {
                     productId: selectedId,
                     name: selectedProduct.name,
@@ -233,7 +233,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                     thumbImage: selectedProduct.thumbnailimage,
                     weight: Number(selectedWeight),
                     price: Number(price),
-                    purchasePrice:Number(purchasePrice),
+                    purchasePrice: Number(purchasePrice),
                     itemCount: Number(quantity),
                     totalPrice: price * quantity,
                 };
@@ -245,10 +245,10 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                 setPurchasePrice(0)
                 setPrice("");
                 setQuantity(1);
-            }else{
-               setQuanerr(true) 
+            } else {
+                setQuanerr(true)
             }
-            
+
         } else {
             setAddErr(true)
             return
@@ -352,18 +352,73 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
         return ((orderedPrice + cgstAmount + sgstAmount + Number(extraPrice)) - ((orderedPrice + cgstAmount + sgstAmount) * Number(discount) / 100));
     };
 
+    // const handleBarcodeInput = (event) => {
+    //     console.log("eventevent",event)
+    //     const scannedValue = event.key; // Capture the input value
+    //     console.log("scannedValuescannedValue",scannedValue)
+    //     // Check if the key is numeric to capture barcode input
+    //     if (/^[0-9a-zA-Z]+$/.test(scannedValue)) {
+    //         setScannedCode((prev) => prev + scannedValue);
+    //     }
 
-    const handleBarcodeInput = (event) => {
-        const scannedValue = event.key; // Capture the input value
+    //     // If the Enter key is pressed, process the scanned code
+    //     if (event.key === 'Enter') {
+    //         console.log("scannedValue",scannedCode)
+    //         const product = products.find((ele) => ele.productId === scannedCode);
+    //         console.log("product11",product)
+    //         if (product) {
+    //             setSelectedId(product.productId);// Automatically select the product
+    //             setWeight(product.weight);
+    //             setUnit(product.unit);
+    //             setSelectedWeight("");
+    //             setPrice("");
+    //         } else {
+    //             setWeight([]);
+    //             setUnit("");
+    //             setSelectedWeight("");
+    //             setPrice("");
+    //         }
+    //         setScannedCode(''); // Clear the scanned code for the next scan
+    //     }
+    // };
 
-        // Check if the key is numeric to capture barcode input
-        if (/^[0-9a-zA-Z]+$/.test(scannedValue)) {
-            setScannedCode((prev) => prev + scannedValue);
-        }
+    // useEffect(() => {
+    //     window.addEventListener('keydown', handleBarcodeInput);
 
-        // If the Enter key is pressed, process the scanned code
-        if (event.key === 'Enter') {
-            const product = products.find((ele) => ele.productId === scannedCode);
+    //     return () => {
+    //         window.removeEventListener('keydown', handleBarcodeInput);
+    //     };
+    // }, [scannedCode, products]);
+
+
+
+
+
+    useEffect(() => {
+        let inputBuffer = "";
+        let timeout;
+
+        const handleBarcodeInput = (event) => {
+            clearTimeout(timeout);
+
+            // Check if the input is alphanumeric
+            if (/^[0-9a-zA-Z]$/.test(event.key)) {
+                inputBuffer += event.key; // Append the key to the buffer
+            }
+
+            // Process input after a short delay
+            timeout = setTimeout(() => {
+                if (event.key === "Enter") {
+                    processScannedCode(inputBuffer);
+                    inputBuffer = ""; // Reset buffer
+                }
+            }, 200); // Adjust delay if needed
+        };
+
+        const processScannedCode = (code) => {
+            setScannedCode(code);
+            const product = products.find((item) => item.productId === code);
+            // setSelectedProduct(product || null);
             if (product) {
                 setSelectedId(product.productId);// Automatically select the product
                 setWeight(product.weight);
@@ -376,19 +431,15 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                 setSelectedWeight("");
                 setPrice("");
             }
-            setScannedCode(''); // Clear the scanned code for the next scan
-        }
-    };
+        };
 
-    useEffect(() => {
-        window.addEventListener('keydown', handleBarcodeInput);
+        window.addEventListener("keydown", handleBarcodeInput);
 
         return () => {
-            window.removeEventListener('keydown', handleBarcodeInput);
+            window.removeEventListener("keydown", handleBarcodeInput);
+            clearTimeout(timeout);
         };
-    }, [scannedCode, products]);
-
-
+    }, [products]);
 
 
     useEffect(() => {
@@ -455,10 +506,10 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                             <label for="inputEmail4" class="form-label">Select Quantity</label>
                             <input type="number" class="form-control" placeholder="Quantity" aria-label="Quantity" min={1} max={maxQuantity} value={quantity} onChange={handleQuantityChange} />
                             {
-                            quanErr ? (
-                                <p style={{ color: 'red' }}>* maximum {maxQuantity} numbers can add</p>
-                            ) : ("")
-                        }
+                                quanErr ? (
+                                    <p style={{ color: 'red' }}>* maximum {maxQuantity} numbers can add</p>
+                                ) : ("")
+                            }
                         </div>
                         <div className='col'>
 
@@ -541,7 +592,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                             {orderItems.map((item, index) => (
                                 <div key={index}>
                                     <p>{item.name} ({item.productId}) - {item.weight} {unit} - Quantity: {item.itemCount} Pieces- Total Price: ₹ {item.totalPrice}
-                                        <button className="btn btn-danger" onClick={() => handleRemoveItem(item.productId,item.weight)}>
+                                        <button className="btn btn-danger" onClick={() => handleRemoveItem(item.productId, item.weight)}>
                                             <CloseIcon />
                                         </button>
                                     </p>

@@ -400,42 +400,91 @@ const AddManualOnlineOrders = ({ onlineModal, setOnlineModal, setRef }) => {
     }
 
     console.log("platName", platName);
-    const handleBarcodeInput = (event) => {
-        const scannedValue = event.key; // Capture the input value
+    // const handleBarcodeInput = (event) => {
+    //     const scannedValue = event.key; // Capture the input value
 
-        // Check if the key is numeric to capture barcode input
-        if (/^[0-9a-zA-Z]+$/.test(scannedValue)) {
-            setScannedCode((prev) => prev + scannedValue);
-        }
+    //     // Check if the key is numeric to capture barcode input
+    //     if (/^[0-9a-zA-Z]+$/.test(scannedValue)) {
+    //         setScannedCode((prev) => prev + scannedValue);
+    //     }
 
-        // If the Enter key is pressed, process the scanned code
-        if (event.key === 'Enter') {
-            const product = products.find((ele) => ele.productId === scannedCode);
-            if (product) {
-                setSelectedId(product.productId);// Automatically select the product
-                setWeight(product.weight);
-                setUnit(product.unit);
-                setSelectedWeight("");
-                setPrice("");
-            } else {
-                setWeight([]);
-                setUnit("");
-                setSelectedWeight("");
-                setPrice("");
-            }
-            setScannedCode(''); // Clear the scanned code for the next scan
-        }
-    };
+    //     // If the Enter key is pressed, process the scanned code
+    //     if (event.key === 'Enter') {
+    //         const product = products.find((ele) => ele.productId === scannedCode);
+    //         if (product) {
+    //             setSelectedId(product.productId);// Automatically select the product
+    //             setWeight(product.weight);
+    //             setUnit(product.unit);
+    //             setSelectedWeight("");
+    //             setPrice("");
+    //         } else {
+    //             setWeight([]);
+    //             setUnit("");
+    //             setSelectedWeight("");
+    //             setPrice("");
+    //         }
+    //         setScannedCode(''); // Clear the scanned code for the next scan
+    //     }
+    // };
 
-    useEffect(() => {
-        window.addEventListener('keydown', handleBarcodeInput);
+    // useEffect(() => {
+    //     window.addEventListener('keydown', handleBarcodeInput);
 
-        return () => {
-            window.removeEventListener('keydown', handleBarcodeInput);
-        };
-    }, [scannedCode, products]);
+    //     return () => {
+    //         window.removeEventListener('keydown', handleBarcodeInput);
+    //     };
+    // }, [scannedCode, products]);
 
 
+
+
+        useEffect(() => {
+            let inputBuffer = "";
+            let timeout;
+    
+            const handleBarcodeInput = (event) => {
+                clearTimeout(timeout);
+    
+                // Check if the input is alphanumeric
+                if (/^[0-9a-zA-Z]$/.test(event.key)) {
+                    inputBuffer += event.key; // Append the key to the buffer
+                }
+    
+                // Process input after a short delay
+                timeout = setTimeout(() => {
+                    if (event.key === "Enter") {
+                        processScannedCode(inputBuffer);
+                        inputBuffer = ""; // Reset buffer
+                    }
+                }, 200); // Adjust delay if needed
+            };
+    
+            const processScannedCode = (code) => {
+                setScannedCode(code);
+                const product = products.find((item) => item.productId === code);
+                // setSelectedProduct(product || null);
+                if (product) {
+                    setSelectedId(product.productId);// Automatically select the product
+                    setWeight(product.weight);
+                    setUnit(product.unit);
+                    setSelectedWeight("");
+                    setPrice("");
+                } else {
+                    setWeight([]);
+                    setUnit("");
+                    setSelectedWeight("");
+                    setPrice("");
+                }
+            };
+    
+            window.addEventListener("keydown", handleBarcodeInput);
+    
+            return () => {
+                window.removeEventListener("keydown", handleBarcodeInput);
+                clearTimeout(timeout);
+            };
+        }, [products]);
+    
 
 
     useEffect(() => {
