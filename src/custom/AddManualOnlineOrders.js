@@ -174,9 +174,10 @@ const AddManualOnlineOrders = ({ onlineModal, setOnlineModal, setRef }) => {
         const selectedProductId = e.target.value;
         console.log("selectedProductId", selectedProductId)
         setSelectedId(selectedProductId);
-
+     
         if (selectedProductId) {
             const product = products.find(p => p.productId === selectedProductId);
+            setDiscount(product.discount)
             if (product) {
                 setWeight(product.weight);
                 setUnit(product.unit);
@@ -187,6 +188,7 @@ const AddManualOnlineOrders = ({ onlineModal, setOnlineModal, setRef }) => {
                 setUnit("");
                 setSelectedWeight("");
                 setPrice("");
+                setDiscount(0)
             }
         } else {
             // If no product is selected, reset weight, unit, selectedWeight, and price
@@ -194,6 +196,8 @@ const AddManualOnlineOrders = ({ onlineModal, setOnlineModal, setRef }) => {
             setUnit("");
             setSelectedWeight("");
             setPrice("");
+            setDiscount(0)
+
         }
 
         setAddErr(false);
@@ -207,7 +211,7 @@ const AddManualOnlineOrders = ({ onlineModal, setOnlineModal, setRef }) => {
         if (selectedId) {
             console.log("selectedId", selectedId)
             const selectedProduct = products.find(p => p.productId === selectedId);
-
+            setDiscount(selectedProduct.discount)
             if (selectedProduct) {
                 const priceInfo = selectedProduct.platforms.find(w => Number(w.weight) === Number(selectedWeight));
                 const weightInfo = selectedProduct.weight.find(w => Number(w.weight) === Number(selectedWeight));

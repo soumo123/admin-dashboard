@@ -33,6 +33,7 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 const settings = ['Logout'];
 
 const Sidenav = () => {
@@ -142,8 +143,11 @@ const Sidenav = () => {
                             <MenuItem icon={<CategoryIcon />}>
                                 <SimpleTreeView>
                                     <TreeItem itemId="grid" label=" Products">
-                                        <Link to="/sales" style={{ textDecoration: "none", color: "black" }}>
-                                        <TreeItem itemId="grid-community" label="Deal products" />
+                                        <Link to="/addsale" style={{ textDecoration: "none", color: "black" }}>
+                                            <TreeItem itemId="grid-community" label="Add Sale" />
+                                        </Link>
+                                        <Link to="/saleproducts" style={{ textDecoration: "none", color: "black" }}>
+                                            <TreeItem itemId="grid-community1" label="Sale Products" />
                                         </Link>
                                     </TreeItem>
                                 </SimpleTreeView>
@@ -167,7 +171,7 @@ const Sidenav = () => {
 
                     {access.platforms && (<Link to="/platforms" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AirplayIcon />}>Platforms</MenuItem></Link>)}
                     {access.report && (<Link to="/reports" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<SummarizeIcon />}>Reports</MenuItem></Link>)}
-
+                   {access.templates && ( <Link to="/template" style={{ textDecoration: "none", color: "black" }}><MenuItem icon={<AddToPhotosIcon />}>Templates</MenuItem></Link>)}
 
                 </Menu>
                 <Box sx={{ flexGrow: 0 }} className="profile-icon">

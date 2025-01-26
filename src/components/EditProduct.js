@@ -94,7 +94,7 @@ const EditProduct = () => {
         imagePreviews: [],
         manufacture_date: "",
         expiry_date: "",
-        till_date:null
+        // till_date:null
     });
 
 
@@ -196,13 +196,13 @@ const EditProduct = () => {
         setFileError('');
     };
 
-    const handleDateChange = (newDate) => {
-        const formattedDate = dayjs(newDate).format('YYYY-MM-DD'); // Or any format you prefer
-        setProductData(prevState => ({
-            ...prevState,
-            till_date:formattedDate
-        }));
-      };
+    // const handleDateChange = (newDate) => {
+    //     const formattedDate = dayjs(newDate).format('YYYY-MM-DD'); // Or any format you prefer
+    //     setProductData(prevState => ({
+    //         ...prevState,
+    //         till_date:formattedDate
+    //     }));
+    //   };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -226,11 +226,11 @@ const EditProduct = () => {
             setSellingPriceMethodErr('Please enter price method');
             return;
         }
-        if(productData.till_date===null || productData.till_date==""){
-            setDateError('Please deletect the date')
-            return;
+        // if(productData.till_date===null || productData.till_date==""){
+        //     setDateError('Please deletect the date')
+        //     return;
 
-        }
+        // }
         // if (productData.selling_price_method === "offline" && !productData.price) {
         //     setPriceError('Please enter a price.');
         //     return;
@@ -1230,7 +1230,7 @@ const EditProduct = () => {
                                     <label>Is the product offered ?</label>
                                     <input class="form-check-input7" type="checkbox" name="isOffered" value={check9} checked={check9} id="flexCheckDefault7" onChange={() => setCheck9(!check9)} />
                                 </div>
-                                {
+                                {/* {
                                    check9 ? (
                                     <div className='form-group'>
                                     <label>Till Date</label>
@@ -1245,7 +1245,7 @@ const EditProduct = () => {
                                     </LocalizationProvider>
                                 </div>
                                    ) :("")
-                                }
+                                } */}
                               
 
                                 <div class="form-group">

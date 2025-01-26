@@ -39,6 +39,10 @@ import { useSelector,useDispatch } from 'react-redux';
 import Transactionreport from './components/Transactionreport';
 import BottomBar from './components/BottomBar';
 import "bootstrap/dist/css/bootstrap.min.css";
+import AddSaleProducts from './components/AddSaleProducts';
+import SaleProducts from './components/SaleProducts';
+import Templates from './components/Templates';
+import Createtemplate from './components/Createtemplate';
 
 function App() {
   const location = useLocation();
@@ -172,6 +176,12 @@ function App() {
                     {access.platforms ? (<Route exact={true} path="/platforms" element={<Platforms />} />):(<Route exact={true} path="/" element={<Orders />} />)} 
 
                     {access.report ? (<Route exact={true} path="/reports" element={<Transactionreport />} />):(<Route exact={true} path="/" element={<Orders />} />)} 
+
+                    {access.sales ? (<Route exact={true} path="/addsale" element={<AddSaleProducts />} />):(<Route exact={true} path="/" element={<Orders />} />)} 
+                    {access.sales ? (<Route exact={true} path="/saleproducts" element={<SaleProducts />} />):(<Route exact={true} path="/" element={<Orders />} />)} 
+
+                   {access.templates ? (<Route exact={true} path="/template" element={<Templates/>} />):(<Route exact={true} path="/" element={<Orders />} />)}
+                  {access.templates ? (<Route exact={true} path="/addtemplate" element={<Createtemplate/>} />):( <Route exact={true} path="/" element={<Orders />} />)} 
 
                     </Routes>
                   )

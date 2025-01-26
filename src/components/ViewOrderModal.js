@@ -131,7 +131,10 @@ const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad, se
 
                                                                 <div class="col my-auto"> <small>Price : ₹ {ele.price}</small></div>
                                                                 <div class="col my-auto"> <small>Qty : {ele.itemCount}</small></div>
-                                                                <div class="col my-auto"><h6 class="mb-0">&#8377;{ele.totalPrice}</h6>
+                                                                <div class="col my-auto">
+                                                                    <h6 class="mb-0">&#8377;{ele.totalPrice}</h6>
+                                                                   {ele.discount ? (<h6 class="mb-0">{ele.discount} % Off</h6>):("")} 
+                                                                
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -195,7 +198,7 @@ const ViewOrderModal = ({ show, setModalShow, viewData, setViewData, setLoad, se
                                         <div class="flex-sm-col col-auto"><p class="mb-1">&#8377;{viewData?.extraprice}</p></div>
                                     </div>
                                     <div class="row justify-content-between">
-                                        <div class="flex-sm-col text-right col"><p class="mb-1"> <b>Discount</b></p> </div>
+                                        <div class="flex-sm-col text-right col"><p class="mb-1"> <b>Overall Discount</b></p> </div>
                                         <div class="flex-sm-col col-auto"><p class="mb-1">{viewData?.discount} %</p></div>
                                     </div>
                                     <div class="row justify-content-between">

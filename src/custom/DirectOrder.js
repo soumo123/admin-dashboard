@@ -178,7 +178,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
         if (selectedId) {
             console.log("selectedId", selectedId)
             const selectedProduct = products.find(p => p.productId === selectedId);
-
+            setDiscount(selectedProduct.discount)
             if (selectedProduct) {
                 const weightInfo = selectedProduct.weight.find(w => Number(w.weight) === Number(selectedWeight));
                 console.log("weightInfo", weightInfo)
@@ -186,6 +186,7 @@ const DirectOrder = ({ directModal, setDirectModal, setRef }) => {
                     setMaxQuantity(weightInfo.stock)
                     setPrice(weightInfo.price);
                     setPurchasePrice(weightInfo.purchaseprice)
+                   
                 } else {
                     setPrice("");
                 }

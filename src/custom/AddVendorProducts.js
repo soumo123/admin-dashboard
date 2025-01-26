@@ -16,7 +16,7 @@ import dayjs from 'dayjs';
 const AddVendorProducts = () => {
   const navigate = useNavigate()
   const [products, setProducts] = useState([]);
-  const [forms, setForms] = useState([{ id: Date.now(), productName: '', unit: '', manufacture_date: null, expiry_date: null, weights: [], weightInput: { weight: '', price: 0, stock: 0, purchaseprice: 0 }, weightFormVisible: false }]);
+  const [forms, setForms] = useState([{ id: Date.now(), productName: '', unit: '', category:'',manufacture_date: null, expiry_date: null, weights: [], weightInput: { weight: '', price: 0, stock: 0, purchaseprice: 0 }, weightFormVisible: false }]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [message, setMessage] = useState(false)
   const [messageType, setMessageType] = useState("")
@@ -34,6 +34,7 @@ const AddVendorProducts = () => {
   const [title, setTitle] = useState("")
   const [err, setErr] = useState(false)
   const [loader, setLoader] = useState(false)
+  const[category,setCategory]=useState("")
   const adminToken = localStorage.getItem("adminToken")
 
   const handleAddWeight = (formIndex) => {
@@ -74,6 +75,7 @@ const AddVendorProducts = () => {
     const product = {
       productName: form.productName,
       unit: form.unit,
+      category:form.category,
       weights: form.weights,
       manufacture_date: form.manufacture_date,
       expiry_date: form.expiry_date
@@ -90,7 +92,7 @@ const AddVendorProducts = () => {
   };
 
   const handleAddMoreForm = () => {
-    setForms([...forms, { id: Date.now(), productName: '', unit: '', manufacture_date: null, expiry_date: null, weights: [], weightInput: { weight: '', price: 0, stock: 0, purchaseprice: 0 }, weightFormVisible: false }]);
+    setForms([...forms, { id: Date.now(), productName: '', unit: '', category:'',manufacture_date: null, expiry_date: null, weights: [], weightInput: { weight: '', price: 0, stock: 0, purchaseprice: 0 }, weightFormVisible: false }]);
   };
 
   const handleClearall = () => {
@@ -105,11 +107,15 @@ const AddVendorProducts = () => {
     const newProducts = products.filter((_, index) => index !== productIndex);
     setProducts(newProducts);
     if (newProducts.length === 0) {
-      setForms([{ id: Date.now(), productName: '', unit: '', manufacture_date: null, expiry_date: null, weights: [], weightInput: { weight: '', price: 0, stock: 0, purchaseprice: 0 }, weightFormVisible: false }]);
+      setForms([{ id: Date.now(), productName: '', unit: '',category:'', manufacture_date: null, expiry_date: null, weights: [], weightInput: { weight: '', price: 0, stock: 0, purchaseprice: 0 }, weightFormVisible: false }]);
     }
   };
 
-console.log("productsporductsproductsproducts",products)
+  const handleCategory = (e)=>{
+    setCategory(e.target.value)
+  }
+
+  console.log("category", category,forms)
 
   const addAgentProduct = async () => {
 
@@ -131,7 +137,7 @@ console.log("productsporductsproductsproducts",products)
         setMessage("Product Added")
         setProducts([])
         setSelectedOption(null)
-        setForms([{ id: Date.now(), name: '', unit: '', manufacture_date: null, expiry_date: null, weights: [], weightInput: { weight: '', price: 0, stock: 0, purchaseprice: 0 }, weightFormVisible: false }])
+        setForms([{ id: Date.now(), name: '', unit: '', category:'',manufacture_date: null, expiry_date: null, weights: [], weightInput: { weight: '', price: 0, stock: 0, purchaseprice: 0 }, weightFormVisible: false }])
         setTimeout(() => {
           setMessage(false)
         }, 2000);
@@ -236,7 +242,7 @@ console.log("productsporductsproductsproducts",products)
       <h1>Add Products From Agent</h1>
       <Box sx={{ p: 4, maxWidth: 800, mx: 'auto' }} className="add-prod">
         <Typography variant="h4" gutterBottom>
-         
+
           <Stack spacing={2} sx={{ width: 300 }}>
 
             <Autocomplete
@@ -244,7 +250,7 @@ console.log("productsporductsproductsproducts",products)
               id="vendor-agent-autocomplete"
               disableClearable={false} // Allow clearing with the clear icon
               clearOnEscape={true}
-              
+
               clearIcon={<ClearIcon />} // Add the clear icon
               options={searchData}
               getOptionLabel={(option) => option.title || ""}
@@ -284,10 +290,10 @@ console.log("productsporductsproductsproducts",products)
 
         </Typography>
         <Stack spacing={2} sx={{ width: 300 }}>
-            {/* <label for="inputEmail4" class="form-label"></label> */}
-            <input type="text" className='form-control' value={title} placeholder='Agent & Vendor'readOnly />
+          {/* <label for="inputEmail4" class="form-label"></label> */}
+          <input type="text" className='form-control' value={title} placeholder='Agent & Vendor' readOnly />
 
-          </Stack>
+        </Stack>
         {/* <div class="row">
           <div className='col'>
         
@@ -300,7 +306,7 @@ console.log("productsporductsproductsproducts",products)
           </Button>
         )}
         {forms.map((form, formIndex) => (
-          <Box style={{marginTop:"10px"}}key={form.id} sx={{ mb: 4, p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
+          <Box style={{ marginTop: "10px" }} key={form.id} sx={{ mb: 4, p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
             <Typography variant="h6">Add Product </Typography>
             <form onSubmit={(e) => {
               e.preventDefault();
@@ -325,6 +331,7 @@ console.log("productsporductsproductsproducts",products)
                   }
                 }}
               />
+
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker
@@ -343,6 +350,25 @@ console.log("productsporductsproductsproducts",products)
                   />
                 </DemoContainer>
               </LocalizationProvider>
+              <div className='row'>
+                <div className='col-6'>
+                  <label>Select Category</label>
+                  <select className='form-control' value={form.category} 
+                  
+                  onChange={(e) => {
+                    const value = e.target.value;
+                     // Regular expression to allow only non-numeric characters
+                      handleFormChange(formIndex, 'category', value);
+                    
+                  }}>
+                    <option value="">Select</option>
+                    <option value="1">Cakes</option>
+                    <option value="2">Pastrys</option>
+                    <option value="3">Chocolates</option>
+
+                  </select>
+                </div>
+              </div>
               <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                 <Button variant="outlined" onClick={() => handleFormChange(formIndex, 'weightFormVisible', true)}>
                   Add Weight
@@ -414,7 +440,7 @@ console.log("productsporductsproductsproducts",products)
                 />
               </DialogContent>
               <DialogActions>
-                <button type="button"onClick={() => handleAddWeight(formIndex)}  className="btnSubmit">
+                <button type="button" onClick={() => handleAddWeight(formIndex)} className="btnSubmit">
                   Add
                 </button>
                 <button onClick={() => handleFormChange(formIndex, 'weightFormVisible', false)} className='btn btn-danger'>
@@ -449,7 +475,7 @@ console.log("productsporductsproductsproducts",products)
                 <List>
                   {product.weights.map((weight, weightIndex) => (
                     <ListItem key={weightIndex}>
-                      <ListItemText primary={`Weight: ${weight.weight}, Price: ₹ ${weight.purchaseprice}, Stock: ${weight.stock}`} />
+                      <ListItemText primary={`Weight: ${weight.weight} ${product.unit}, Price: ₹ ${weight.purchaseprice}, Stock: ${weight.stock}` } />
                     </ListItem>
                   ))}
                 </List>
@@ -460,19 +486,19 @@ console.log("productsporductsproductsproducts",products)
 
       </Box>
       {
-          
-          loader ? (
-            <button type="button" className="btnSubmit" disabled>
-              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-              Uploading ....
-            </button>
-          ) : (
 
-            <button type="button" className="btnSubmit" onClick={addAgentProduct}>
-              Submit
-            </button>
-          )
-        }
+        loader ? (
+          <button type="button" className="btnSubmit" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            Uploading ....
+          </button>
+        ) : (
+
+          <button type="button" className="btnSubmit" onClick={addAgentProduct}>
+            Submit
+          </button>
+        )
+      }
     </>
   );
 };

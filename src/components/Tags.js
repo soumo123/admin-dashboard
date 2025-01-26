@@ -313,7 +313,12 @@ const Tags = () => {
 
                             <td>
                               <div className="">
-                                <img src={ele.thumbnailImage} style={{ width: '50%', height: '50%' }} />
+                                <img src={ele.thumbnailImage} style={{
+                width: '80px',  // Adjust width to a smaller size
+                height: 'auto', // Maintain aspect ratio
+                borderRadius: '5px', // Optional: Rounded corners
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Optional: Subtle shadow
+            }}/>
                               </div>
                             </td>
                             <td>
